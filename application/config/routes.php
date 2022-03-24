@@ -65,5 +65,13 @@ $route['sites'] = '/sites';
 $route['machines'] = '/machines';
 //andon
 $route['andon_dashboard'] = 'andon/index';
+//daily_report
+$route['daily_report'] = '/reports/index';
+//measuring_point
+$route['measuring_point'] = '/measuring_point/index';
+//manual_capture
+$route['manual_capture'] = '/manual_capture/index';
+
+
 
 
