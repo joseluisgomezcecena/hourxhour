@@ -5,8 +5,9 @@ include BASEPATH . 'core\\Model.php';
 class Base_Model extends CI_Model{
 
     protected $table = ""; //To override
-    
+    protected $column_id = "";
 
+    
     public $created_at;
     public $updated_at;
 
@@ -20,15 +21,19 @@ class Base_Model extends CI_Model{
         $this->db->where($column_id, $id);
         $query = $this->db->get(  $this->table );
         $data = $query->result_array();
-
-        //echo json_encode($data);
-
         return $data;
     }
 
     public function insertData($data)
     {
-        return $this->db->insert($this->table, $data);
+        $result = $this->db->insert($this->table, $data);
+        
+        if($result)
+        {
+            $result = $this->db->insert_id();   
+        }
+        
+        return $result;
     }
 
     public function updateData($data, $where)

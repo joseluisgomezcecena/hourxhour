@@ -75,3 +75,9 @@ $route['manual_capture'] = '/manual_capture/index';
 
 
 
+
+$route['test/plant/'] = 'testscontroller/plant_index';
+$route['test/plant/show'] = 'testscontroller/plant_show';
+$route['test/plant/create'] = 'testscontroller/plant_create';
+$route['test/plant/update'] = 'testscontroller/plant_update';
+$route['test/plant/delete'] = 'testscontroller/plant_delete';
