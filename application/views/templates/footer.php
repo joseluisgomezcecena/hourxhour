@@ -1,7 +1,7 @@
 <!-- Footer -->
 <footer class="mt-auto">
 	<div class="footer">
-		<span class='uppercase'>&copy; 2022 Yeti Themes</span>
+		<span class='uppercase'>&copy; 2022 Martech Medical Products</span>
 		<nav>
 			<a href="mailto:Yeti Themes<info@yetithemes.net>?subject=Support">Support</a>
 			<span class="divider">|</span>
