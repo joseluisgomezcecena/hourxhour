@@ -1,0 +1,4 @@
+"plant_id";"plant_name";"plant_use_password";"plant_password";"plant_active";"created_at";"updated_at"
+6;"Moldeo";1;"planta1";1;"2021-11-01 16:29:47";"2021-11-01 23:29:47"
+7;"Ensamble";1;"planta2";1;"2021-11-01 16:34:41";"2021-11-01 23:34:41"
+8;"Planta 3 ";1;"planta3";1;"2021-11-01 16:36:07";"2021-11-01 23:36:07"
