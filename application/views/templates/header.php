@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" class="menu_branded theme-rose font-poppins"  dir="ltr">
+<html lang="en" class="menu_branded theme-sky font-poppins"  dir="ltr">
 
 <head>
     <meta charset="UTF-8">
