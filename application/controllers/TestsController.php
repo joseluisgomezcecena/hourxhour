@@ -53,4 +53,12 @@ class TestsController extends CI_Controller{
         echo json_encode($plant);
     }
 
+    public function test_angular()
+    {
+      $data['title'] = "Assets";
+      $this->load->view('templates/header');
+      $this->load->view('pages/andon/angular', $data);
+      $this->load->view('templates/footer');
+    }
+
 }

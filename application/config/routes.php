@@ -73,11 +73,13 @@ $route['measuring_point'] = '/measuring_point/index';
 $route['manual_capture'] = '/manual_capture/index';
 
 
-
-
-
 $route['test/plant/'] = 'testscontroller/plant_index';
 $route['test/plant/show'] = 'testscontroller/plant_show';
 $route['test/plant/create'] = 'testscontroller/plant_create';
 $route['test/plant/update'] = 'testscontroller/plant_update';
 $route['test/plant/delete'] = 'testscontroller/plant_delete';
+
+//test for Angular
+$route['test/angular'] = 'testscontroller/test_angular';
+$route['api/plants/all'] = 'plants/api_all';
+$route['api/sites/all/(:num)'] = 'sites/api_all_by_plant/$1';
