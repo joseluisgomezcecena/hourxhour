@@ -56,13 +56,13 @@ $route['translate_uri_dashes'] = FALSE;
 //Plan
 $route['planners'] = 'plan/index';
 //assets
-$route['assets'] = 'andon/assets';
+$route['assets'] = '/assets';
 //plants
-$route['plants'] = 'andon/plants';
+$route['plants'] = '/plants';
 //sites
-$route['sites'] = 'andon/sites';
+$route['sites'] = '/sites';
 //machines
-$route['machines'] = 'andon/machines';
+$route['machines'] = '/machines';
 //andon
 $route['andon_dashboard'] = 'andon/index';
 

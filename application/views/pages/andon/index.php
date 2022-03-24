@@ -4,6 +4,6 @@
 		<ul>
 			<li><a href="#">Pages</a></li>
 			<li class="divider la la-arrow-right"></li>
-			<li>Blank Page</li>
+			<li><?= $title ?></li>
 		</ul>
 	</section>
