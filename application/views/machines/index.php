@@ -8,6 +8,13 @@
 	</ul>
 </section>
 
+<div class="flex flex-wrap gap-2 items-center ltr:ml-auto rtl:mr-auto mt-5 lg:mt-0">
+
+<div class="flex gap-x-2 mb-5">
+	<!-- Add New -->
+	<a href="<?php echo base_url() ?>machines/create" class="btn btn_primary uppercase">Add New</a>
+</div>
+</div>
 
 <div class="grid lg:grid-cols-1 gap-5">
 
