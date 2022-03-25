@@ -29,8 +29,8 @@ class Machine_model extends CI_Model
 
 	public function display_machines()
 	{
-		$query = $this->db->query("SELECT * FROM assets");
-		return $query->result();
+		$query = $this->db->get("assets");
+		return $query->result_array();
 	}
 
 	public function create_machine()
