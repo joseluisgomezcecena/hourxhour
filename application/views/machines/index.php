@@ -9,7 +9,7 @@
 </section>
 
 
-<div class="grid lg:grid-cols-4 gap-5">
+<div class="grid lg:grid-cols-1 gap-5">
 
 	<!-- Content -->
 	<div class="lg:col-span-3 xl:col-span-3">
