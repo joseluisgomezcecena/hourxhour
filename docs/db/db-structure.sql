@@ -24,6 +24,7 @@ CREATE TABLE `sites` (
   CONSTRAINT `fk_sites_plant_id_plants_plant_id` FOREIGN KEY (`plant_id`) REFERENCES `plants` (`plant_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 
+
 CREATE TABLE `assets` (
   `asset_id` int(11) NOT NULL AUTO_INCREMENT,
   `site_id` int(11) NOT NULL,
@@ -43,4 +44,41 @@ CREATE TABLE `assets` (
 
 
 
+CREATE TABLE `shifts` (
+  `shift_id` int(11) NOT NULL AUTO_INCREMENT,
+  `shift_name` varchar(45) COLLATE utf8mb4_spanish_ci NOT NULL,
+  `shift_start_time` time DEFAULT NULL,
+  `shift_end_time` time DEFAULT NULL,
+  PRIMARY KEY (`shift_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 
+CREATE TABLE `production_plans` (
+  `plan_id` int(11) NOT NULL AUTO_INCREMENT,
+  `asset_id` int(11) NOT NULL,
+  `date` datetime NOT NULL,
+  `shift_id` int(11) DEFAULT NULL,
+  `supervisor_id` int(11) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`plan_id`),
+  KEY `fk_production_plan_asset_id_assets_asset_id_idx` (`asset_id`),
+  KEY `fk_production_plans_shift_id_shifts_shift_id_idx` (`shift_id`),
+  CONSTRAINT `fk_production_plan_asset_id_assets_asset_id` FOREIGN KEY (`asset_id`) REFERENCES `assets` (`asset_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_production_plans_shift_id_shifts_shift_id` FOREIGN KEY (`shift_id`) REFERENCES `shifts` (`shift_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+
+CREATE TABLE `plan_by_hours` (
+  `plan_by_hour_id` int(11) NOT NULL AUTO_INCREMENT,
+  `plan_id` int(11) NOT NULL,
+  `time` time NOT NULL,
+  `planned` int(11) DEFAULT NULL,
+  `planned_head_cout` int(11) DEFAULT NULL,
+  `workorder` varchar(45) COLLATE utf8mb4_spanish_ci DEFAULT NULL,
+  `part_number` varchar(45) COLLATE utf8mb4_spanish_ci DEFAULT NULL,
+  `completed` int(11) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`plan_by_hour_id`),
+  KEY `fk_production_plan_plan_id_plan_by_hour_idx` (`plan_id`),
+  CONSTRAINT `fk_production_plan_plan_id_plan_by_hour` FOREIGN KEY (`plan_id`) REFERENCES `production_plans` (`plan_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;

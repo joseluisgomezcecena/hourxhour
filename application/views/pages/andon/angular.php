@@ -72,7 +72,7 @@
    $scope.change_site = function()
    {
 	   console.log('changed..' + $scope.selected_site);
-	}
+   }
 
 	//este es al cargar
    $scope.init();
