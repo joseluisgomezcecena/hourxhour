@@ -20,7 +20,7 @@ class Machine_model extends CI_Model
 
 		$this->db->select('site_id,site_name');
 		$this->db->where('plant_id', $postData['plant_id']);
-		$q = $this->db->get('site');
+		$q = $this->db->get('sites');
 		$response = $q->result_array();
 
 		return $response;
