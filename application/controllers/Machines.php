@@ -1,12 +1,15 @@
 <?php
 
 class Machines extends CI_Controller{
+
 	public function index(){
 
 		$data['title'] = "Machines";
 		//$data['plants'] = $this->Machine_model->get_plants();
 
 		$data['machines'] = $this->Machine_model->display_machines();
+
+		//$data['debug'] = print_r($this->db->last_query());
 
 		$this->load->view('templates/header');
 		$this->load->view('machines/index', $data);
@@ -47,6 +50,10 @@ class Machines extends CI_Controller{
 
 
 
+	public function delete($id)
+	{
+		$this->Machine_model->delete_machine($id);
+	}
 
 
 

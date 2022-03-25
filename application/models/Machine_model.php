@@ -29,7 +29,12 @@ class Machine_model extends CI_Model
 
 	public function display_machines()
 	{
-		$query = $this->db->get("assets");
+		//$query = $this->db->get("assets");
+		$this->db->select ( '*' );
+		$this->db->from ( 'assets' );
+		$this->db->join ( 'sites', 'sites.site_id = assets.site_id' , 'left' );
+		$this->db->join ( 'plants', 'plants.plant_id = sites.plant_id' , 'left' );
+		$query = $this->db->get();
 		return $query->result_array();
 	}
 
@@ -73,6 +78,13 @@ class Machine_model extends CI_Model
 
 	}
 
+
+	public function delete_machine($id)
+	{
+		$this->db->where('asset_id', $id);
+		$this->db->delete('assets');
+		return true;
+	}
 
 
 }

@@ -22,38 +22,56 @@
 	<div class="lg:col-span-3 xl:col-span-3">
 		<div class="card p-5">
 
-			<table id="asset-table" class="table table-auto table_hoverable w-full">
-				<thead>
-				<tr>
-					<th class="text-center uppercase">Asset</th>
-					<th class="ltr:text-left rtl:text-right uppercase">Work Center</th>
-					<th class="text-center uppercase">Control Number</th>
-				</tr>
-				</thead>
-
-
-				<tbody>
-					<?php foreach ($machines as $machine): ?>
+			<div class="mt-5">
+				<table id="asset-table" class="table table-auto table_hoverable w-full mb-5">
+					<thead >
 					<tr>
-						<td class="text-center"><?php echo $machine['asset_name'] ?></td>
-						<td class="text-center"><?php echo $machine['asset_name'] ?></td>
-						<td class="text-center"><?php echo $machine['asset_name'] ?></td>
+						<th style="font-size: 14px !important; width: 150px;" class="text-center uppercase">Plant</th>
+						<th style="font-size: 14px !important; width: 150px;" class="text-center uppercase">Site</th>
+						<th style="font-size: 14px !important; width: 150px;" class="text-center uppercase">Asset</th>
+						<th style="font-size: 14px !important; width: 150px;" class="ltr:text-center rtl:text-right uppercase">Work Center</th>
+						<th style="font-size: 14px !important; width: 150px;" class="text-center uppercase">Control Number</th>
+						<th style="font-size: 14px !important; width: 150px;" class="text-center uppercase">Edit</th>
+						<th style="font-size: 14px !important; width: 150px;" class="text-center uppercase">Delete</th>
 					</tr>
+					</thead>
+
+
+					<tbody>
+					<?php foreach ($machines as $machine): ?>
+						<tr>
+							<td class="text-center"><?php echo $machine['plant_name'] ?></td>
+							<td class="text-center"><?php echo $machine['site_name'] ?></td>
+							<td class="text-center"><?php echo $machine['asset_name'] ?></td>
+							<td class="text-center"><?php echo $machine['asset_work_center'] ?></td>
+							<td class="text-center"><?php echo $machine['asset_control_number'] ?></td>
+							<td class="text-center">
+								<a  href="machines/edit/" <?php echo  $machine['asset_id']; ?> class="btn btn_primary uppercase">Edit</a>
+							</td>
+
+							<td class="text-center">
+								<?php echo form_open('machines/delete/' . $machine['asset_id']); ?>
+								<input type="submit" name="delete_machine" value="Delete" class="btn btn_danger text-gray-300">
+								</form>
+							</td>
+
+						</tr>
 
 					<?php endforeach; ?>
-				</tbody>
-			</table>
-
+					</tbody>
+				</table>
+			</div>
 		</div>
 	</div>
 
 </div>
 
-<!-- Script-->
+<!-- Script
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+-->
 
-<!-- Datatables -->
+<!-- Datatables
 <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
@@ -72,3 +90,4 @@
 		} );
 	} );
 </script>
+-->
