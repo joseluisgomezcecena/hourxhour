@@ -7,16 +7,17 @@ class Machine_model extends CI_Model
 		$this->load->database();
 	}
 
+
 	public function get_plants()
 	{
 		$query = $this->db->get('plants');
 		return $query->result_array();
 	}
 
+
 	public function get_sites($postData)
 	{
 		$response = array();
-
 
 		$this->db->select('site_id,site_name');
 		$this->db->where('plant_id', $postData['plant_id']);
@@ -24,7 +25,6 @@ class Machine_model extends CI_Model
 		$response = $q->result_array();
 
 		return $response;
-
 	}
 
 	public function display_machines()
@@ -32,6 +32,16 @@ class Machine_model extends CI_Model
 		$query = $this->db->get("assets");
 		return $query->result_array();
 	}
+
+
+
+	public function display_single($id)
+	{
+		$query = $this->db->get_where("assets", array('asset_id' => $id));
+		return $query->result_array();
+	}
+
+
 
 	public function create_machine()
 	{
@@ -61,7 +71,8 @@ class Machine_model extends CI_Model
 
 		return $this->db->insert('assets', $data);
 
-
 	}
+
+
 
 }

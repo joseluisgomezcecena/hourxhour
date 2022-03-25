@@ -20,12 +20,21 @@ class Machines extends CI_Controller{
 		$data['title'] = "Add Machine or Asset";
 		$data['plants'] = $this->Machine_model->get_plants();
 
+		$this->form_validation->set_rules('plant_id', 'Plant', 'required');
+		$this->form_validation->set_rules('plant_id', 'Plant', 'required');
+		$this->form_validation->set_rules('work_center', 'Work Center', 'required');
+		$this->form_validation->set_rules('machine_name', 'Machine Name', 'required');
+
+
 		if( isset($_POST['save_machine']))
 		{
-			$this->Machine_model->create_machine();
 
-			//debug
-			//print_r($this->db->last_query());
+			if($this->form_validation->run()===TRUE)
+			{
+				$this->Machine_model->create_machine();
+				//debug
+				//print_r($this->db->last_query());
+			}
 
 		}
 

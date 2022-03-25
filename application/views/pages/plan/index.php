@@ -111,7 +111,7 @@
                 </tbody>
             </table>
             <div class="flex justify-end mt-5">
-                <button type="button" class="btn btn_success uppercase">
+                <button type="button" class="btn btn_success uppercase" data-toggle="modal" data-target="#dialog_success">
                     <span class="la la-save ltr:mr-2 rtl:ml-2"></span>
                     Save Plan
                 </button>
@@ -119,3 +119,6 @@
         </div>
     </form>
 </section>
+<script>
+   
+</script>

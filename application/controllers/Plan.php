@@ -1,26 +1,38 @@
 <?php
 
-class Plan extends CI_Controller{
-	
-	
-	public function __construct()
-	{
-		parent::__construct();
+class Plan extends CI_Controller
+{
 
-		$this->load->model('shift');
-		$this->load->model('productionplan');
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->load->model('shift');
+        $this->load->model('productionplan');
     }
 
 
-	public function index(){
+    public function index()
+    {
+        $title = "";
+        $message = "";
+        $icon = "";
 
-		
-		$data['title'] = "Plan";
-		$this->load->view('templates/header');
-		$this->load->view('pages/plan/index', $data);
-		$this->load->view('templates/footer');
-		
-	}
+        $data['message'] =
+            <<<DELEMETER
+            <script>
+            Swal.fire(
+            '{$title}',
+            '{$message}',
+            '{$icon}')
+            </script>
+    DELEMETER;
+        $data['title'] = "Plan";
+        $this->load->view('templates/header');
+        $this->load->view('pages/plan/index', $data);
+        $this->load->view('templates/footer');
+    }
 
 
 	public function test()
