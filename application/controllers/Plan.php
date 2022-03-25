@@ -14,20 +14,27 @@ class Plan extends CI_Controller{
 
 	public function index(){
 
-		//$shift = new Shift;
-		$now = new DateTime();
-
-		$asset_id = 10;
-		$shif_id = $this->shift->getIdFromCurrentTime( $now );
-		$date = $now->format(DATETIME_FORMAT);
-
-		$this->productionplan->date = $now->format(DATETIME_FORMAT);
-		$this->productionplan->GenerateHours();
-		/*
+		
 		$data['title'] = "Plan";
 		$this->load->view('templates/header');
 		$this->load->view('pages/plan/index', $data);
 		$this->load->view('templates/footer');
-		*/
+		
+	}
+
+
+	public function test()
+	{
+				//$shift = new Shift;
+				$now = DateTime::createFromFormat(DATETIME_FORMAT, '2022-03-25 10:00:00');
+
+				$asset_id = 10;
+				$shif_id = $this->shift->getIdFromCurrentTime( $now );
+				$date = $now->format(DATE_FORMAT);
+		
+				//echo $now->format(DATE_FORMAT);
+		
+				$this->productionplan->date = $now->format(DATETIME_FORMAT);
+				$this->productionplan->GenerateHours();
 	}
 }

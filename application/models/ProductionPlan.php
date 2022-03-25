@@ -14,7 +14,7 @@ class ProductionPlan extends CI_Model
 
     public $supervisor_id;
 
-    public $create_at;
+    public $created_at;
     public $updated_at;
 
     public $plan_by_hours = array();
@@ -71,8 +71,8 @@ class ProductionPlan extends CI_Model
         $this->$date= $row['date'];
         $this->$shift_id= $row['shift_id'];
         $this->$supervisor_id= $row['supervisor_id'];
-        $this->$create_at= $row['create_at'];
-        $this->$udated_at= $row['udated_at'];
+        $this->$created_at= $row['create_at'];
+        $this->$updated_at= $row['udated_at'];
     }
 
     public function ReadProperties()
@@ -95,7 +95,7 @@ class ProductionPlan extends CI_Model
     {
         $interval_in_milliseconds = self::time_interval_in_minutes  * 60 * 1000;
 
-        echo $interval_in_milliseconds;
+        //echo $interval_in_milliseconds;
 
         $start_date = date_create($this->date);
         $parsed_start = date_parse( $this->start_hour );
@@ -112,10 +112,23 @@ class ProductionPlan extends CI_Model
         {
             $end_date->add(new DateInterval('P1D'));
             $end_millis = $end_date->format('Uv');
+            
         }
 
+        //$plan_by_hours
+        for($m=$start_millis; $m < $end_millis ;  $m+=$interval_in_milliseconds )
+        {
+            $date = new DateTime();
+            $date->setTimeStamp($m / 1000);
+            $plan_by_hour['plan_id'] = $this->plan_id;
+            $plan_by_hour['time'] = $date->format(DATETIME_FORMAT);
+            $plan_by_hour['created_at'] = $this->created_at;
+            $plan_by_hour['updated_at'] = $this->created_at;
 
+            array_push($this->plan_by_hours, $plan_by_hour);
+        }
 
+        echo json_encode($this->plan_by_hours);
     }
 
 }
