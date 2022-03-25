@@ -26,15 +26,18 @@ class Plan extends CI_Controller{
 	public function test()
 	{
 				//$shift = new Shift;
-				$now = DateTime::createFromFormat(DATETIME_FORMAT, '2022-03-25 10:00:00');
+				
+				$now = new DateTime();
 
 				$asset_id = 10;
-				$shif_id = $this->shift->getIdFromCurrentTime( $now );
+				$shift_id = $this->shift->getIdFromCurrentTime( $now );
 				$date = $now->format(DATE_FORMAT);
-		
-				//echo $now->format(DATE_FORMAT);
-		
-				$this->productionplan->date = $now->format(DATETIME_FORMAT);
-				$this->productionplan->GenerateHours();
+				$this->shift->Load($shift_id);
+				//Cargar Plan
+				
+				$this->productionplan->LoadPlan($asset_id, $date, $shift_id, $this->shift->shift_start_time, $this->shift->shift_end_time);
+				
+				echo json_encode($this->productionplan);
+
 	}
 }

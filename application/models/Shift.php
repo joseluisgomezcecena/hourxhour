@@ -3,10 +3,41 @@
 class Shift extends CI_Model {
 
 
+    protected $table = 'shifts';
+
+    public $shift_id;
+    public $shift_name;
+    public $shift_start_time;
+    public $shift_end_time;
+
+    public $created_at;
+    public $updated_at;
+
     public function __construct()
 	{
 
     }
+
+    public function Load($id)
+    {
+        $this->shift_id = $id;
+
+        $this->db->where('shift_id', $this->shift_id);
+        $query = $this->db->get($this->table);
+        $data = $query->result_array();
+        if(count($data) == 1 )
+        {
+            $row = $data[0];
+            $this->shift_name = $row['shift_name'];
+            $this->shift_start_time = $row['shift_start_time'];
+            $this->shift_end_time = $row['shift_end_time'];
+
+            $this->created_at = $row['created_at'];
+            $this->updated_at = $row['updated_at'];
+        }
+    }
+
+
 
 
     public function getIdFromCurrentTime($now)
@@ -47,8 +78,7 @@ class Shift extends CI_Model {
         }
 
         foreach($data as $shift)
-        {
-        
+        {       
             //$formato = 'Y-m-d';
             //$fecha = DateTime::createFromFormat($formato, '2009-02-15');
             //echo date(DATE_FORMAT);
