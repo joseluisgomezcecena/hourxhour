@@ -9,7 +9,7 @@ class Machine_model extends CI_Model
 
 	public function get_plants()
 	{
-		$query = $this->db->get('plant');
+		$query = $this->db->get('plants');
 		return $query->result_array();
 	}
 
@@ -49,14 +49,14 @@ class Machine_model extends CI_Model
 		$pom = $this->input->post('pom') == '1' ? 1 : 0;
 
 		$data = array(
-			'asset_site'=> $this->input->post('site_id'),
+			'site_id'=> $this->input->post('site_id'),
 			'asset_name'=> $this->input->post('machine_name'),
 			'asset_control_number'=> $this->input->post('machine_control_number'),
 			'asset_work_center'=> $this->input->post('work_center'),
 			'asset_active'=> 1,
-			'machine'=>$machine,
-			'station'=>$station,
-			'pom'=> $pom
+			'asset_is_machine'=>$machine,
+			'asset_is_station'=>$station,
+			'asset_is_pom'=> $pom
 		);
 
 		return $this->db->insert('assets', $data);

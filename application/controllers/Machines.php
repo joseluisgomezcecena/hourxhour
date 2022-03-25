@@ -5,7 +5,6 @@ class Machines extends CI_Controller{
 
 		$data['title'] = "Machines";
 		$data['plants'] = $this->Machine_model->get_plants();
-		//print_r($data['plants']);
 
 		$this->load->view('templates/header');
 		$this->load->view('machines/index', $data);
@@ -16,9 +15,8 @@ class Machines extends CI_Controller{
 
 	public function create()
 	{
-		$data['title'] = "Add Machine-Asset";
+		$data['title'] = "Add Machine or Asset";
 		$data['plants'] = $this->Machine_model->get_plants();
-		//print_r($data['plants']);
 
 		if( isset($_POST['save_machine']))
 		{
@@ -34,10 +32,6 @@ class Machines extends CI_Controller{
 		$this->load->view('machines/create', $data);
 		$this->load->view('templates/footer');
 	}
-
-
-
-
 
 
 
