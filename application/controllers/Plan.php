@@ -52,4 +52,21 @@ class Plan extends CI_Controller
 				echo json_encode($this->productionplan);
 
 	}
+    
+    public function select_cell()
+    {
+        $data['title'] = "Selección de celda";
+        $this->load->view('templates/header');
+        $this->load->view('pages/plan/select_cell', $data);
+        $this->load->view('templates/footer');
+    }
+
+    public function select_measuring_point()
+    {
+        $data['title'] = "Selección de celda";
+        $this->load->view('templates/header');
+        $this->load->view('pages/plan/measuring_point', $data);
+        $this->load->view('templates/footer');
+    }
+
 }

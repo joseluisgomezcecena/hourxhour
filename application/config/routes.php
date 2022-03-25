@@ -59,7 +59,8 @@ $route['translate_uri_dashes'] = FALSE;
 //Plan
 $route['planners'] = 'plan/index';
 $route['planners/test'] = 'plan/test';
-
+$route['cell'] = 'plan/select_cell';
+$route['measuring_point'] = 'plan/select_measuring_point';
 //assets
 $route['assets'] = '/assets';
 //plants
