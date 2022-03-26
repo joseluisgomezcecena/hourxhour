@@ -57,7 +57,7 @@ class Machines extends CI_Controller{
 			show_404();
 		}
 
-		$data['title'] = $data['machines']['machine_name'];
+		//$data['title'] = $data['machines']['asset_name'];
 
 		$this->load->view('templates/header');
 		$this->load->view('machines/view', $data);

@@ -43,7 +43,7 @@ class Machine_model extends CI_Model
 	public function display_single($id)
 	{
 		$query = $this->db->get_where("assets", array('asset_id' => $id));
-		return $query->result_array();
+		return $query->row_array();
 	}
 
 
