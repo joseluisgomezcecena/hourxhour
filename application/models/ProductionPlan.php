@@ -8,9 +8,11 @@ class ProductionPlan extends CI_Model
 
     public $plan_id;
     
-    //unique
     public $asset_id;
+    public $asset_name;
+
     public $date;
+    public $date_end;
 
     public $shift_id;
     public $shift_name;
@@ -26,6 +28,8 @@ class ProductionPlan extends CI_Model
     public $created_at;
     public $updated_at;
 
+    public $hc;
+
     public $plan_by_hours = array();
     
     protected $start_hour = '23:00:00';
@@ -40,18 +44,29 @@ class ProductionPlan extends CI_Model
         $this->end_hour = $end_hour;
 
         
+        $select = '*, shifts.shift_name as shift_name, assets.site_id as site_id, ';
+        $select .= 'assets.asset_name as asset_name, assets.asset_id as asset_id, ';
+        $select .= 'sites.site_id as site_id, sites.site_name as site_name, ';
+        $select .= 'plants.plant_id as plant_id, plants.plant_name as plant_name';
+
         //check if exists
-        $this->db->select('*, shifts.shift_name as shift_name');
-        
+        $this->db->select( $select);
+        //
+
         $this->db->where('production_plans.asset_id', $asset_id);
         $this->db->where('production_plans.date', $date);
         $this->db->where('production_plans.shift_id', $shift_id);
 
-        $this->db->join('shifts', 'production_plans.shift_id = shifts.shift_id');
+        $this->db->join('shifts', 'production_plans.shift_id = shifts.shift_id', 'inner');
+        $this->db->join('assets', 'production_plans.asset_id = assets.asset_id', 'inner');
+        $this->db->join('sites', 'assets.site_id = sites.site_id', 'inner');
+        $this->db->join('plants', 'sites.plant_id = plants.plant_id', 'inner');
+
         $this->db->from('production_plans');
 
-        $query = $this->db->get();
+        $query = $this->db->get();    
         $data = $query->result_array();
+
 
         if(count($data) == 0 )
         {
@@ -60,6 +75,7 @@ class ProductionPlan extends CI_Model
             $this->date = $date;
             $this->shift_id = $shift_id;
             $this->supervisor_id = NULL;
+            $this->hc = 1;
             
             $now = new DateTime();
             $this->created_at = $now->format(DATETIME_FORMAT);
@@ -70,6 +86,7 @@ class ProductionPlan extends CI_Model
             $this->db->insert($this->table, $data);
             //Save the production plan id
             $this->plan_id = $this->db->insert_id();
+
             $this->GenerateHours();
         } else
         {
@@ -79,8 +96,6 @@ class ProductionPlan extends CI_Model
             $this->LoadHours();
         }
 
-        $data['plan_id'] = $this->plan_id; 
-        return $data;
         
     }
 
@@ -88,12 +103,27 @@ class ProductionPlan extends CI_Model
 
     public function LoadProperties($row)
     {
-        $this->plan_id = $row['plan_id'];
-        $this->asset_id = $row['asset_id'];
+        $this->plan_id = intval( $row['plan_id'] );
+
+        $this->asset_id = intval( $row['asset_id'] );
+        $this->asset_name = $row['asset_name'];//foreign
+
+        //site
+        $this->site_id =  intval( $row['site_id'] );
+        $this->site_name = $row['site_name'];//foreign
+
+        //plant
+        $this->plant_id = intval($row['plant_id'] );
+        $this->plant_name = $row['plant_name'];//foreign
+
         $this->date= $row['date'];
-        $this->shift_id= $row['shift_id'];
-        $this->shift_name= $row['shift_name'];
-        $this->supervisor_id= $row['supervisor_id'];
+
+        $this->shift_id= intval($row['shift_id']);
+        $this->shift_name= $row['shift_name'];//foreign
+
+        $this->hc= intval($row['hc']) ;
+
+        $this->supervisor_id= intval( $row['supervisor_id'] );
         $this->created_at= $row['created_at'];
         $this->updated_at= $row['updated_at'];
     }
@@ -105,10 +135,10 @@ class ProductionPlan extends CI_Model
         $row['asset_id'] = $this->asset_id;
         $row['date']  = $this->date;
         $row['shift_id'] = $this->shift_id;
-        $row['shift_name'] = $this->shift_name;
         $row['supervisor_id'] = $this->supervisor_id;
         $row['created_at'] = $this->created_at;
         $row['updated_at'] = $this->updated_at;
+        $row['hc'] = $this->hc;
         return $row;
     }
 
@@ -146,9 +176,14 @@ class ProductionPlan extends CI_Model
             $date = new DateTime();
             $date->setTimeStamp($m / 1000);
             
+            $date_end = new DateTime();
+            $date_end->setTimeStamp( ($m + $interval_in_milliseconds ) / 1000);
             
             $plan_by_hour['plan_id'] = $this->plan_id;
+            
             $plan_by_hour['time'] = $date->format(DATETIME_FORMAT);
+            $plan_by_hour['time_end'] = $date_end->format(DATETIME_FORMAT);
+
             $plan_by_hour['created_at'] = $this->created_at;
             $plan_by_hour['updated_at'] = $this->created_at;
             $this->db->insert($this->table_hours, $plan_by_hour);

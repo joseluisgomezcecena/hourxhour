@@ -37,7 +37,7 @@ class Plan extends CI_Controller
 
 		$this->shift->Load($shift_id);
 				//Cargar Plan
-		$this->productionplan->LoadPlan($asset_id, $date, $shift_id, $this->shift->shift_start_time, $this->shift->shift_end_time);
+		$data = $this->productionplan->LoadPlan($asset_id, $date, $shift_id, $this->shift->shift_start_time, $this->shift->shift_end_time);
 		echo json_encode($this->productionplan);
 	}
 

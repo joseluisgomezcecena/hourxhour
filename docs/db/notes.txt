@@ -1,0 +1,9 @@
+se necesita agregar en shifts
+created_at
+updated_at
+
+en plan_hourxhour
+cambiar time por el tipo de dato datetime
+
+en plan productions
+agregar el hc como int y con default 1

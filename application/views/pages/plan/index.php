@@ -30,36 +30,30 @@
         <table class="table table_bordered w-full mt-3">
             <thead class="text-xs">
                 <tr>
-
-                
+             
                     <th scope="col" class="bg-[#D1FAE5]"><small>PLANT:</small></th>
                     <th scope="col">
-                        <input type="text" name="" value="" disabled class="form-control input_invisible size-sm">
+                        <input type="text" name="" value="" ng-model="production_plan.plant_name" disabled class="form-control input_invisible size-sm">
                     </th>
                     <th scope="col" class="bg-[#D1FAE5]"><small>AREA:</small></th>
                     <th scope="col">
-                        <input type="text" name="" value="" disabled class="form-control input_invisible size-sm">
+                        <input type="text" name="" value="" ng-model="production_plan.site_name" disabled class="form-control input_invisible size-sm">
                     </th>
                     <th scope="col" class="bg-[#D1FAE5]"><small>OUTPUT:</small></th>
                     <th scope="col">
-                        <input type="text" name="" value="" disabled class="form-control input_invisible size-sm">
+                        <input type="text" name="" value="" ng-model="production_plan.asset_name" disabled class="form-control input_invisible size-sm">
                     </th>
                     <th scope="col" class="bg-[#D1FAE5]"><small>SHIFT:</small></th>
                     <th scope="col">
-                        <input type="text" name="shift_id" ng-model="shift_id" 
-                        data-toggle="popover"
-                            data-popover-title="Shift Info"
-                            data-popover-content="{{shift_name}}"
-                            data-tippy-placement="right"
-                        class="form-control input_invisible size-sm">
+                        <input type="text" name="shift_id" ng-model="production_plan.shift_id" class="form-control input_invisible size-sm">
                     </th>
                     <th scope="col" class="bg-[#D1FAE5]"><small>HC:</small></th>
                     <th scope="col">
-                        <input type="number" name="" id="" onkeyup="" class="form-control input_invisible size-sm" />
+                        <input type="number" name="hc" id="" onkeyup="" ng-model="production_plan.hc" class="form-control input_invisible size-sm" />
                     </th>
                     <th scope="col" class="bg-[#D1FAE5]"><small>DATE:</small></th>
                     <th scope="col">
-                        <input style="min-width: 10rem; border: 0;" name="date_id" class="form-control input_invisible size-sm" type="date" value="">
+                        <input style="min-width: 10rem; border: 0;" name="date" ng-model="production_plan.date" class="form-control input_invisible size-sm" type="date" >
                     </th>
                     <th scope="col" class="bg-[#D1FAE5]"><small>SUPERVISOR:</small></th>
                     <th scope="col">
@@ -93,8 +87,11 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <th style="min-width: 7rem;" class="bg-[#D1FAE5] text-xs">6:00-7:00am</th>
+
+
+                    <tr ng-repeat="plan_item in production_plan.plan_by_hours">
+                        <!-- 6:00-7:00am -->
+                        <th style="min-width: 7rem;" class="bg-[#D1FAE5] text-xs">{{plan_item.time | date:'hh:mm'}}-{{plan_item.time_end | date:'hh:mm'}} {{ plan_item.time.getHours() >= 12  ? 'pm' : 'am'}}</th>
                         <td id="" class="bg-[#D1FAE5]">
                             <input type="number" name="" id="" onkeyup="" class="form-control input_invisible size-sm" />
                         </td>
@@ -115,6 +112,7 @@
                         <td class="bg-[#D1FAE5] form-control size-sm" id=""><input class="size-sm" type="text" name="" id="" disabled="true"></td>
                         <td class="bg-[#D1FAE5] form-control size-sm" id=""><input class="size-sm" type="text" name="" id="" disabled="true"></td>
                     </tr>
+
                 </tbody>
             </table>
             <div class="flex justify-end mt-5">
@@ -131,16 +129,7 @@
 var fetch = angular.module('plannerApp', []);
 fetch.controller('planController', ['$scope', '$http', function ($scope, $http) {
 
-   $scope.plan_id = null;
-   $scope.asset_id = null;
-   $scope.date = null;
-   
-   $scope.shift_id = null;
-   $scope.shift_name = null;
-
-   $scope.supervisor_id = null;
-   $scope.supervisor = null;
-
+   $scope.production_plan = null;
    
   $scope.init = function(asset_id, shift_id, date)
   {
@@ -160,17 +149,19 @@ fetch.controller('planController', ['$scope', '$http', function ($scope, $http) 
     params: {asset_id: $scope.asset_id, shift_id: $scope.shift_id, date: $scope.date}
    }).then(function successCallback(response) {
 
-       $scope.plan_id = response.data.plan_id;
+       $scope.production_plan = response.data;
+       $scope.production_plan.date = new Date(response.data.date);
 
-       $scope.shift_id = response.data.shift_id;
-       $scope.shift_name = response.data.shift_name;
 
-       $scope.name = response.data.name;
+       for(var i = 0; i < $scope.production_plan.plan_by_hours.length ;i++)
+       {
+          
+            $scope.production_plan.plan_by_hours[i].time = new Date(response.data.plan_by_hours[i].time);
+            $scope.production_plan.plan_by_hours[i].time_end = new Date(response.data.plan_by_hours[i].time_end);
+            console.log($scope.production_plan.plan_by_hours[i].time);
+       }
        
-       $scope.asset_id = response.data.asset_id;
-       $scope.date = response.data.date;
-       $scope.supervisor_id = response.data.supervisor_id;
-       
+
        console.log(response);   
       // Assign response to users object
        //console.log($scope.plants);
