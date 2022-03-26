@@ -15,42 +15,37 @@ class Plan extends CI_Controller
 
     public function index()
     {
-        $title = "";
-        $message = "";
-        $icon = "";
+		//necesitamos la fecha de hoy, el shift_id y el asset_id
+		$now = new DateTime();
 
-        $data['message'] =
-            <<<DELEMETER
-            <script>
-            Swal.fire(
-            '{$title}',
-            '{$message}',
-            '{$icon}')
-            </script>
-    DELEMETER;
         $data['title'] = "Plan";
-        $this->load->view('templates/header');
+		$data['asset_id'] = 10;
+		$data['shift_id'] = $this->shift->getIdFromCurrentTime( $now );
+		$data['date'] = $date = $now->format(DATE_FORMAT);;
+
+		$this->load->view('templates/header');
         $this->load->view('pages/plan/index', $data);
         $this->load->view('templates/footer');
     }
+
+
+	public function api_get_plan()
+	{
+		$asset_id = $this->input->get('asset_id');
+		$shift_id = $this->input->get('shift_id');
+		$date = $this->input->get('date');
+
+		$this->shift->Load($shift_id);
+				//Cargar Plan
+		$this->productionplan->LoadPlan($asset_id, $date, $shift_id, $this->shift->shift_start_time, $this->shift->shift_end_time);
+		echo json_encode($this->productionplan);
+	}
 
 
 	public function test()
 	{
 				//$shift = new Shift;
 				
-				$now = new DateTime();
-
-				$asset_id = 10;
-				$shift_id = $this->shift->getIdFromCurrentTime( $now );
-				$date = $now->format(DATE_FORMAT);
-				$this->shift->Load($shift_id);
-				//Cargar Plan
-				
-				$this->productionplan->LoadPlan($asset_id, $date, $shift_id, $this->shift->shift_start_time, $this->shift->shift_end_time);
-				
-				echo json_encode($this->productionplan);
-
 	}
     
     public function select_cell()

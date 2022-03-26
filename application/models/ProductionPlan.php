@@ -11,7 +11,15 @@ class ProductionPlan extends CI_Model
     //unique
     public $asset_id;
     public $date;
+
     public $shift_id;
+    public $shift_name;
+
+    public $site_id;
+    public $site_name;
+
+    public $plant_id;
+    public $plant_name;
 
     public $supervisor_id;
 
@@ -33,10 +41,16 @@ class ProductionPlan extends CI_Model
 
         
         //check if exists
-        $this->db->where('asset_id', $asset_id);
-        $this->db->where('date', $date);
-        $this->db->where('shift_id', $shift_id);
-        $query = $this->db->get($this->table);
+        $this->db->select('*, shifts.shift_name as shift_name');
+        
+        $this->db->where('production_plans.asset_id', $asset_id);
+        $this->db->where('production_plans.date', $date);
+        $this->db->where('production_plans.shift_id', $shift_id);
+
+        $this->db->join('shifts', 'production_plans.shift_id = shifts.shift_id');
+        $this->db->from('production_plans');
+
+        $query = $this->db->get();
         $data = $query->result_array();
 
         if(count($data) == 0 )
@@ -45,7 +59,6 @@ class ProductionPlan extends CI_Model
             $this->asset_id = $asset_id;
             $this->date = $date;
             $this->shift_id = $shift_id;
-
             $this->supervisor_id = NULL;
             
             $now = new DateTime();
@@ -79,6 +92,7 @@ class ProductionPlan extends CI_Model
         $this->asset_id = $row['asset_id'];
         $this->date= $row['date'];
         $this->shift_id= $row['shift_id'];
+        $this->shift_name= $row['shift_name'];
         $this->supervisor_id= $row['supervisor_id'];
         $this->created_at= $row['created_at'];
         $this->updated_at= $row['updated_at'];
@@ -91,6 +105,7 @@ class ProductionPlan extends CI_Model
         $row['asset_id'] = $this->asset_id;
         $row['date']  = $this->date;
         $row['shift_id'] = $this->shift_id;
+        $row['shift_name'] = $this->shift_name;
         $row['supervisor_id'] = $this->supervisor_id;
         $row['created_at'] = $this->created_at;
         $row['updated_at'] = $this->updated_at;

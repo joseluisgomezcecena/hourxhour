@@ -19,7 +19,7 @@
     }
 </style>
 <!-- Breadcrumb -->
-<section class="breadcrumb">
+<section class="breadcrumb" ng-app='plannerApp' ng-controller='planController'>
     <h1><?= $title ?></h1>
     <ul>
         <li><a href="#">Pages</a></li>
@@ -30,6 +30,8 @@
         <table class="table table_bordered w-full mt-3">
             <thead class="text-xs">
                 <tr>
+
+                
                     <th scope="col" class="bg-[#D1FAE5]"><small>PLANT:</small></th>
                     <th scope="col">
                         <input type="text" name="" value="" disabled class="form-control input_invisible size-sm">
@@ -44,7 +46,12 @@
                     </th>
                     <th scope="col" class="bg-[#D1FAE5]"><small>SHIFT:</small></th>
                     <th scope="col">
-                        <input type="text" name="" value="" disabled class="form-control input_invisible size-sm">
+                        <input type="text" name="shift_id" ng-model="shift_id" 
+                        data-toggle="popover"
+                            data-popover-title="Shift Info"
+                            data-popover-content="{{shift_name}}"
+                            data-tippy-placement="right"
+                        class="form-control input_invisible size-sm">
                     </th>
                     <th scope="col" class="bg-[#D1FAE5]"><small>HC:</small></th>
                     <th scope="col">
@@ -119,6 +126,60 @@
         </div>
     </form>
 </section>
+
 <script>
+var fetch = angular.module('plannerApp', []);
+fetch.controller('planController', ['$scope', '$http', function ($scope, $http) {
+
+   $scope.plan_id = null;
+   $scope.asset_id = null;
+   $scope.date = null;
    
+   $scope.shift_id = null;
+   $scope.shift_name = null;
+
+   $scope.supervisor_id = null;
+   $scope.supervisor = null;
+
+   
+  $scope.init = function(asset_id, shift_id, date)
+  {
+    $scope.shift_id = shift_id;
+    $scope.asset_id = asset_id;
+    $scope.date = date;
+
+    console.log('date ' + $scope.date);
+
+    $scope.getPlan();
+  } 
+
+  $scope.getPlan = function(){
+   $http({
+    method: 'get',
+    url: '<?= base_url() ?>index.php/api/plan/get',
+    params: {asset_id: $scope.asset_id, shift_id: $scope.shift_id, date: $scope.date}
+   }).then(function successCallback(response) {
+
+       $scope.plan_id = response.data.plan_id;
+
+       $scope.shift_id = response.data.shift_id;
+       $scope.shift_name = response.data.shift_name;
+
+       $scope.name = response.data.name;
+       
+       $scope.asset_id = response.data.asset_id;
+       $scope.date = response.data.date;
+       $scope.supervisor_id = response.data.supervisor_id;
+       
+       console.log(response);   
+      // Assign response to users object
+       //console.log($scope.plants);
+   }); 
+  }
+
+
+   //este es al cargar
+  $scope.init(<?php echo $asset_id . ", " . $shift_id . ", '" . $date . "'" ?>);
+}]);
+
 </script>
