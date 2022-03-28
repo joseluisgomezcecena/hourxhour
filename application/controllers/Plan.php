@@ -10,6 +10,7 @@ class Plan extends CI_Controller
 
         $this->load->model('shift');
         $this->load->model('productionplan');
+        
     }
 
 
@@ -23,6 +24,8 @@ class Plan extends CI_Controller
 		$data['shift_id'] = $this->shift->getIdFromCurrentTime( $now );
 		$data['date'] = $date = $now->format(DATE_FORMAT);;
 
+
+       
 		$this->load->view('templates/header');
         $this->load->view('pages/plan/index', $data);
         $this->load->view('templates/footer');

@@ -167,51 +167,33 @@
                     Manage By Plant
                 </a>
                 <div id="plant_admon" class="collapse">
-                    <a href="#no-link" class="active" data-toggle="collapse" data-target="#moldeo">
-                        <span class="collapse-indicator la la-arrow-circle-down"></span>
-                        Moldeo
-                    </a>
-                    <div id="moldeo" class="collapse">
-                        <a href="<?php echo base_url(); ?>index.php/cell">
-                            Load Plan
-                        </a>
-                        <a href="<?php echo base_url(); ?>index.php/manual_capture">
-                            Manual Capture
-                        </a>
-                        <a href="<?php echo base_url(); ?>index.php/measuring_point">
-                            Measuring Point
-                        </a>
-                    </div>
-                    <a href="#no-link" class="active" data-toggle="collapse" data-target="#ensamble">
-                        <span class="collapse-indicator la la-arrow-circle-down"></span>
-                        Ensamble
-                    </a>
-                    <div id="ensamble" class="collapse">
-                        <a href="<?php echo base_url(); ?>index.php/cell">
-                            Load Plan
-                        </a>
-                        <a href="<?php echo base_url(); ?>index.php/manual_capture">
-                            Manual Capture
-                        </a>
-                        <a href="<?php echo base_url(); ?>index.php/measuring_point">
-                            Measuring Point
-                        </a>
-                    </div>
-                    <a href="#no-link" class="active" data-toggle="collapse" data-target="#planta_3">
-                        <span class="collapse-indicator la la-arrow-circle-down"></span>
-                        Planta 3
-                    </a>
-                    <div id="planta_3" class="collapse">
-                        <a href="<?php echo base_url(); ?>index.php/cell">
-                            Load Plan
-                        </a>
-                        <a href="<?php echo base_url(); ?>index.php/manual_capture">
-                            Manual Capture
-                        </a>
-                        <a href="<?php echo base_url(); ?>index.php/measuring_point">
-                            Measuring Point
-                        </a>
-                    </div>
+
+                    <?php
+                        $CI =& get_instance();
+                        $CI->load->model('plant');
+                        $plants = $CI->plant->getAllActive();
+
+                        foreach($plants as $plant)
+                        {
+                            echo '<a href="#no-link" class="active" data-toggle="collapse" data-target="#plant_' . $plant['plant_id'] . '">';
+                            echo '<span class="collapse-indicator la la-arrow-circle-down"></span>';
+                            echo $plant['plant_name'];
+                            echo '</a>';
+
+                            echo '<div id="plant_' . $plant['plant_id'] . '" class="collapse">';
+                            echo '<a href="' . base_url() . 'index.php/cell?plant_id=' . $plant['plant_id'] .'">';
+                            echo '    Load Plan';
+                            echo '</a>';
+                            echo '<a href="' . base_url() . 'index.php/manual_capture">';
+                            echo '    Manual Capture';
+                            echo '</a>';
+                            echo '<a href="' . base_url() . 'index.php/measuring_point">';
+                            echo '    Measuring Point';
+                            echo '</a>';
+                            echo '</div>';
+                        }
+                    ?>
+
                 </div>
                 <a href="#no-link" class="active" data-toggle="collapse" data-target="#production">
                     <span class="collapse-indicator la la-arrow-circle-down"></span>

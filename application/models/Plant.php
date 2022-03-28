@@ -1,10 +1,9 @@
 <?php
 
-include_once('Base.php');
 
-class Plant extends Base_Model {
+class Plant extends cI_Model {
 
-    protected $table = 'plant';
+    protected $table = 'plants';
 
     public $plant_id;
     //fields
@@ -50,6 +49,16 @@ class Plant extends Base_Model {
         $data['plant_active'] = $this->plant_active;
         $data['created_at'] = $this->created_at;
         $data['updated_at'] = $this->updated_at;
+        return $data;
+    }
+
+
+
+    public function getAllActive()
+    {
+        $this->db->where('plant_active', 1);
+        $query = $this->db->get(  $this->table );
+        $data = $query->result_array();
         return $data;
     }
 
