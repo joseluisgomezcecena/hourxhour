@@ -5,7 +5,15 @@ class Sites extends CI_Controller{
 
 		$data['title'] = "Sites";
 		$this->load->view('templates/header');
-		$this->load->view('pages/andon/sites', $data);
+		$this->load->view('pages/andon/sites/index', $data);
+		$this->load->view('templates/footer');
+	}
+
+    public function create(){
+
+		$data['title'] = "Sites";
+		$this->load->view('templates/header');
+		$this->load->view('pages/andon/sites/create', $data);
 		$this->load->view('templates/footer');
 	}
 

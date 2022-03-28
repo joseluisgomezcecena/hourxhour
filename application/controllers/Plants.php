@@ -7,7 +7,7 @@ class Plants extends CI_Controller{
 
 		$data['title'] = "Plants";
 		$this->load->view('templates/header');
-		$this->load->view('pages/andon/plants', $data);
+		$this->load->view('pages/andon/plants/index', $data);
 		$this->load->view('templates/footer');
 	}
 
@@ -17,4 +17,11 @@ class Plants extends CI_Controller{
 		$this->load->database();
 		echo json_encode($this->db->get('plants')->result_array() );
 	}
+
+    public function create(){
+        $data['title'] = "Create plant";
+		$this->load->view('templates/header');
+		$this->load->view('pages/andon/plants/create', $data);
+		$this->load->view('templates/footer');
+    }
 }

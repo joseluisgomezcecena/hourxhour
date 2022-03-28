@@ -68,9 +68,11 @@ $route['measuring_point'] = 'plan/select_measuring_point';
 //assets
 $route['assets'] = '/assets';
 //plants
-$route['plants'] = '/plants';
+$route['plants'] = '/plants/index';
+$route['plants/create'] = '/plants/create';
 //sites
-$route['sites'] = '/sites';
+$route['sites'] = '/sites/index';
+$route['sites/create'] = '/sites/create';
 //machines
 $route['machines'] = '/machines';
 //andon
