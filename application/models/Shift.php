@@ -39,7 +39,6 @@ class Shift extends CI_Model {
 
 
 
-
     public function getIdFromCurrentTime($now)
     {
         $result_id = -1;
