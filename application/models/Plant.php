@@ -16,15 +16,15 @@ class Plant extends cI_Model {
 	public function __construct($id = NULL)
 	{
         parent::__construct();
-
 		$this->load->database();
-        $this->plant_id = $id;
-
-        if($this->plant_id != NULL)
-        {
-            $this->loadModel( $this->getData('plant_id',$this->plant_id) );
-        }        
 	}
+
+
+    public function Load($id)
+    {
+        $this->plant_id = $id;
+        $this->loadModel( $this->getData() );
+    }
 
     public function loadModel($data)
     {   
@@ -53,6 +53,13 @@ class Plant extends cI_Model {
     }
 
 
+    public function getData()
+    {
+        $this->db->where('plant_id',  $this->plant_id);
+        $query = $this->db->get(  $this->table );
+        $data = $query->result_array();
+        return $data;
+    }
 
     public function getAllActive()
     {

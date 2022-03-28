@@ -175,7 +175,7 @@
 
                         foreach($plants as $plant)
                         {
-                            echo '<a href="#no-link" class="active" data-toggle="collapse" data-target="#plant_' . $plant['plant_id'] . '">';
+                            echo '<a class="active" data-toggle="collapse" data-target="#plant_' . $plant['plant_id'] . '">';
                             echo '<span class="collapse-indicator la la-arrow-circle-down"></span>';
                             echo $plant['plant_name'];
                             echo '</a>';
