@@ -9,7 +9,7 @@ class Plan extends CI_Controller
         parent::__construct();
 
         $this->load->model('shift');
-        $this->load->model('productionplan');
+        
         
     }
 
@@ -20,7 +20,8 @@ class Plan extends CI_Controller
 		$now = new DateTime();
 
         $data['title'] = "Plan";
-		$data['asset_id'] = 10;
+		$data['asset_id'] = $asset_id = $this->input->get('asset_id');
+
 		$data['shift_id'] = $this->shift->getIdFromCurrentTime( $now );
 		$data['date'] = $date = $now->format(DATE_FORMAT);;
 
@@ -33,6 +34,7 @@ class Plan extends CI_Controller
 
 	public function api_get_plan()
 	{
+        $this->load->model('productionplan');
 		$asset_id = $this->input->get('asset_id');
 		$shift_id = $this->input->get('shift_id');
 		$date = $this->input->get('date');

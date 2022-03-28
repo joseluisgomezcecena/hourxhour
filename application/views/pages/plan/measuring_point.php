@@ -19,7 +19,7 @@
 
 				foreach($production_plans as $plan)
 				{
-					echo '<a href="<?php echo base_url(); ?>index.php/planners">';
+					echo '<a href="' . base_url() . 'index.php/planners?asset_id=' . $plan['asset_id'] .'">';
 					echo '<div class="card p-5">';
 					echo '<div class="items-center px-5 py-2">';
 					echo '<h5 class="mb-0 uppercase">' . $plan['asset_name'] . '</h5>';
