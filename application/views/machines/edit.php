@@ -37,15 +37,15 @@
 				</div>
 				<div class="lg:col-span-1 xl:col-span-2">
 					<label class="label block mb-2" for="work_center">Work Center:</label>
-					<input class="form-control"  id="work_center"  name="work_center" required>
+					<input class="form-control"  id="work_center" value="<?php echo $machine['asset_work_center'] ?>"  name="work_center" required>
 				</div>
 				<div class="lg:col-span-1 xl:col-span-2">
 					<label class="label block mb-2" for="machine_name">Machine Name:</label>
-					<input class="form-control"  id="machine_name"  name="machine_name" required>
+					<input class="form-control"  id="machine_name" value="<?php echo $machine['asset_name'] ?>"  name="machine_name" required>
 				</div>
 				<div class="lg:col-span-2 xl:col-span-2">
 					<label class="label block mb-2" for="machine_control_number">Control Number:</label>
-					<input class="form-control"  id="machine_control_number"  name="machine_control_number" >
+					<input class="form-control"  id="machine_control_number" value="<?php echo $machine['asset_control_number'] ?>"  name="machine_control_number" >
 				</div>
 			</div>
 
@@ -72,8 +72,8 @@
 					<div class="w-3/4 ml-2">
 						<div class="custom-select">
 							<select name="machine_station" class="form-control">
-								<option value="1">Molding</option>
-								<option value="0">Assembly</option>
+								<option <?php if($machine['asset_is_machine']==1){echo"selected";}else{echo "";} ?> value="1">Molding</option>
+								<option <?php if($machine['asset_is_station']==0){echo"selected";}else{echo "";} ?> value="0">Assembly</option>
 							</select>
 							<div class="custom-select-icon la la-caret-down"></div>
 						</div>
@@ -86,7 +86,7 @@
 					</div>
 					<div class="w-3/4 ml-2">
 						<label class="label switch">
-							<input name="pom" type="checkbox" value="1">
+							<input <?php if($machine['asset_is_pom']==1){echo"checked";}else{echo "";} ?> name="pom" type="checkbox" value="1">
 							<span></span>
 							<span>Yes</span>
 						</label>

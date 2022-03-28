@@ -32,6 +32,7 @@
 						<th style="font-size: 14px !important; width: 150px;" class="ltr:text-center rtl:text-right uppercase">Work Center</th>
 						<th style="font-size: 14px !important; width: 150px;" class="text-center uppercase">Control Number</th>
 						<th style="font-size: 14px !important; width: 150px;" class="text-center uppercase">Point Of Measure</th>
+						<th style="font-size: 14px !important; width: 150px;" class="text-center uppercase">View</th>
 						<th style="font-size: 14px !important; width: 150px;" class="text-center uppercase">Edit</th>
 						<th style="font-size: 14px !important; width: 150px;" class="text-center uppercase">Delete</th>
 					</tr>
@@ -48,9 +49,11 @@
 							<td class="text-center"><?php echo $machine['asset_control_number'] ?></td>
 							<td class="text-center"><?php echo ($machine['asset_is_pom'] == 1) ? "Yes" : "No"; ?></td>
 							<td class="text-center">
+								<a  href="machines/<?php echo  $machine['asset_id']; ?>" class="btn btn_primary btn_outlined uppercase">View</a>
+							</td>
+							<td class="text-center">
 								<a  href="machines/edit/<?php echo  $machine['asset_id']; ?>" class="btn btn_primary uppercase">Edit</a>
 							</td>
-
 							<td class="text-center">
 								<?php echo form_open('machines/delete/' . $machine['asset_id']); ?>
 								<input type="submit" name="delete_machine" value="Delete" class="btn btn_danger text-gray-300">
