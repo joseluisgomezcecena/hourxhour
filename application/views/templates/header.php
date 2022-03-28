@@ -230,7 +230,7 @@
                     <a href="<?php echo base_url(); ?>index.php/daily_report">
                         Daily Report
                     </a>
-                    <a href="#no-link">
+                    <a href="<?php echo base_url(); ?>index.php/custom_report">
                         Custom Report
                     </a>
                 </div>
