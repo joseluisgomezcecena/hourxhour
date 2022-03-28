@@ -42,7 +42,13 @@ class Machine_model extends CI_Model
 
 	public function display_single($id)
 	{
-		$query = $this->db->get_where("assets", array('asset_id' => $id));
+		//$query = $this->db->get_where("assets", array('asset_id' => $id));
+		$this->db->select ( '*' );
+		$this->db->from ( 'assets' );
+		$this->db->join ( 'sites', 'sites.site_id = assets.site_id' , 'left' );
+		$this->db->join ( 'plants', 'plants.plant_id = sites.plant_id' , 'left' );
+		$this->db->where("asset_id" , $id );
+		$query = $this->db->get();
 		return $query->row_array();
 	}
 

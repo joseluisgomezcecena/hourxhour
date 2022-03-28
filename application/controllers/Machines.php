@@ -52,6 +52,8 @@ class Machines extends CI_Controller{
 	{
 		$data['machines'] = $this->Machine_model->display_single($id);
 
+		$data['title'] = "Machine Details";
+
 		if(empty($data['machines']))
 		{
 			show_404();
