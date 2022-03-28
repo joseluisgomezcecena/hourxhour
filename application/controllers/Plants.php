@@ -1,6 +1,6 @@
 <?php
 
-include_once('application/models/Plant.php');
+
 
 class Plants extends CI_Controller{
 	public function index(){
