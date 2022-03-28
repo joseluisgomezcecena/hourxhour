@@ -31,7 +31,7 @@ CREATE TABLE `plan_by_hours` (
   `completed` int(11) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
-  `time_end` time DEFAULT NULL,
+  `time_end` datetime DEFAULT NULL,
   PRIMARY KEY (`plan_by_hour_id`),
   KEY `fk_production_plan_plan_id_plan_by_hour_idx` (`plan_id`),
   CONSTRAINT `fk_production_plan_plan_id_plan_by_hour` FOREIGN KEY (`plan_id`) REFERENCES `production_plans` (`plan_id`) ON DELETE NO ACTION ON UPDATE NO ACTION

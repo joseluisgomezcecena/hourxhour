@@ -80,12 +80,12 @@ class ProductionPlan extends CI_Model
             $now = new DateTime();
             $this->created_at = $now->format(DATETIME_FORMAT);
             $this->updated_at = $now->format(DATETIME_FORMAT);
-            $data = $this->ReadProperties();
+            //$data = $this->ReadProperties();
             //echo json_encode($data);
 
-            $this->db->insert($this->table, $data);
+            //$this->db->insert($this->table, $data);
             //Save the production plan id
-            $this->plan_id = $this->db->insert_id();
+            //$this->plan_id = $this->db->insert_id();
 
             $this->GenerateHours();
         } else
