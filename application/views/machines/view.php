@@ -80,34 +80,16 @@
 		<div class="card p-5">
 			<h3>Database details</h3>
 			<div class="accordion border border-divider rounded-xl mt-5">
-				<h5 class="p-5" data-toggle="collapse" data-target="#faqs-2">
+				<h5 class="p-5 active" data-toggle="collapse" data-target="#faqs-2">
 					Data Details
 					<span class="collapse-indicator la la-arrow-circle-down"></span>
 				</h5>
-				<div id="faqs-2" class="collapse">
+				<div id="faqs-2" class="collapse open">
 					<div class="p-5 pt-0">
-						<?php $machines['created_at'] ?>
+						Created at: <?php echo dateFormat('d/m/Y',$machines['created_at']); ?>
+						<br>
+						Last updated: <?php echo dateFormat('d/m/Y',$machines['updated_at']); ?>
 					</div>
-				</div>
-				<h5 class="border-t border-divider p-5" data-toggle="collapse"
-					data-target="#faqs-2-2">
-					We Want Potato
-					<span class="collapse-indicator la la-arrow-circle-down"></span>
-				</h5>
-				<div id="faqs-2-2" class="collapse">
-					<div class="p-5 pt-0">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Totam iure
-						rem sed dicta ut a perspiciatis temporibus! Repudiandae quidem eaque unde culpa
-						molestias neque dolores assumenda magnam, ut doloremque iste.</div>
-				</div>
-				<h5 class="border-t border-divider p-5 active" data-toggle="collapse"
-					data-target="#faqs-2-3">
-					Where To Buy Potato
-					<span class="collapse-indicator la la-arrow-circle-down"></span>
-				</h5>
-				<div id="faqs-2-3" class="collapse open">
-					<div class="p-5 pt-0">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Totam iure
-						rem sed dicta ut a perspiciatis temporibus! Repudiandae quidem eaque unde culpa
-						molestias neque dolores assumenda magnam, ut doloremque iste.</div>
 				</div>
 			</div>
 		</div>

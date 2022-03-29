@@ -85,12 +85,41 @@ class Machine_model extends CI_Model
 	}
 
 
+	public function update_machine()
+	{
+		if($this->input->post('machine_station') == '1')
+		{
+			$machine = 1;
+			$station = 0;
+		}
+		else
+		{
+			$machine = 0;
+			$station = 1;
+		}
+
+		$pom = $this->input->post('pom') == '1' ? 1 : 0;
+
+		$data = array(
+			'site_id'=> $this->input->post('site_id'),
+			'asset_name'=> $this->input->post('machine_name'),
+			'asset_control_number'=> $this->input->post('machine_control_number'),
+			'asset_work_center'=> $this->input->post('work_center'),
+			'asset_active'=> 1,
+			'asset_is_machine'=>$machine,
+			'asset_is_station'=>$station,
+			'asset_is_pom'=> $pom
+		);
+
+		$this->db->where('asset_id', $this->input->post('id'));
+		return $this->db->update('assets', $data);
+	}
+
 	public function delete_machine($id)
 	{
 		$this->db->where('asset_id', $id);
 		$this->db->delete('assets');
 		return true;
 	}
-
 
 }

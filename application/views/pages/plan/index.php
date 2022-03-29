@@ -8,7 +8,7 @@
     }
 
     .size-sm {
-        width: 5rem !important;
+        width: 6rem !important;
     }
 
     input,
@@ -37,7 +37,7 @@
                     </th>
                     <th scope="col" class="bg-[#D1FAE5]"><small>AREA:</small></th>
                     <th scope="col">
-                        <input type="text" name="" value="" ng-model="production_plan.site_name" disabled class="form-control input_invisible size-sm">
+                        <input type="text" name="" value="" ng-model="production_plan.site_name"  disabled class="form-control input_invisible size-sm">
                     </th>
                     <th scope="col" class="bg-[#D1FAE5]"><small>OUTPUT:</small></th>
                     <th scope="col">
@@ -45,11 +45,11 @@
                     </th>
                     <th scope="col" class="bg-[#D1FAE5]"><small>SHIFT:</small></th>
                     <th scope="col">
-                        <input type="text" name="shift_id" ng-model="production_plan.shift_id" class="form-control input_invisible size-sm">
+                        <input type="text" name="shift_id" ng-model="production_plan.shift_id"  class="form-control input_invisible size-sm">
                     </th>
                     <th scope="col" class="bg-[#D1FAE5]"><small>HC:</small></th>
                     <th scope="col">
-                        <input type="number" name="hc" id="" onkeyup="" ng-model="production_plan.hc" class="form-control input_invisible size-sm" />
+                        <input type="number" name="hc" id="" onkeyup=""  ng-model="production_plan.hc" ng-change="sethc()" class="form-control input_invisible size-sm" />
                     </th>
                     <th scope="col" class="bg-[#D1FAE5]"><small>DATE:</small></th>
                     <th scope="col">
@@ -92,9 +92,12 @@
                     <tr ng-repeat="plan_item in production_plan.plan_by_hours">
                         <!-- 6:00-7:00am -->
                         <th style="min-width: 7rem;" class="bg-[#D1FAE5] text-xs">{{plan_item.time | date:'hh:mm'}}-{{plan_item.time_end | date:'hh:mm'}} {{ plan_item.time.getHours() >= 12  ? 'pm' : 'am'}}</th>
+                        
                         <td id="" class="bg-[#D1FAE5]">
-                            <input type="number" name="" id="" onkeyup="" class="form-control input_invisible size-sm" />
+                           
+                            <input type="number" name="" onkeyup="" class="form-control input_invisible size-sm" ng-model="plan_item.hc"  />
                         </td>
+
                         <td>
                             <select placeholder="Select" onkeyup="" onchange="" class="form-control input_invisible size-sm" required>
                                 <option value="name">Select</option>
@@ -154,10 +157,10 @@ fetch.controller('planController', ['$scope', '$http', function ($scope, $http) 
 
 
        for(var i = 0; i < $scope.production_plan.plan_by_hours.length ;i++)
-       {
-          
+       {    
             $scope.production_plan.plan_by_hours[i].time = new Date(response.data.plan_by_hours[i].time);
             $scope.production_plan.plan_by_hours[i].time_end = new Date(response.data.plan_by_hours[i].time_end);
+            $scope.production_plan.plan_by_hours[i].hc =  $scope.production_plan.hc;
             console.log($scope.production_plan.plan_by_hours[i].time);
        }
        
@@ -166,6 +169,17 @@ fetch.controller('planController', ['$scope', '$http', function ($scope, $http) 
       // Assign response to users object
        //console.log($scope.plants);
    }); 
+  }
+
+
+  $scope.sethc = function()
+  {
+    console.log('hc: ' +  $scope.production_plan.hc)
+    for(var i = 0; i < $scope.production_plan.plan_by_hours.length ;i++)
+    {
+        $scope.production_plan.plan_by_hours[i].hc = $scope.production_plan.hc;
+        console.log('updated ' + $scope.production_plan.hc);
+    }
   }
 
 

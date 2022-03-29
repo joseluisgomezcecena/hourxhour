@@ -59,12 +59,38 @@ class Machines extends CI_Controller{
 			show_404();
 		}
 
-		//$data['title'] = $data['machines']['asset_name'];
-
 		$this->load->view('templates/header');
 		$this->load->view('machines/view', $data);
 		$this->load->view('templates/footer');
 	}
+
+
+
+
+	public function edit($id)
+	{
+		$data['title'] = "Update Asset";
+		$data['plants'] = $this->Machine_model->get_plants();
+		$data['machine'] = $this->Machine_model->display_single($id);
+
+		if(empty($data['machine']))
+		{
+			show_404();
+		}
+
+		$this->load->view('templates/header');
+		$this->load->view('machines/edit', $data);
+		$this->load->view('templates/footer');
+	}
+
+
+
+	public function update()
+	{
+		$this->Machine_model->update_machine();
+		redirect('machines');
+	}
+
 
 
 	public function delete($id)
@@ -73,16 +99,8 @@ class Machines extends CI_Controller{
 	}
 
 
-	public function edit($id)
-	{
-		$data['title'] = "Update Asset";
 
-		$data['machine'] = $this->Machine_model->edit_machine($id);
 
-		$this->load->view('templates/header');
-		$this->load->view('machines/create', $data);
-		$this->load->view('templates/footer');
-	}
 
 
 
