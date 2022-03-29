@@ -69,6 +69,51 @@ class Plant extends CI_Model {
         return $data;
     }
 
+
+
+	public function display_single_plant($id)
+	{
+		$query = $this->db->get_where($this->table, array('plant_id' => $id));
+		return $query->row_array();
+	}
+
+
+
+
+	public function save()
+	{
+		$data = array(
+			'plant_name'=> $this->input->post('plant_name'),
+			'plant_use_password'=> $this->input->post('plant_use_password'),
+			'plant_password'=> $this->input->post('plant_password'),
+			'plant_active'=> 1,
+		);
+
+		return $this->db->insert($this->table, $data);
+
+	}
+
+
+
+
+	public function update()
+	{
+		$data = array(
+			'plant_name'=> $this->input->post('plant_name'),
+			'plant_use_password'=> $this->input->post('plant_use_password'),
+			'plant_password'=> $this->input->post('plant_password'),
+			'plant_active'=> 1,
+		);
+
+		$this->db->where('plant_id', $this->input->post('id'));
+		return $this->db->update($this->table, $data);
+
+	}
+
+
+
+
+	/*
     public function Save()
     {
         $result = true;
@@ -95,6 +140,7 @@ class Plant extends CI_Model {
 
         return $result;
     }
+	*/
 
 
     public function Delete()

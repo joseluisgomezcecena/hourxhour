@@ -54,6 +54,8 @@ class Machine_model extends CI_Model
 
 
 
+
+
 	public function create_machine()
 	{
 		if($this->input->post('machine_station') == '1')
@@ -85,6 +87,9 @@ class Machine_model extends CI_Model
 	}
 
 
+
+
+
 	public function update_machine()
 	{
 		if($this->input->post('machine_station') == '1')
@@ -114,6 +119,10 @@ class Machine_model extends CI_Model
 		$this->db->where('asset_id', $this->input->post('id'));
 		return $this->db->update('assets', $data);
 	}
+
+
+
+
 
 	public function delete_machine($id)
 	{

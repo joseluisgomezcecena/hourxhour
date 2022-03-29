@@ -79,6 +79,7 @@ $route['assets'] = '/assets';
 //plants
 $route['plants'] = '/plants/index';
 $route['plants/create'] = '/plants/create';
+$route['plants/edit/(:any)'] = '/plants/edit/$1';
 //sites
 $route['sites'] = '/sites/index';
 $route['sites/create'] = '/sites/create';

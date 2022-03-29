@@ -41,8 +41,8 @@
 								<td class="text-center"><?php if($plant['plant_use_password'] == 1) {echo "Password Protected";}else{echo "Not Protected";} ?></td>
 								<td class="text-center">
 									<div class="btn-group">
-										<button type="button" class="btn btn_warning uppercase"><span class="icon las la-edit la-2x"></span></button>
-										<button type="button" class="btn btn_danger uppercase"><span class="icon las la-trash la-2x"></span></button>
+										<a href="plants/edit/<?php echo $plant['plant_id'] ?>" class="btn btn_warning uppercase"><span class="icon las la-edit la-2x"></span></a>
+										<a href="" class="btn btn_danger uppercase"><span class="icon las la-trash la-2x"></span></a>
 									</div>
 								</td>
 
