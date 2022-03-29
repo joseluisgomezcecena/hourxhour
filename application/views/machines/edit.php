@@ -76,7 +76,7 @@
 							<select name="machine_station" class="form-control" required>
 								<option value="">Select</option>
 								<option <?php if($machine['asset_is_machine'] == '1'){echo "selected";}else{echo "";} ?> value="1"> Molding</option>
-								<option <?php if($machine['asset_is_station'] == '0'){echo"selected";}else{echo "";} ?> value="0"> Assembly</option>
+								<option <?php if($machine['asset_is_station'] == '1'){echo"selected";}else{echo "";} ?> value="0"> Assembly</option>
 							</select>
 							<div class="custom-select-icon la la-caret-down"></div>
 						</div>
