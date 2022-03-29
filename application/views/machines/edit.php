@@ -33,7 +33,7 @@
 				<div class="lg:col-span-2 xl:col-span-2">
 					<label class="label block mb-2" for="site_id">Select Site or Cell:</label>
 					<select class="form-control"  id="site_id"  name="site_id" required>
-
+						<option value="<?php echo $machine['site_id']; ?>"><?php echo $machine['site_name']; ?></option>
 					</select>
 				</div>
 				<div class="lg:col-span-1 xl:col-span-2">

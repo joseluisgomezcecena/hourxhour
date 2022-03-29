@@ -6,6 +6,9 @@ class Plants extends CI_Controller{
 	public function index(){
 
 		$data['title'] = "Plants";
+
+		$data['plants'] = $this->Plant->getAllActive();
+
 		$this->load->view('templates/header');
 		$this->load->view('pages/andon/plants/index', $data);
 		$this->load->view('templates/footer');

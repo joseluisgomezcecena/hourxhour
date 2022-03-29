@@ -1,7 +1,7 @@
 <?php
 
 
-class Plant extends cI_Model {
+class Plant extends CI_Model {
 
     protected $table = 'plants';
 
