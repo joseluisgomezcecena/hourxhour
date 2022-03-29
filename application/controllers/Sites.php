@@ -4,6 +4,9 @@ class Sites extends CI_Controller{
 	public function index(){
 
 		$data['title'] = "Sites";
+
+		$data['sites'] = $this->Site->getAll();
+
 		$this->load->view('templates/header');
 		$this->load->view('pages/andon/sites/index', $data);
 		$this->load->view('templates/footer');

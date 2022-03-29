@@ -1,6 +1,6 @@
 <?php
 
-class Site_Model extends Base_Model{
+class Site extends CI_Model {
 
     protected $table = 'site';
     
@@ -37,6 +37,12 @@ class Site_Model extends Base_Model{
         $data['plant_id'] = $this->plant_id;
         return $data;
     }
+
+	public function getAll()
+	{
+		$query = $this->db->get('sites');
+		return $query->result_array();
+	}
 
     public function Save()
     {
