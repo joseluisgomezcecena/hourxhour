@@ -94,15 +94,13 @@
                         <th style="min-width: 7rem;" class="bg-[#D1FAE5] text-xs">{{plan_item.time | date:'hh:mm'}}-{{plan_item.time_end | date:'hh:mm'}} {{ plan_item.time.getHours() >= 12  ? 'pm' : 'am'}}</th>
                         
                         <td id="" class="bg-[#D1FAE5]">
-                           
-                            <input type="number" name="" onkeyup="" class="form-control input_invisible size-sm" ng-model="plan_item.hc"  />
+                            <input type="number" type="text" name="" onkeyup="" class="form-control input_invisible size-sm" ng-model="plan_item.hc" />                        
                         </td>
 
                         <td>
-                            <select placeholder="Select" onkeyup="" onchange="" class="form-control input_invisible size-sm" required>
-                                <option value="name">Select</option>
-                            </select>
+                            <input placeholder="Select" type="text"  onkeyup="" onchange="" class="form-control input_invisible size-sm" list="dl_items" required/>
                         </td>
+                        
                         <td><input type="text" name="" value="" class="form-control input_invisible size-sm"></td>
                         <td id=""><input type="text" onkeyup="" name="" class="form-control input_invisible size-sm" /></td>
                         <td id="" name="" class="bg-[#D1FAE5] form-control size-sm">0</td>
@@ -116,6 +114,10 @@
                         <td class="bg-[#D1FAE5] form-control size-sm" id=""><input class="size-sm" type="text" name="" id="" disabled="true"></td>
                     </tr>
 
+                    <datalist id="dl_items">
+                        <option ng-repeat="item in items"  value="{{ item.item_number }}">
+                    </datalist>
+
                 </tbody>
             </table>
             <div class="flex justify-end mt-5">
@@ -125,6 +127,9 @@
                 </button>
             </div>
         </div>
+
+
+
     </form>
 </section>
 
@@ -132,17 +137,20 @@
 var fetch = angular.module('plannerApp', []);
 fetch.controller('planController', ['$scope', '$http', function ($scope, $http) {
 
+    //El plan de produccion
    $scope.production_plan = null;
+   
+   //La lista de items (item_number, etc..)
+   $scope.items = null;
    
   $scope.init = function(asset_id, shift_id, date)
   {
     $scope.shift_id = shift_id;
     $scope.asset_id = asset_id;
     $scope.date = date;
-
-    console.log('date ' + $scope.date);
-
     $scope.getPlan();
+
+    $scope.getItems();
   } 
 
   $scope.getPlan = function(){
@@ -164,12 +172,20 @@ fetch.controller('planController', ['$scope', '$http', function ($scope, $http) 
             console.log($scope.production_plan.plan_by_hours[i].time);
        }
        
-
-       console.log(response);   
-      // Assign response to users object
-       //console.log($scope.plants);
    }); 
   }
+
+  $scope.getItems = function()
+  {
+    $http({
+    method: 'get',
+    url: '<?= base_url() ?>index.php/api/items/get',
+   }).then(function successCallback(response) {
+       //console.log(response.data);
+       $scope.items = response.data.items;       
+   }); 
+  }
+
 
 
   $scope.sethc = function()
@@ -178,7 +194,6 @@ fetch.controller('planController', ['$scope', '$http', function ($scope, $http) 
     for(var i = 0; i < $scope.production_plan.plan_by_hours.length ;i++)
     {
         $scope.production_plan.plan_by_hours[i].hc = $scope.production_plan.hc;
-        console.log('updated ' + $scope.production_plan.hc);
     }
   }
 

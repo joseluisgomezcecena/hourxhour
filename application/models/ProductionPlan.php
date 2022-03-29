@@ -97,15 +97,15 @@ class ProductionPlan extends CI_Model
             $this->supervisor_id = NULL;
             $this->hc = 1;
             
-            //$now = new DateTime();
-            //$this->created_at = $now->format(DATETIME_FORMAT);
-            //$this->updated_at = $now->format(DATETIME_FORMAT);
-            //$data = $this->ReadProperties();
+            $now = new DateTime();
+            $this->created_at = $now->format(DATETIME_FORMAT);
+            $this->updated_at = $now->format(DATETIME_FORMAT);
+            $data = $this->ReadProperties();
             //echo json_encode($data);
 
-            //$this->db->insert($this->table, $data);
+            $this->db->insert($this->table, $data);
             //Save the production plan id
-            //$this->plan_id = $this->db->insert_id();
+            $this->plan_id = $this->db->insert_id();
 
             $this->GenerateHours();
         } else
@@ -204,14 +204,14 @@ class ProductionPlan extends CI_Model
             $date_end = new DateTime();
             $date_end->setTimeStamp( ($m + $interval_in_milliseconds ) / 1000);
             
-            //$plan_by_hour['plan_id'] = $this->plan_id;
+            $plan_by_hour['plan_id'] = $this->plan_id;
             
             $plan_by_hour['time'] = $date->format(DATETIME_FORMAT);
             $plan_by_hour['time_end'] = $date_end->format(DATETIME_FORMAT);
 
             $plan_by_hour['created_at'] = $this->created_at;
             $plan_by_hour['updated_at'] = $this->created_at;
-            //$this->db->insert($this->table_hours, $plan_by_hour);
+            $this->db->insert($this->table_hours, $plan_by_hour);
 
             array_push($this->plan_by_hours, $plan_by_hour); 
             

@@ -16,6 +16,7 @@ class Plan extends CI_Controller
 
     public function index()
     {
+        
 		//necesitamos la fecha de hoy, el shift_id y el asset_id
 		$now = new DateTime();
 
@@ -23,7 +24,7 @@ class Plan extends CI_Controller
 		$data['asset_id'] = $asset_id = $this->input->get('asset_id');
 
 		$data['shift_id'] = $this->shift->getIdFromCurrentTime( $now );
-		$data['date'] = $date = $now->format(DATE_FORMAT);;
+		$data['date'] = $date = $now->format(DATE_FORMAT);
 
    
 		$this->load->view('templates/header');
@@ -44,6 +45,15 @@ class Plan extends CI_Controller
 		$data = $this->productionplan->LoadPlan($asset_id, $date, $shift_id, $this->shift->shift_start_time, $this->shift->shift_end_time);
 		echo json_encode($this->productionplan);
 	}
+
+
+    public function api_get_items()
+    {
+        //SELECT item_id, item_number, max( CAST(item_pph AS DECIMAL(10,2)) ) as pph FROM plan_hourxhour.items_pph GROUP BY item_number ORDER BY item_number;
+        $query = $this->db->query('SELECT item_id, item_number, max( CAST(item_pph AS DECIMAL(10,2)) ) as item_pph FROM plan_hourxhour.items_pph GROUP BY item_number ORDER BY item_number');
+        $data['items'] =   $query->result_array();
+        echo json_encode($data);
+    }
 
 
 	public function test()
