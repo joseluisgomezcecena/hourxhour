@@ -70,7 +70,7 @@ class Machines extends CI_Controller{
 	public function edit($id)
 	{
 		$data['title'] = "Update Asset";
-
+		$data['plants'] = $this->Machine_model->get_plants();
 		$data['machine'] = $this->Machine_model->display_single($id);
 
 		if(empty($data['machine']))
@@ -81,6 +81,14 @@ class Machines extends CI_Controller{
 		$this->load->view('templates/header');
 		$this->load->view('machines/edit', $data);
 		$this->load->view('templates/footer');
+	}
+
+
+
+	public function update()
+	{
+		$this->Machine_model->update_machine();
+		redirect('machines');
 	}
 
 

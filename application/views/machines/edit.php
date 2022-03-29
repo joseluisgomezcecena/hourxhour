@@ -11,7 +11,8 @@
 
 <?php echo validation_errors(); ?>
 
-<?php echo form_open('machines/create') ?>
+<?php echo form_open('machines/update') ?>
+<input type="hidden" name="id" value="<?php echo $machine['asset_id']; ?>">
 <div class="grid lg:grid-cols-4 gap-5">
 
 	<!-- Content -->
@@ -25,7 +26,7 @@
 					<select class="form-control"  id="plant_id"  name="plant_id" required>
 						<option value="">Select Option</option>
 						<?php foreach ($plants as $plant): ?>
-							<option value="<?php echo $plant["plant_id"] ?>"><?php echo $plant["plant_name"] ?></option>
+							<option <?php if($machine['plant_id']==$plant["plant_id"]){echo "selected";}else{echo "";} ?> value="<?php echo $plant["plant_id"] ?>"><?php echo $plant["plant_name"] ?></option>
 						<?php endforeach; ?>
 					</select>
 				</div>
@@ -70,10 +71,12 @@
 						<label class="label block">Category</label>
 					</div>
 					<div class="w-3/4 ml-2">
+
 						<div class="custom-select">
-							<select name="machine_station" class="form-control">
-								<option <?php if($machine['asset_is_machine']==1){echo"selected";}else{echo "";} ?> value="1">Molding</option>
-								<option <?php if($machine['asset_is_station']==0){echo"selected";}else{echo "";} ?> value="0">Assembly</option>
+							<select name="machine_station" class="form-control" required>
+								<option value="">Select</option>
+								<option <?php if($machine['asset_is_machine'] == '1'){echo "selected";}else{echo "";} ?> value="1"> Molding</option>
+								<option <?php if($machine['asset_is_station'] == '0'){echo"selected";}else{echo "";} ?> value="0"> Assembly</option>
 							</select>
 							<div class="custom-select-icon la la-caret-down"></div>
 						</div>

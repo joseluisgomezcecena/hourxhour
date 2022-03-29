@@ -61,6 +61,7 @@ $route['posts'] = 'posts/index';
 
 $route['machines'] = 'machines/index';
 $route['machines/create'] = 'machines/create';
+$route['machines/update'] = 'machines/update';
 $route['machines/(:any)'] = 'machines/view/$1';
 $route['machines/edit/(:any)'] = 'machines/edit/$1';
 
