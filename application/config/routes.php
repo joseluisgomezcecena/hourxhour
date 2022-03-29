@@ -94,6 +94,8 @@ $route['measuring_point'] = '/measuring_point/index';
 $route['manual_capture'] = '/manual_capture/index';
 //trigger
 $route['trigger'] = '/trigger/index';
+//trigger
+$route['login'] = '/login/index';
 //button_tablet
 $route['button_tablet'] = '/button_tablet';
 //test for Angular
