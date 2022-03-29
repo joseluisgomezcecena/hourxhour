@@ -56,12 +56,9 @@ $route['machines/(:any)'] = 'machines/view/$1';
 $route['default_controller'] = 'pages/view';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
-
 //Plan
 $route['planners'] = 'plan/index';
-
 $route['api/plan/get'] = 'plan/api_get_plan';
-
 $route['planners/test'] = 'plan/test';
 $route['cell'] = 'plan/select_cell';
 $route['measuring_point'] = 'plan/select_measuring_point';
@@ -84,14 +81,10 @@ $route['custom_report'] = 'reports/custom_report';
 $route['measuring_point'] = '/measuring_point/index';
 //manual_capture
 $route['manual_capture'] = '/manual_capture/index';
-
-
-$route['test/plant/'] = 'testscontroller/plant_index';
-$route['test/plant/show'] = 'testscontroller/plant_show';
-$route['test/plant/create'] = 'testscontroller/plant_create';
-$route['test/plant/update'] = 'testscontroller/plant_update';
-$route['test/plant/delete'] = 'testscontroller/plant_delete';
-
+//trigger
+$route['trigger'] = '/trigger/index';
+//button_tablet
+$route['button_tablet'] = '/button_tablet';
 //test for Angular
 $route['test/angular'] = 'testscontroller/test_angular';
 $route['api/plants/all'] = 'plants/api_all';
