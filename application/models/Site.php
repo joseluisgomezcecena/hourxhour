@@ -40,10 +40,32 @@ class Site extends CI_Model {
 
 	public function getAll()
 	{
-		$query = $this->db->get('sites');
+		$this->db->select ( '*' );
+		$this->db->from ( 'sites' );
+		$this->db->join ( 'plants', 'plants.plant_id = sites.plant_id' , 'left' );
+		$query = $this->db->get();
 		return $query->result_array();
 	}
 
+	public function getSingle($id)
+	{
+		$query = $this->db->get_where("sites", array('site_id' => $id));
+		return $query->row_array();
+	}
+
+
+	public function create()
+	{
+		$data = array(
+			'plant_id'=> $this->input->post('plant_id'),
+			'site_name'=> $this->input->post('site_name'),
+		);
+
+		return $this->db->insert("sites", $data);
+
+	}
+
+	/*
     public function Save()
     {
         $now        = date("Y-m-d H:i:s");
@@ -61,6 +83,7 @@ class Site extends CI_Model {
             $this->updateData( $data, ['id' => $this->id] );
         }
     }
+	*/
 
 
     public function Delete()

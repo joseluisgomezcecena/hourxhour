@@ -83,6 +83,7 @@ $route['plants/edit/(:any)'] = '/plants/edit/$1';
 //sites
 $route['sites'] = '/sites/index';
 $route['sites/create'] = '/sites/create';
+$route['sites/edit/(:any)'] = '/sites/edit/$1';
 //machines
 $route['machines'] = '/machines';
 //andon
