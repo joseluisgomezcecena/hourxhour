@@ -96,7 +96,7 @@
                         
                         <!-- HC -->
                         <td id="" class="bg-[#D1FAE5]">
-                            <input type="number" min="1" type="text" name="" onkeyup="" class="form-control input_invisible size-sm" ng-model="plan_item.hc" />                        
+                            <input type="number" min="1" type="text" name="" onkeyup="" class="form-control input_invisible size-sm" ng-model="plan_item.hc" ng-change="hc_changed(plan_item)" />                        
                         </td>
 
                         <!-- ITEM NUMBER -->
@@ -108,11 +108,13 @@
                         <td><input type="text" name="" ng-model="plan_item.workorder" class="form-control input_invisible size-sm"></td>
 
                         <!-- PLAN BY HOUR -->
-                        <td id=""><input type="text" onkeyup=""  ng-model="plan_item.planned" class="form-control input_invisible size-sm" /></td>
+                        <td id=""><input type="number" min="0" onkeyup=""  ng-model="plan_item.planned" ng-change="planned_changed(plan_item)" class="form-control input_invisible size-sm" /></td>
 
 
                         <!-- CUM PLAN -->
-                        <td id="" name="" class="bg-[#D1FAE5] form-control size-sm">0</td>
+                        <td id="" name="" class="bg-[#D1FAE5] form-control size-sm"   >
+                            <input type="number" min="0" ng-model="plan_item.planned_acum" class="form-control input_invisible size-sm" disabled>
+                        </td>
 
                         <!-- PLANNED INTERRUPTION -->
                         <td>
@@ -130,7 +132,9 @@
                         </td>
                         
                            <!-- CALCULATED QTY BY HR -->
-                        <td class="bg-[#D1FAE5] form-control size-sm" id=""><input class="size-sm" type="text" name="" id="" disabled="true"></td>
+                        <td class="bg-[#D1FAE5] form-control size-sm" id="">
+                            <input class="size-sm" type="text" name="" id="" disabled="true" ng-model="plan_item.formula" >
+                        </td>
                     </tr>
 
                     <datalist id="dl_items">
@@ -191,9 +195,13 @@ fetch.controller('planController', ['$scope', '$http', function ($scope, $http) 
             $scope.production_plan.plan_by_hours[i].time = new Date(response.data.plan_by_hours[i].time);
             $scope.production_plan.plan_by_hours[i].time_end = new Date(response.data.plan_by_hours[i].time_end);
             $scope.production_plan.plan_by_hours[i].hc =  $scope.production_plan.hc;
-            console.log($scope.production_plan.plan_by_hours[i].time);
+
+            $scope.production_plan.plan_by_hours[i].planned = undefined;
+            $scope.production_plan.plan_by_hours[i].planned_acum = undefined;
+           
        }
        
+       console.log($scope.production_plan);
    }); 
   }
 
@@ -222,20 +230,13 @@ fetch.controller('planController', ['$scope', '$http', function ($scope, $http) 
   }
 
 
-
-
   $scope.sethc = function()
   {
     console.log('hc: ' +  $scope.production_plan.hc)
     for(var i = 0; i < $scope.production_plan.plan_by_hours.length ;i++)
     {
         $scope.production_plan.plan_by_hours[i].hc = $scope.production_plan.hc;
-        
-        //Calculate formula
-        //$scope.calculate_formula( $scope.production_plan.plan_by_hours[i] );
     }
-
-
   }
 
   $scope.partnumber_changed = function(plan_item) 
@@ -244,23 +245,59 @@ fetch.controller('planController', ['$scope', '$http', function ($scope, $http) 
         return item.item_number === plan_item.item_number;
     })[0];
 
-    if(found) {
-        console.log(plan_item);
+    if(found) {    
         plan_item.item_id = found.item_id;
         plan_item.std_time = parseFloat(found.item_run_labor);
+        $scope.calculate_formula(plan_item);
     }  
   }
+
+
+  $scope.planned_changed = function(plan_item) 
+  {
+
+    $scope.calculate_formula(plan_item);
+
+    var index = $scope.production_plan.plan_by_hours.indexOf(plan_item);
+    var count = $scope.production_plan.plan_by_hours.length;
+
+    var total = 0;
+    for (let i = 0; i < count; i++) {
+        //$scope.production_plan.plan_by_hours[i].planned_acum = $scope.production_plan.plan_by_hours[i].planned;
+        total +=  $scope.production_plan.plan_by_hours[i].planned;
+        $scope.production_plan.plan_by_hours[i].planned_acum = total;
+    }
+
+  }
+
+  $scope.hc_changed = function(plan_item) 
+  {
+    $scope.calculate_formula(plan_item);
+  }
+
 
   $scope.interruption_changed = function(plan_item) 
   {
     plan_item.interruption_id = plan_item.selected_interruption.interruption_id;
     plan_item.less_time = parseFloat(plan_item.selected_interruption.interruption_time);
-    console.log(plan_item);
   }
 
 
   $scope.calculate_formula = function(plan_item)
-  {
+  { 
+    console.log("calculate formula....")
+    console.log(plan_item);
+
+    if(plan_item.planned == undefined||plan_item.std_time == undefined)
+    {
+        plan_item.formula = undefined;
+    }
+     else
+    {
+        plan_item.formula = parseFloat((plan_item.hc - (plan_item.less_time == undefined ? 0 : plan_item.less_time) ) / plan_item.std_time).toFixed(2);
+    }
+         
+    
 
   }
 
