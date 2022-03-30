@@ -87,3 +87,8 @@ defined('EXIT__AUTO_MAX')      OR define('EXIT__AUTO_MAX', 125); // highest auto
 defined('DATETIME_FORMAT')      OR define('DATETIME_FORMAT', 'Y-m-d H:i:s');
 defined('DATE_FORMAT')      OR define('DATE_FORMAT', 'Y-m-d');
 
+
+defined('CAPTURE_MANUAL')      OR define('CAPTURE_MANUAL', 0);
+defined('CAPTURE_SENSOR')      OR define('CAPTURE_SENSOR', 1);
+defined('CAPTURE_BUTTON')      OR define('CAPTURE_BUTTON', 2);
+

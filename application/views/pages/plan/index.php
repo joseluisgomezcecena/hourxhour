@@ -93,29 +93,45 @@
                         <!-- 6:00-7:00am -->
                         <th style="min-width: 7rem;" class="bg-[#D1FAE5] text-xs">{{plan_item.time | date:'hh:mm'}}-{{plan_item.time_end | date:'hh:mm'}} {{ plan_item.time.getHours() >= 12  ? 'pm' : 'am'}}</th>
                         
+                        <!-- HC -->
                         <td id="" class="bg-[#D1FAE5]">
                             <input type="number" type="text" name="" onkeyup="" class="form-control input_invisible size-sm" ng-model="plan_item.hc" />                        
                         </td>
 
+                        <!-- ITEM NUMBER -->
                         <td>
-                            <input placeholder="Select" type="text"  onkeyup="" onchange="" class="form-control input_invisible size-sm" list="dl_items" required/>
+                            <input placeholder="Select" type="text" ng-model="plan_item.item_number" ng-change="partnumber_changed(plan_item)"  class="form-control input_invisible size-sm" list="dl_items" required/>
                         </td>
                         
-                        <td><input type="text" name="" value="" class="form-control input_invisible size-sm"></td>
-                        <td id=""><input type="text" onkeyup="" name="" class="form-control input_invisible size-sm" /></td>
+                        <!-- WORKORDER  -->
+                        <td><input type="text" name="" ng-model="plan_item.workorder" class="form-control input_invisible size-sm"></td>
+
+                        <!-- PLAN BY HOUR -->
+                        <td id=""><input type="text" onkeyup=""  ng-model="plan_item.planned" class="form-control input_invisible size-sm" /></td>
+
+
+                        <!-- CUM PLAN -->
                         <td id="" name="" class="bg-[#D1FAE5] form-control size-sm">0</td>
+
+                        <!-- PLANNED INTERRUPTION -->
                         <td>
                             <select placeholder="Select" onkeyup="" onchange="" class="form-control input_invisible size-sm" required>
                                 <option value="name">Select</option>
                             </select>
                         </td>
+
+                           <!-- LESS TIME -->
                         <td class="bg-[#D1FAE5] form-control size-sm" id=""><input class="size-sm" type="text" name="" id="" disabled="true"></td>
+                        
+                           <!-- STD TIME -->
                         <td class="bg-[#D1FAE5] form-control size-sm" id=""><input class="size-sm" type="text" name="" id="" disabled="true"></td>
+                        
+                           <!-- CALCULATED QTY BY HR -->
                         <td class="bg-[#D1FAE5] form-control size-sm" id=""><input class="size-sm" type="text" name="" id="" disabled="true"></td>
                     </tr>
 
                     <datalist id="dl_items">
-                        <option ng-repeat="item in items"  value="{{ item.item_number }}">
+                        <option  ng-repeat='item in items' value="{{item.item_number}}"></option>
                     </datalist>
 
                 </tbody>
@@ -195,6 +211,16 @@ fetch.controller('planController', ['$scope', '$http', function ($scope, $http) 
     {
         $scope.production_plan.plan_by_hours[i].hc = $scope.production_plan.hc;
     }
+  }
+
+  $scope.partnumber_changed = function(plan_item) 
+  {
+    var found = $scope.items.filter(function(item) {
+        return item.item_number === plan_item.item_number;
+    })[0];
+
+    if(found) plan_item.item_id = found.item_id;  
+
   }
 
 

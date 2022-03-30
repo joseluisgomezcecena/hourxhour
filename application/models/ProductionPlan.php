@@ -116,10 +116,6 @@ class ProductionPlan extends CI_Model
             $this->LoadHours();
         }
 
-
-
-        
-
         //echo json_encode($this);
         
     }
