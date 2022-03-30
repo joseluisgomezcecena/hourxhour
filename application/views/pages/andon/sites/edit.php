@@ -15,6 +15,7 @@
 
 		<?php echo form_open('sites/update') ?>
 
+		<input type="hidden" name="id" value="<?php echo $site['site_id'] ?>"  />
 		<div class="grid lg:grid-cols-4 gap-5">
 			<div class="lg:col-span-2 xl:col-span-2">
 				<label class="label block mb-2" for="plant_id">Select Plant:</label>

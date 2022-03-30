@@ -58,6 +58,18 @@ class Sites extends CI_Controller{
 	}
 
 
+
+
+
+	public function update()
+	{
+		$this->Site->update();
+		redirect('sites');
+
+	}
+
+
+
 	public function api_all_by_plant($plant_id)
 	{
 		$this->load->database();

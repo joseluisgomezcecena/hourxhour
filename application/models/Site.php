@@ -65,6 +65,17 @@ class Site extends CI_Model {
 
 	}
 
+	public function update()
+	{
+		$data = array(
+			'plant_id'=> $this->input->post('plant_id'),
+			'site_name'=> $this->input->post('site_name'),
+		);
+
+		$this->db->where('site_id', $this->input->post('id'));
+		return $this->db->update("sites", $data);
+
+	}
 	/*
     public function Save()
     {
