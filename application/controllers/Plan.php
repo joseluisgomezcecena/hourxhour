@@ -50,8 +50,16 @@ class Plan extends CI_Controller
     public function api_get_items()
     {
         //SELECT item_id, item_number, max( CAST(item_pph AS DECIMAL(10,2)) ) as pph FROM plan_hourxhour.items_pph GROUP BY item_number ORDER BY item_number;
-        $query = $this->db->query('SELECT item_id, item_number, max( CAST(item_pph AS DECIMAL(10,2)) ) as item_pph FROM plan_hourxhour.items_pph GROUP BY item_number ORDER BY item_number');
+        $query = $this->db->query('SELECT item_id, item_number, max( CAST(item_pph AS DECIMAL(10,2)) ) as item_pph, item_run_labor, item_pph FROM plan_hourxhour.items_pph GROUP BY item_number ORDER BY item_number');
         $data['items'] =   $query->result_array();
+        echo json_encode($data);
+    }
+
+
+    public function api_get_interruptions()
+    {
+        $query = $this->db->query('SELECT * FROM interruptions');
+        $data['interruptions'] =   $query->result_array();
         echo json_encode($data);
     }
 

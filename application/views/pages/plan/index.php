@@ -14,6 +14,7 @@
     input,
     select {
         background-color: transparent;
+        text-align: center;
         border: transparent;
         color: black;
     }
@@ -49,7 +50,7 @@
                     </th>
                     <th scope="col" class="bg-[#D1FAE5]"><small>HC:</small></th>
                     <th scope="col">
-                        <input type="number" name="hc" id="" onkeyup=""  ng-model="production_plan.hc" ng-change="sethc()" class="form-control input_invisible size-sm" />
+                        <input type="number" min="1" name="hc" id="" onkeyup=""  ng-model="production_plan.hc" ng-change="sethc()" class="form-control input_invisible size-sm" />
                     </th>
                     <th scope="col" class="bg-[#D1FAE5]"><small>DATE:</small></th>
                     <th scope="col">
@@ -86,7 +87,7 @@
                         </th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="text-center">
 
 
                     <tr ng-repeat="plan_item in production_plan.plan_by_hours">
@@ -95,7 +96,7 @@
                         
                         <!-- HC -->
                         <td id="" class="bg-[#D1FAE5]">
-                            <input type="number" type="text" name="" onkeyup="" class="form-control input_invisible size-sm" ng-model="plan_item.hc" />                        
+                            <input type="number" min="1" type="text" name="" onkeyup="" class="form-control input_invisible size-sm" ng-model="plan_item.hc" />                        
                         </td>
 
                         <!-- ITEM NUMBER -->
@@ -115,16 +116,18 @@
 
                         <!-- PLANNED INTERRUPTION -->
                         <td>
-                            <select placeholder="Select" onkeyup="" onchange="" class="form-control input_invisible size-sm" required>
-                                <option value="name">Select</option>
-                            </select>
+                            <select ng-model="plan_item.selected_interruption" ng-change="interruption_changed(plan_item)"  ng-options="interruption as interruption.interruption_name for interruption in interruptions"></select>
                         </td>
 
                            <!-- LESS TIME -->
-                        <td class="bg-[#D1FAE5] form-control size-sm" id=""><input class="size-sm" type="text" name="" id="" disabled="true"></td>
+                        <td class="bg-[#D1FAE5] form-control size-sm" id="">
+                            <input class="size-sm" type="number" ng-model="plan_item.less_time" name="" id="" disabled="true">
+                        </td>
                         
                            <!-- STD TIME -->
-                        <td class="bg-[#D1FAE5] form-control size-sm" id=""><input class="size-sm" type="text" name="" id="" disabled="true"></td>
+                        <td class="bg-[#D1FAE5] form-control size-sm"  id="">
+                            <input class="size-sm" type="number" name="" id="" ng-model="plan_item.std_time" disabled="true">
+                        </td>
                         
                            <!-- CALCULATED QTY BY HR -->
                         <td class="bg-[#D1FAE5] form-control size-sm" id=""><input class="size-sm" type="text" name="" id="" disabled="true"></td>
@@ -158,6 +161,9 @@ fetch.controller('planController', ['$scope', '$http', function ($scope, $http) 
    
    //La lista de items (item_number, etc..)
    $scope.items = null;
+
+   //Lista de interrupciones
+   $scope.interruptions = null;
    
   $scope.init = function(asset_id, shift_id, date)
   {
@@ -167,6 +173,7 @@ fetch.controller('planController', ['$scope', '$http', function ($scope, $http) 
     $scope.getPlan();
 
     $scope.getItems();
+    $scope.getInterruptions();
   } 
 
   $scope.getPlan = function(){
@@ -178,7 +185,6 @@ fetch.controller('planController', ['$scope', '$http', function ($scope, $http) 
 
        $scope.production_plan = response.data;
        $scope.production_plan.date = new Date(response.data.date);
-
 
        for(var i = 0; i < $scope.production_plan.plan_by_hours.length ;i++)
        {    
@@ -203,6 +209,20 @@ fetch.controller('planController', ['$scope', '$http', function ($scope, $http) 
   }
 
 
+  
+  $scope.getInterruptions = function()
+  {
+    $http({
+    method: 'get',
+    url: '<?= base_url() ?>index.php/api/interruptions/get',
+   }).then(function successCallback(response) {
+       $scope.interruptions = response.data.interruptions;
+        console.log($scope.interruptions );  
+   }); 
+  }
+
+
+
 
   $scope.sethc = function()
   {
@@ -210,7 +230,12 @@ fetch.controller('planController', ['$scope', '$http', function ($scope, $http) 
     for(var i = 0; i < $scope.production_plan.plan_by_hours.length ;i++)
     {
         $scope.production_plan.plan_by_hours[i].hc = $scope.production_plan.hc;
+        
+        //Calculate formula
+        //$scope.calculate_formula( $scope.production_plan.plan_by_hours[i] );
     }
+
+
   }
 
   $scope.partnumber_changed = function(plan_item) 
@@ -219,10 +244,25 @@ fetch.controller('planController', ['$scope', '$http', function ($scope, $http) 
         return item.item_number === plan_item.item_number;
     })[0];
 
-    if(found) plan_item.item_id = found.item_id;  
-
+    if(found) {
+        console.log(plan_item);
+        plan_item.item_id = found.item_id;
+        plan_item.std_time = parseFloat(found.item_run_labor);
+    }  
   }
 
+  $scope.interruption_changed = function(plan_item) 
+  {
+    plan_item.interruption_id = plan_item.selected_interruption.interruption_id;
+    plan_item.less_time = parseFloat(plan_item.selected_interruption.interruption_time);
+    console.log(plan_item);
+  }
+
+
+  $scope.calculate_formula = function(plan_item)
+  {
+
+  }
 
    //este es al cargar
   $scope.init(<?php echo $asset_id . ", " . $shift_id . ", '" . $date . "'" ?>);
