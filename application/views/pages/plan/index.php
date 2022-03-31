@@ -341,6 +341,8 @@ fetch.controller('planController', ['$scope', '$http', function ($scope, $http) 
     $http.post(url, data, config).then(function (response) {
         
         console.log(response);
+        swal("Good job!", "The plan has been saved.", "success");
+
         
     }, function (response) {
 
