@@ -30,8 +30,14 @@ class ProductionPlan extends CI_Model
 
     public $hc;
 
+    public $use_multiplier_factor;
+    public $multiplier_factor;
+
+
     public $plan_by_hours = array();
+
     
+
     protected $start_hour = '23:00:00';
     protected $end_hour = '04:00:00';
 
@@ -98,32 +104,23 @@ class ProductionPlan extends CI_Model
             $this->shift_id = $shift_id;
             $this->supervisor_id = NULL;
             $this->hc = 1;
-            
-            //$now = new DateTime();
-            //$this->created_at = $now->format(DATETIME_FORMAT);
-            //$this->updated_at = $now->format(DATETIME_FORMAT);
-            //$data = $this->ReadProperties();
-            //echo json_encode($data);
 
-            //$this->db->insert($this->table, $data);
-            //Save the production plan id
-            //$this->plan_id = $this->db->insert_id();
+            $this->use_multiplier_factor = false;
+            $this->multiplier_factor = NULL;
+
 
             $this->GenerateHours();
         } else
         {
-            //echo "debug 02";
+   
 
             $row = $data[0];
             $this->LoadProperties($row);
             //$this->plan_id = $row['plan_id'];
             $this->LoadHours();
         }
-
-        //echo json_encode($this);
-        
+         
     }
-
 
 
     public function LoadProperties($row)
@@ -151,6 +148,9 @@ class ProductionPlan extends CI_Model
         $this->supervisor_id= intval( $row['supervisor_id'] );
         $this->created_at= $row['created_at'];
         $this->updated_at= $row['updated_at'];
+
+        $this->use_multiplier_factor = intval($row['use_multiplier_factor']);
+        $this->multiplier_factor = intval($row['multiplier_factor']);
     }
 
     public function ReadProperties()
@@ -164,6 +164,11 @@ class ProductionPlan extends CI_Model
         $row['created_at'] = $this->created_at;
         $row['updated_at'] = $this->updated_at;
         $row['hc'] = intval($this->hc);
+
+ 
+        $row['use_multiplier_factor'] = intval($this->use_multiplier_factor);
+        $row['multiplier_factor'] = intval($this->multiplier_factor);
+
         return $row;
     }
 

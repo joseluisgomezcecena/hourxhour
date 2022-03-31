@@ -82,6 +82,9 @@ class Plan extends CI_Controller
         $data['date'] = $plan->date;
         $data['shift_id'] = $plan->shift_id;
         $data['supervisor_id'] = $plan->supervisor_id;
+
+        $data['use_multiplier_factor'] = intval($plan->use_multiplier_factor);
+        $data['multiplier_factor'] = intval($plan->multiplier_factor);
         
         //if($is_new_record) {
         //    $data['created_at'] = $now->format(DATETIME_FORMAT);
