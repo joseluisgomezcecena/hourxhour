@@ -71,6 +71,8 @@ class ProductionPlan extends CI_Model
 
         if(count($data) == 0 )
         {
+            //echo "debug 01" . $this->db->last_query();;
+
             $select = 'assets.asset_name as asset_name, ';
             $select .= 'sites.site_id as site_id, sites.site_name as site_name, ';
             $select .= 'plants.plant_id as plant_id, plants.plant_name as plant_name ';
@@ -97,22 +99,24 @@ class ProductionPlan extends CI_Model
             $this->supervisor_id = NULL;
             $this->hc = 1;
             
-            $now = new DateTime();
-            $this->created_at = $now->format(DATETIME_FORMAT);
-            $this->updated_at = $now->format(DATETIME_FORMAT);
-            $data = $this->ReadProperties();
+            //$now = new DateTime();
+            //$this->created_at = $now->format(DATETIME_FORMAT);
+            //$this->updated_at = $now->format(DATETIME_FORMAT);
+            //$data = $this->ReadProperties();
             //echo json_encode($data);
 
-            $this->db->insert($this->table, $data);
+            //$this->db->insert($this->table, $data);
             //Save the production plan id
-            $this->plan_id = $this->db->insert_id();
+            //$this->plan_id = $this->db->insert_id();
 
             $this->GenerateHours();
         } else
         {
+            //echo "debug 02";
+
             $row = $data[0];
             $this->LoadProperties($row);
-            $this->plan_id = $row['plan_id'];
+            //$this->plan_id = $row['plan_id'];
             $this->LoadHours();
         }
 
@@ -152,14 +156,14 @@ class ProductionPlan extends CI_Model
     public function ReadProperties()
     {
         $row = array();
-        //$row['plan_id'] = $this->plan_id;
-        $row['asset_id'] = $this->asset_id;
+        $row['plan_id'] = intval($this->plan_id);
+        $row['asset_id'] = intval($this->asset_id);
         $row['date']  = $this->date;
-        $row['shift_id'] = $this->shift_id;
-        $row['supervisor_id'] = $this->supervisor_id;
+        $row['shift_id'] = intval($this->shift_id);
+        $row['supervisor_id'] = intval($this->supervisor_id);
         $row['created_at'] = $this->created_at;
         $row['updated_at'] = $this->updated_at;
-        $row['hc'] = $this->hc;
+        $row['hc'] = intval($this->hc);
         return $row;
     }
 
@@ -200,14 +204,14 @@ class ProductionPlan extends CI_Model
             $date_end = new DateTime();
             $date_end->setTimeStamp( ($m + $interval_in_milliseconds ) / 1000);
             
-            $plan_by_hour['plan_id'] = $this->plan_id;
+            //$plan_by_hour['plan_id'] = $this->plan_id;
             
             $plan_by_hour['time'] = $date->format(DATETIME_FORMAT);
             $plan_by_hour['time_end'] = $date_end->format(DATETIME_FORMAT);
 
             $plan_by_hour['created_at'] = $this->created_at;
             $plan_by_hour['updated_at'] = $this->created_at;
-            $this->db->insert($this->table_hours, $plan_by_hour);
+            //$this->db->insert($this->table_hours, $plan_by_hour);
 
             array_push($this->plan_by_hours, $plan_by_hour); 
             
@@ -217,10 +221,14 @@ class ProductionPlan extends CI_Model
 
     public function LoadHours()
     {
-        $this->db->where('plan_id', $this->plan_id);
-        $this->db->order_by('time', 'ASC');
-        $query = $this->db->get($this->table_hours);
-        $this->plan_by_hours = $query->result_array();              
+        //$this->db->where('plan_id', $this->plan_id);
+        //$this->db->order_by('time', 'ASC');
+        //$this->table_hours
+
+        $query = $this->db->query('SELECT * from plan_by_hours WHERE plan_id = ' . $this->plan_id . " ORDER BY time ASC");
+        $this->plan_by_hours = $query->result_array();   
+        
+        //echo json_encode($this->plan_by_hours);
     }
 
 }

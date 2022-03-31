@@ -54,7 +54,7 @@
                     </th>
                     <th scope="col" class="bg-[#D1FAE5]"><small>DATE:</small></th>
                     <th scope="col">
-                        <input style="min-width: 10rem; border: 0;" name="date" ng-model="production_plan.date" class="form-control input_invisible size-sm" type="date" >
+                        <input style="min-width: 10rem; border: 0;" name="date" ng-model="production_plan.date_display" class="form-control input_invisible size-sm" type="date" >
                     </th>
                     <th scope="col" class="bg-[#D1FAE5]"><small>SUPERVISOR:</small></th>
                     <th scope="col">
@@ -92,11 +92,11 @@
 
                     <tr ng-repeat="plan_item in production_plan.plan_by_hours">
                         <!-- 6:00-7:00am -->
-                        <th style="min-width: 7rem;" class="bg-[#D1FAE5] text-xs">{{plan_item.time | date:'hh:mm'}}-{{plan_item.time_end | date:'hh:mm'}} {{ plan_item.time.getHours() >= 12  ? 'pm' : 'am'}}</th>
+                        <th style="min-width: 7rem;" class="bg-[#D1FAE5] text-xs">{{plan_item.time_display | date:'hh:mm'}}-{{plan_item.time_end_display | date:'hh:mm'}} {{ plan_item.time_display.getHours() >= 12  ? 'pm' : 'am'}}</th>
                         
                         <!-- HC -->
                         <td id="" class="bg-[#D1FAE5]">
-                            <input type="number" min="1" type="text" name="" onkeyup="" class="form-control input_invisible size-sm" ng-model="plan_item.hc" ng-change="hc_changed(plan_item)" />                        
+                            <input type="number" min="1" type="text" name="" onkeyup="" class="form-control input_invisible size-sm" ng-model="plan_item.planned_head_count" ng-change="hc_changed(plan_item)" />                        
                         </td>
 
                         <!-- ITEM NUMBER -->
@@ -144,7 +144,7 @@
                 </tbody>
             </table>
             <div class="flex justify-end mt-5">
-                <button type="button" class="btn btn_success uppercase" data-toggle="modal" data-target="#dialog_success">
+                <button type="button" class="btn btn_success uppercase" ng-click="save()">
                     <span class="la la-save ltr:mr-2 rtl:ml-2"></span>
                     Save Plan
                 </button>
@@ -174,10 +174,12 @@ fetch.controller('planController', ['$scope', '$http', function ($scope, $http) 
     $scope.shift_id = shift_id;
     $scope.asset_id = asset_id;
     $scope.date = date;
-    $scope.getPlan();
-
-    $scope.getItems();
+  
     $scope.getInterruptions();
+    $scope.getPlan();
+    $scope.getItems();
+    
+    
   } 
 
   $scope.getPlan = function(){
@@ -187,21 +189,27 @@ fetch.controller('planController', ['$scope', '$http', function ($scope, $http) 
     params: {asset_id: $scope.asset_id, shift_id: $scope.shift_id, date: $scope.date}
    }).then(function successCallback(response) {
 
+        console.log(response.data) ;
+    
        $scope.production_plan = response.data;
-       $scope.production_plan.date = new Date(response.data.date);
+       $scope.production_plan.date_display = new Date(response.data.date);
 
        for(var i = 0; i < $scope.production_plan.plan_by_hours.length ;i++)
        {    
-            $scope.production_plan.plan_by_hours[i].time = new Date(response.data.plan_by_hours[i].time);
-            $scope.production_plan.plan_by_hours[i].time_end = new Date(response.data.plan_by_hours[i].time_end);
-            $scope.production_plan.plan_by_hours[i].hc =  $scope.production_plan.hc;
+  
+            $scope.production_plan.plan_by_hours[i].time_display = new Date(response.data.plan_by_hours[i].time);
+            $scope.production_plan.plan_by_hours[i].time_end_display = new Date(response.data.plan_by_hours[i].time_end);
+            
+            $scope.production_plan.plan_by_hours[i].planned_head_count =  Number($scope.production_plan.plan_by_hours[i].planned_head_count);
+            $scope.production_plan.plan_by_hours[i].planned =  Number($scope.production_plan.plan_by_hours[i].planned);
+            
+            $scope.production_plan.plan_by_hours[i].std_time =  Number($scope.production_plan.plan_by_hours[i].std_time); 
 
-            $scope.production_plan.plan_by_hours[i].planned = undefined;
-            $scope.production_plan.plan_by_hours[i].planned_acum = undefined;
-           
        }
        
-       console.log($scope.production_plan);
+      
+       
+
    }); 
   }
 
@@ -211,11 +219,36 @@ fetch.controller('planController', ['$scope', '$http', function ($scope, $http) 
     method: 'get',
     url: '<?= base_url() ?>index.php/api/items/get',
    }).then(function successCallback(response) {
-       //console.log(response.data);
-       $scope.items = response.data.items;       
+       console.log(response.data);
+       $scope.items = response.data.items;    
+       $scope.updateItems();
    }); 
   }
 
+
+  $scope.updateItems = function()
+  {
+
+    for(var i = 0; i < $scope.production_plan.plan_by_hours.length ;i++)
+    {
+        //$scope.production_plan.plan_by_hours[i].planned_head_count = $scope.production_plan.hc;
+        if ($scope.production_plan.plan_by_hours[i].item_id != undefined)
+        {
+            var found = $scope.items.filter(function(item) {
+                return item.item_id === $scope.production_plan.plan_by_hours[i].item_id;
+            })[0];
+
+            if(found)
+            {
+                $scope.production_plan.plan_by_hours[i].item_number = found.item_number;
+                $scope.calculate_formula($scope.production_plan.plan_by_hours[i]);
+            }
+        }
+    }
+
+    $scope.update_acum();
+
+  }
 
   
   $scope.getInterruptions = function()
@@ -235,7 +268,7 @@ fetch.controller('planController', ['$scope', '$http', function ($scope, $http) 
     console.log('hc: ' +  $scope.production_plan.hc)
     for(var i = 0; i < $scope.production_plan.plan_by_hours.length ;i++)
     {
-        $scope.production_plan.plan_by_hours[i].hc = $scope.production_plan.hc;
+        $scope.production_plan.plan_by_hours[i].planned_head_count = $scope.production_plan.hc;
     }
   }
 
@@ -255,19 +288,18 @@ fetch.controller('planController', ['$scope', '$http', function ($scope, $http) 
 
   $scope.planned_changed = function(plan_item) 
   {
-
     $scope.calculate_formula(plan_item);
+    $scope.update_acum();
+  }
 
-    var index = $scope.production_plan.plan_by_hours.indexOf(plan_item);
+  $scope.update_acum = function(){
     var count = $scope.production_plan.plan_by_hours.length;
-
     var total = 0;
     for (let i = 0; i < count; i++) {
         //$scope.production_plan.plan_by_hours[i].planned_acum = $scope.production_plan.plan_by_hours[i].planned;
         total +=  $scope.production_plan.plan_by_hours[i].planned;
         $scope.production_plan.plan_by_hours[i].planned_acum = total;
     }
-
   }
 
   $scope.hc_changed = function(plan_item) 
@@ -294,11 +326,24 @@ fetch.controller('planController', ['$scope', '$http', function ($scope, $http) 
     }
      else
     {
-        plan_item.formula = parseFloat((plan_item.hc - (plan_item.less_time == undefined ? 0 : plan_item.less_time) ) / plan_item.std_time).toFixed(2);
+        plan_item.formula = parseFloat((plan_item.planned_head_count - (plan_item.less_time == undefined ? 0 : plan_item.less_time) ) / plan_item.std_time).toFixed(2);
     }
-         
-    
+  }
 
+
+  $scope.save = function()
+  {
+    var url = '<?= base_url() ?>index.php/api/plan/save'; 
+    var data = {plan: $scope.production_plan}
+    var config= {headers: {'Content-Type': 'application/json'} }
+    $http.post(url, data, config).then(function (response) {
+        
+        console.log(response);
+        
+    }, function (response) {
+
+    // this function handles error
+    });
   }
 
    //este es al cargar

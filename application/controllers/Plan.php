@@ -42,7 +42,8 @@ class Plan extends CI_Controller
 
 		$this->shift->Load($shift_id);
 				//Cargar Plan
-		$data = $this->productionplan->LoadPlan($asset_id, $date, $shift_id, $this->shift->shift_start_time, $this->shift->shift_end_time);
+		$this->productionplan->LoadPlan($asset_id, $date, $shift_id, $this->shift->shift_start_time, $this->shift->shift_end_time);
+
 		echo json_encode($this->productionplan);
 	}
 
@@ -61,6 +62,133 @@ class Plan extends CI_Controller
         $query = $this->db->query('SELECT * FROM interruptions');
         $data['interruptions'] =   $query->result_array();
         echo json_encode($data);
+    }
+
+
+    public function api_save_plan()
+    {
+        //this has the array to start saving
+        $input = json_decode($this->input->raw_input_stream);
+        $plan = $input->plan;
+
+        $is_new_record = true;
+
+        if(isset($plan->plan_id))
+            $is_new_record = false;
+
+        $now = new DateTime();
+
+        $data['asset_id'] = $plan->asset_id;
+        $data['date'] = $plan->date;
+        $data['shift_id'] = $plan->shift_id;
+        $data['supervisor_id'] = $plan->supervisor_id;
+        
+        //if($is_new_record) {
+        //    $data['created_at'] = $now->format(DATETIME_FORMAT);
+       // }
+        //$data['updated_at'] = $now->format(DATETIME_FORMAT);
+
+        
+        if($is_new_record)
+        {
+            $this->db->insert('production_plans', $data);
+            $plan->plan_id = $this->db->insert_id(); //get the last inserted id
+        }
+        else 
+        {
+            $this->db->where('plan_id', $plan->plan_id);
+            $this->db->update('production_plans', $data);
+        }
+
+        
+        
+        for( $i=0; $i < count($plan->plan_by_hours); $i++)
+        {
+            unset($data_item);
+            $data_item = array();
+
+            //$plan->plan_by_hours as $item
+            $item = $plan->plan_by_hours[$i];
+            
+                    
+            if($is_new_record)
+            {
+                $data_item['updated_at'] = $now->format(DATETIME_FORMAT);
+                $data_item['created_at'] = $now->format(DATETIME_FORMAT);
+
+
+                $sql = "INSERT INTO plan_by_hours (`plan_id`, `time`, `time_end`, `planned`, `planned_head_count`, `workorder`, `item_id`, `interruption_id`, `less_time`, `std_time`, `updated_at`, `created_at`)";
+                $sql .= " VALUES (";
+
+                $sql .= $plan->plan_id . ", ";
+                $sql .= "'" . $item->time . "', ";
+                $sql .= "'" . $item->time_end . "', ";
+                $sql .= (isset($item->planned) ? $item->planned : 'NULL') . ", ";
+                $sql .= (isset($item->planned_head_count) ? $item->planned_head_count : 'NULL') . ", ";
+                $sql .= (isset($item->workorder) ? "'" . $item->workorder . "'" : 'NULL') . ", ";
+                $sql .= (isset($item->item_id) ? $item->item_id : 'NULL') . ", ";
+                $sql .= (isset($item->interruption_id) ? $item->interruption_id : 'NULL') . ", ";
+                $sql .= (isset($item->less_time) ? $item->less_time : 'NULL') . ", ";
+                $sql .= (isset($item->std_time) ? $item->std_time : 'NULL') . ", ";
+                $sql .= "'" . $data_item['updated_at'] . "', ";
+                $sql .= "'" . $data_item['created_at'] . "'";
+
+                $sql .= ")";
+                
+                if(!$this->db->simple_query($sql)){
+                    echo 'ocurrion un error en ' . $sql;
+                }
+    
+            } else
+            {
+                $data_item['updated_at'] = $now->format(DATETIME_FORMAT);
+                /* 
+                UPDATE table_name
+                SET column1 = value1, column2 = value2, ...
+                WHERE condition;
+                */
+                //plan_id`, `time`, `time_end`, `planned`, `planned_head_count`, `workorder`, `item_id`, `interruption_id`, `less_time`, `std_time`, `updated_at`, `created_at
+                $sql = "UPDATE plan_by_hours SET ";
+
+                $sql .= "plan_id = ";
+                $sql .= $plan->plan_id . ", ";
+                
+                $sql .= "planned = ";
+                $sql .= (isset($item->planned) ? $item->planned : 'NULL') . ", ";
+                
+                $sql .= "planned_head_count = ";
+                $sql .= (isset($item->planned_head_count) ? $item->planned_head_count : 'NULL') . ", ";
+                
+                $sql .= "workorder = ";
+                $sql .= (isset($item->workorder) ? "'" . $item->workorder . "'" : 'NULL') . ", ";
+                
+                $sql .= "item_id = ";
+                $sql .= (isset($item->item_id) ? $item->item_id : 'NULL') . ", ";
+                
+                $sql .= "interruption_id = ";
+                $sql .= (isset($item->interruption_id) ? $item->interruption_id : 'NULL') . ", ";
+                
+                $sql .= "less_time = ";
+                $sql .= (isset($item->less_time) ? $item->less_time : 'NULL') . ", ";
+                
+                $sql .= "std_time = ";
+                $sql .= (isset($item->std_time) ? $item->std_time : 'NULL') . ", ";
+                
+                $sql .= "updated_at = ";
+                $sql .= "'" . $data_item['updated_at'] . "'";
+                
+                $sql .= " WHERE plan_by_hour_id = " .  $item->plan_by_hour_id;
+
+                if(!$this->db->simple_query($sql)){
+                    echo 'ocurrion un error en ' . $sql;
+                }
+                //$data_item[$i]['updated_at'] = $now->format(DATETIME_FORMAT);
+                //$this->db->where('plan_by_hora_id', $data_item['plan_by_hora_id']  );
+                //$this->db->update('plan_by_hours', $data_item);
+            } 
+
+        }
+
     }
 
 

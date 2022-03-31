@@ -72,6 +72,7 @@ $route['planners'] = 'plan/index';
 $route['api/plan/get'] = 'plan/api_get_plan';
 $route['api/items/get'] = 'plan/api_get_items';
 $route['api/interruptions/get'] = 'plan/api_get_interruptions';
+$route['api/plan/save']['post'] = 'plan/api_save_plan';
 $route['planners/test'] = 'plan/test';
 $route['cell'] = 'plan/select_cell';
 $route['measuring_point'] = 'plan/select_measuring_point';
