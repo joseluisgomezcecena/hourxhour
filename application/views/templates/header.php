@@ -30,13 +30,6 @@
         <span class="brand">
             <img width="150" src="<?php echo base_url(); ?>assets/images/transparente.png" alt="">
         </span>
-        <!-- Search -->
-        <form class="hidden md:block ltr:ml-10 rtl:mr-10" action="#">
-            <label class="form-control-addon-within rounded-full">
-                <input type="text" class="form-control border-none" placeholder="Search">
-                <button type="button" class="btn btn-link text-gray-300 dark:text-gray-700 dark:hover:text-primary text-xl leading-none la la-search ltr:mr-4 rtl:ml-4"></button>
-            </label>
-        </form>
         <!-- Right -->
         <div class="flex items-center ltr:ml-auto rtl:mr-auto">
             <!-- Notifications -->

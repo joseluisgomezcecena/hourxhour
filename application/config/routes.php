@@ -99,10 +99,15 @@ $route['measuring_point'] = '/measuring_point/index';
 $route['manual_capture'] = '/manual_capture/index';
 //trigger
 $route['trigger'] = '/trigger/index';
-//trigger
+//login
 $route['login'] = '/login/index';
 //button_tablet
-$route['button_tablet'] = '/button_tablet';
+$route['manual_capture/button_tablet'] = '/manual_capture/tablet';
+//select_plant_button
+$route['manual_capture/select_plant_button'] = '/manual_capture/select_plant_button';
+//$route['manual_capture/measuring_point_button'] = '/manual_capture/measuring_point_button';
+//measuring_point_tablet
+$route['manual_capture/measuring_point'] = '/manual_capture/measuring_point';
 //test for Angular
 $route['test/angular'] = 'testscontroller/test_angular';
 $route['api/plants/all'] = 'plants/api_all';

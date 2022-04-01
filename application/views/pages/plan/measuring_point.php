@@ -34,47 +34,6 @@
 					echo '</div>';
 					echo '</a>';
 				}
-
-	
-
 			?>
-
-			<!--
-        	<a href="<?php echo base_url(); ?>index.php/planners">
-        	            <div class="card p-5">
-	                <div class="items-center px-5 py-2">
-	                    <h5 class="mb-0 uppercase">TIP32</h5>
-	                    <small>Selet this point</small>
-	                </div>
-	            </div>
-	        </a>
-	        <a href="<?php echo base_url(); ?>index.php/planners">
-	            <div class="card p-5">
-	                <div class="items-center px-5 py-2">
-	                    <h5 class="mb-0 uppercase">TIP32</h5>
-	                    <small>Selet this point</small>
-	                </div>
-	            </div>
-	        </a>
-	        <a href="<?php echo base_url(); ?>index.php/planners">
-	            <div class="card p-5">
-	                <div class="items-center px-5 py-2">
-	                    <h5 class="mb-0 uppercase">TIP32</h5>
-	                    <small>Selet this point</small>
-	                </div>
-	            </div>
-	        </a>
-	        <a href="<?php echo base_url(); ?>index.php/planners">
-	            <div class="card p-5">
-	                <div class="items-center px-5 py-2">
-	                    <h5 class="mb-0 uppercase">TIP32</h5>
-	                    <small>Selet this point</small><br>
-	                    <small class="text-primary"><span class="icon las la-exclamation-triangle mt-3"></span>Ya existe un plan para este dia</small>
-	                </div>
-	            </div>
-	        </a>
-		-->
-
-
 	    </div>
 	</section>
