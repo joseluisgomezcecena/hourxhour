@@ -120,7 +120,9 @@
 
                         <!-- PLANNED INTERRUPTION -->
                         <td>
-                            <select ng-model="plan_item.selected_interruption" ng-change="interruption_changed(plan_item)"  ng-options="interruption as interruption.interruption_name for interruption in interruptions"></select>
+                            <select ng-model="plan_item.selected_interruption" ng-change="interruption_changed(plan_item)"  ng-options="interruption as interruption.interruption_name for interruption in interruptions">
+                                <option value="" ng-if="false"></option>
+                            </select>
                         </td>
 
                            <!-- LESS TIME -->
@@ -206,7 +208,8 @@ fetch.controller('planController', ['$scope', '$http', function ($scope, $http) 
             $scope.production_plan.plan_by_hours[i].planned =  Number($scope.production_plan.plan_by_hours[i].planned);
             
             $scope.production_plan.plan_by_hours[i].std_time =  Number($scope.production_plan.plan_by_hours[i].std_time); 
-
+            $scope.production_plan.plan_by_hours[i].less_time =  Number($scope.production_plan.plan_by_hours[i].less_time); 
+            //plan_item.interruption_id = plan_item.selected_interruption.interruption_id;
        }
        
       
@@ -233,7 +236,14 @@ fetch.controller('planController', ['$scope', '$http', function ($scope, $http) 
 
     for(var i = 0; i < $scope.production_plan.plan_by_hours.length ;i++)
     {
-        //$scope.production_plan.plan_by_hours[i].planned_head_count = $scope.production_plan.hc;
+        
+        $scope.production_plan.plan_by_hours[i].interruption_id = Number($scope.production_plan.plan_by_hours[i].interruption_id);
+        var foundInterruption = $scope.interruptions.filter(function(interr) {
+                return Number(interr.interruption_id) === $scope.production_plan.plan_by_hours[i].interruption_id;
+            })[0];
+        if(foundInterruption)
+        $scope.production_plan.plan_by_hours[i].selected_interruption = foundInterruption;
+
         if ($scope.production_plan.plan_by_hours[i].item_id != undefined)
         {
             var found = $scope.items.filter(function(item) {
@@ -312,8 +322,8 @@ fetch.controller('planController', ['$scope', '$http', function ($scope, $http) 
 
   $scope.interruption_changed = function(plan_item) 
   {
-    plan_item.interruption_id = plan_item.selected_interruption.interruption_id;
-    plan_item.less_time = parseFloat(plan_item.selected_interruption.interruption_time);
+        plan_item.interruption_id = plan_item.selected_interruption.interruption_id;
+        plan_item.less_time = parseFloat(plan_item.selected_interruption.interruption_time);
   }
 
 
@@ -342,8 +352,6 @@ fetch.controller('planController', ['$scope', '$http', function ($scope, $http) 
         
         console.log(response);
         swal("Good job!", "The plan has been saved.", "success");
-
-        
     }, function (response) {
 
     // this function handles error
