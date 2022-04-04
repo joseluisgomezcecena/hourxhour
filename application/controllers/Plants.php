@@ -14,6 +14,7 @@ class Plants extends CI_Controller{
 		$this->load->view('templates/footer');
 	}
 
+	
 
 	public function api_all()
 	{
@@ -38,8 +39,7 @@ class Plants extends CI_Controller{
 				$this->Plant->save();
 			}
 		}
-
-
+		
 		$this->load->view('templates/header');
 		$this->load->view('pages/andon/plants/create', $data);
 		$this->load->view('templates/footer');

@@ -21,6 +21,9 @@
 </style>
 <!-- Breadcrumb -->
 <section class="breadcrumb" ng-app='plannerApp' ng-controller='planController'>
+
+    <button ng-click="copy_clipboard()">Copiar Excel</button>
+
     <h1><?= $title ?></h1>
     <ul>
         <li><a href="#">Pages</a></li>
@@ -161,6 +164,20 @@
 </section>
 
 <script>
+
+
+/*
+* Author: Emanuel Jauregui
+* Date: 04/04/2022  
+* $scope.production_plan is the object that contains all the data for this screen, is the core of the funcionality.
+* 
+*  each row is represented by an array called  $scope.production_plan.plan_by_hours
+*  each plan_by_hours contains:
+* planned_head_count: is the hc for each row, it is allowed modify them individually
+* item_number: it is the identifier for the part (it is the part number)
+* workorder: the number of work order, for 
+* planned: is the planned production for that hour for traceability purposes
+*/
 var fetch = angular.module('plannerApp', []);
 fetch.controller('planController', ['$scope', '$http', function ($scope, $http) {
 
@@ -181,9 +198,7 @@ fetch.controller('planController', ['$scope', '$http', function ($scope, $http) 
   
     $scope.getInterruptions();
     $scope.getPlan();
-    $scope.getItems();
-    
-    
+    $scope.getItems();    
   } 
 
   $scope.getPlan = function(){
@@ -200,15 +215,31 @@ fetch.controller('planController', ['$scope', '$http', function ($scope, $http) 
 
        for(var i = 0; i < $scope.production_plan.plan_by_hours.length ;i++)
        {    
-  
-            $scope.production_plan.plan_by_hours[i].time_display = new Date(response.data.plan_by_hours[i].time);
-            $scope.production_plan.plan_by_hours[i].time_end_display = new Date(response.data.plan_by_hours[i].time_end);
+            var plan_item = response.data.plan_by_hours[i];
+            plan_item.time_display = new Date(response.data.plan_by_hours[i].time);
+            plan_item.time_end_display = new Date(response.data.plan_by_hours[i].time_end);
             
-            $scope.production_plan.plan_by_hours[i].planned_head_count =  Number($scope.production_plan.plan_by_hours[i].planned_head_count);
-            $scope.production_plan.plan_by_hours[i].planned =  Number($scope.production_plan.plan_by_hours[i].planned);
+            //Estos numeros necesitan estar definidos como numteros
+            //console.log($scope.production_plan.plan_by_hours[i].planned_head_count);
+            if($scope.production_plan.plan_by_hours[i].planned_head_count == null)
+                plan_item.planned_head_count = undefined;
+            else
+                plan_item.planned_head_count =  Number($scope.production_plan.plan_by_hours[i].planned_head_count);
             
-            $scope.production_plan.plan_by_hours[i].std_time =  Number($scope.production_plan.plan_by_hours[i].std_time); 
-            $scope.production_plan.plan_by_hours[i].less_time =  Number($scope.production_plan.plan_by_hours[i].less_time); 
+            if($scope.production_plan.plan_by_hours[i].planned == null)
+                plan_item.planned = undefined;
+            else
+                plan_item.planned =  Number($scope.production_plan.plan_by_hours[i].planned);
+            
+            if($scope.production_plan.plan_by_hours[i].std_time == null)
+                plan_item.std_time = undefined;
+            else
+                plan_item.std_time =  Number($scope.production_plan.plan_by_hours[i].std_time); 
+
+            if($scope.production_plan.plan_by_hours[i].less_time == null)
+                plan_item.less_time = undefined;
+            else
+                plan_item.less_time =  Number($scope.production_plan.plan_by_hours[i].less_time); 
             //plan_item.interruption_id = plan_item.selected_interruption.interruption_id;
        }
        
@@ -262,6 +293,23 @@ fetch.controller('planController', ['$scope', '$http', function ($scope, $http) 
 
   }
 
+  $scope.getIdFromItemNumber = function(item_number)
+  {
+    var found = $scope.items.filter(function(item) {
+                return item.item_number === item_number;
+            })[0];
+
+    if(found)
+    {
+        return found.item_id;
+    } else
+    {
+        return null;
+    }
+        
+    
+  }
+
   
   $scope.getInterruptions = function()
   {
@@ -275,6 +323,29 @@ fetch.controller('planController', ['$scope', '$http', function ($scope, $http) 
   }
 
 
+  $scope.getInterruptionFromName = function(interruption_name)
+  {
+        //console.log('load interuption ' + $scope.interruptions);
+        var found = null;
+        for(let i = 0; i < $scope.interruptions.length; i++)
+        {
+            console.log($scope.interruptions[i].interruption_name);
+           if( $scope.interruptions[i].interruption_name.trim() === interruption_name.trim() )
+           {
+            found = $scope.interruptions[i];
+               break;
+           }                       
+        }
+
+        if(found)
+        {
+            return found;
+        } else
+        {
+            return null;
+        }
+  }
+
   $scope.sethc = function()
   {
     console.log('hc: ' +  $scope.production_plan.hc)
@@ -286,6 +357,7 @@ fetch.controller('planController', ['$scope', '$http', function ($scope, $http) 
 
   $scope.partnumber_changed = function(plan_item) 
   {
+
     var found = $scope.items.filter(function(item) {
         return item.item_number === plan_item.item_number;
     })[0];
@@ -294,7 +366,14 @@ fetch.controller('planController', ['$scope', '$http', function ($scope, $http) 
         plan_item.item_id = found.item_id;
         plan_item.std_time = parseFloat(found.item_run_labor);
         $scope.calculate_formula(plan_item);
-    }  
+        //console.log('item_id loaded...')
+    } else 
+    {
+        console.log('not found item');
+        plan_item.item_id = undefined;
+        plan_item.std_time = undefined;
+        $scope.calculate_formula(plan_item);
+    } 
   }
 
 
@@ -329,7 +408,7 @@ fetch.controller('planController', ['$scope', '$http', function ($scope, $http) 
 
   $scope.calculate_formula = function(plan_item)
   { 
-    console.log("calculate formula....")
+    //console.log("calculate formula....")
     console.log(plan_item);
 
     if(plan_item.planned == undefined||plan_item.std_time == undefined)
@@ -343,8 +422,47 @@ fetch.controller('planController', ['$scope', '$http', function ($scope, $http) 
   }
 
 
+  /* Author: Emanuel Jauregui
+  * Date: 04/04/2022
+  * Last Update: 04/04/2022
+  * 
+  * Method: save
+  * Parameters: None
+  * $scope.production_plan Represents all the production plan of the entire screen
+  * $scope.production_plan.plan_by_hours represents each row of the plan, the row containing the Date (start - end date)
+  *  the method send to the api a json string of the $scope.production_plan to be stored.   
+  *  It will have a validation for not completed rows based on HC, item_number, work order and plany by hours
+  */
   $scope.save = function()
   {
+
+    for (let i = 0; i < $scope.production_plan.plan_by_hours.length; i++) { 
+        
+        //Si al menos uno tiene definidos datos
+        if( $scope.production_plan.plan_by_hours[i].planned != undefined ||
+            $scope.production_plan.plan_by_hours[i].item_id != undefined ||
+            $scope.production_plan.plan_by_hours[i].workorder != undefined ||
+            $scope.production_plan.plan_by_hours[i].planned_head_count != undefined
+        )
+        {   
+
+            //Checar que esten definidos los 4 datos       
+            if( !
+                ($scope.production_plan.plan_by_hours[i].planned != undefined && 
+                $scope.production_plan.plan_by_hours[i].item_id != undefined &&
+                $scope.production_plan.plan_by_hours[i].workorder != undefined &&
+                $scope.production_plan.plan_by_hours[i].planned_head_count != undefined
+            )
+            )
+            {
+                //plan_item.time_display
+                swal("Something was wrong!", "You have some data incompleted! check item number, workorder, hc and planned from row with time: " + $scope.production_plan.plan_by_hours[i].time_display.getHours() + ":00", "error");
+                return;
+            }
+        }
+    }
+    //if($scope.production_plan.plan_by_hours[i]
+
     var url = '<?= base_url() ?>index.php/api/plan/save'; 
     var data = {plan: $scope.production_plan}
     var config= {headers: {'Content-Type': 'application/json'} }
@@ -356,6 +474,71 @@ fetch.controller('planController', ['$scope', '$http', function ($scope, $http) 
 
     // this function handles error
     });
+  }
+
+
+  $scope.copy_clipboard = function()
+  {
+
+    console.log('entering to copy clipboard');
+
+    const column_hc = 1;
+    const column_item_number = 2;
+    const column_workorder = 3;
+    const plan_by_hour = 4;
+    const planned_interuption = 5;
+
+    (async () => {
+
+    
+    var text = await navigator.clipboard.readText();
+    //console.log(text);
+
+    var lines = text.split("\n");
+
+    let table_row = 0;
+
+    for(let i = 1; i < lines.length ;i++)
+    {
+        //console.log('goes beyond all lines');
+
+        var line = lines[i];
+        if(line == '')
+        {
+            //console.log('arrived here');
+            break;
+        }
+            
+
+        var rows = line.split("\t");
+
+        //console.log(rows);
+        $scope.production_plan.plan_by_hours[table_row].planned_head_count = Number( rows[column_hc] );
+        
+        $scope.production_plan.plan_by_hours[table_row].item_number =  rows[column_item_number];
+        $scope.partnumber_changed($scope.production_plan.plan_by_hours[table_row]);
+
+        $scope.production_plan.plan_by_hours[table_row].workorder = rows[column_workorder];
+        $scope.production_plan.plan_by_hours[table_row].planned = Number( rows[plan_by_hour] ) ;
+
+        console.log('buscar ' +  rows[planned_interuption] );
+        $scope.production_plan.plan_by_hours[table_row].selected_interruption = $scope.getInterruptionFromName( rows[planned_interuption]  );
+        
+        if ($scope.production_plan.plan_by_hours[table_row].selected_interruption != null )
+        {
+            console.log('found interruption changed');
+            $scope.production_plan.plan_by_hours[table_row].interruption_id = $scope.production_plan.plan_by_hours[table_row].selected_interruption.interruption_id;
+            $scope.interruption_changed($scope.production_plan.plan_by_hours[table_row]);
+        }
+            
+        $scope.calculate_formula();
+         
+        table_row++;
+    }
+    $scope.update_acum();
+    $scope.$apply();
+    
+    })();
   }
 
    //este es al cargar
