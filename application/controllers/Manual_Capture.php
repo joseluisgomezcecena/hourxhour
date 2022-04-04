@@ -30,9 +30,7 @@ class Manual_Capture extends CI_Controller
         $this->load->model('capture');
         $this->load->model('shift');
         $this->load->model('productionplan');
-  
-
-        
+       
         $now = new DateTime;
 
         //$asset_id, $shift_id, $date, si no hay plan regresa NULL
@@ -53,6 +51,7 @@ class Manual_Capture extends CI_Controller
         $this->load->view('templates/footer');
         
     }
+
 
 
     public function select_plant_button()
