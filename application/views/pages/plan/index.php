@@ -166,7 +166,18 @@
 <script>
 
 
-
+/*
+* Author: Emanuel Jauregui
+* Date: 04/04/2022  
+* $scope.production_plan is the object that contains all the data for this screen, is the core of the funcionality.
+* 
+*  each row is represented by an array called  $scope.production_plan.plan_by_hours
+*  each plan_by_hours contains:
+* planned_head_count: is the hc for each row, it is allowed modify them individually
+* item_number: it is the identifier for the part (it is the part number)
+* workorder: the number of work order, for 
+* planned: is the planned production for that hour for traceability purposes
+*/
 var fetch = angular.module('plannerApp', []);
 fetch.controller('planController', ['$scope', '$http', function ($scope, $http) {
 
@@ -323,18 +334,14 @@ fetch.controller('planController', ['$scope', '$http', function ($scope, $http) 
            {
             found = $scope.interruptions[i];
                break;
-           }
-                       
+           }                       
         }
-
 
         if(found)
         {
-            console.log('Found interruption');
             return found;
         } else
         {
-            console.log('Not Found interruption');
             return null;
         }
   }
@@ -415,8 +422,47 @@ fetch.controller('planController', ['$scope', '$http', function ($scope, $http) 
   }
 
 
+  /* Author: Emanuel Jauregui
+  * Date: 04/04/2022
+  * Last Update: 04/04/2022
+  * 
+  * Method: save
+  * Parameters: None
+  * $scope.production_plan Represents all the production plan of the entire screen
+  * $scope.production_plan.plan_by_hours represents each row of the plan, the row containing the Date (start - end date)
+  *  the method send to the api a json string of the $scope.production_plan to be stored.   
+  *  It will have a validation for not completed rows based on HC, item_number, work order and plany by hours
+  */
   $scope.save = function()
   {
+
+    for (let i = 0; i < $scope.production_plan.plan_by_hours.length; i++) { 
+        
+        //Si al menos uno tiene definidos datos
+        if( $scope.production_plan.plan_by_hours[i].planned != undefined ||
+            $scope.production_plan.plan_by_hours[i].item_id != undefined ||
+            $scope.production_plan.plan_by_hours[i].workorder != undefined ||
+            $scope.production_plan.plan_by_hours[i].planned_head_count != undefined
+        )
+        {   
+
+            //Checar que esten definidos los 4 datos       
+            if( !
+                ($scope.production_plan.plan_by_hours[i].planned != undefined && 
+                $scope.production_plan.plan_by_hours[i].item_id != undefined &&
+                $scope.production_plan.plan_by_hours[i].workorder != undefined &&
+                $scope.production_plan.plan_by_hours[i].planned_head_count != undefined
+            )
+            )
+            {
+                //plan_item.time_display
+                swal("Something was wrong!", "You have some data incompleted! check item number, workorder, hc and planned from row with time: " + $scope.production_plan.plan_by_hours[i].time_display.getHours() + ":00", "error");
+                return;
+            }
+        }
+    }
+    //if($scope.production_plan.plan_by_hours[i]
+
     var url = '<?= base_url() ?>index.php/api/plan/save'; 
     var data = {plan: $scope.production_plan}
     var config= {headers: {'Content-Type': 'application/json'} }
@@ -429,6 +475,7 @@ fetch.controller('planController', ['$scope', '$http', function ($scope, $http) 
     // this function handles error
     });
   }
+
 
   $scope.copy_clipboard = function()
   {
