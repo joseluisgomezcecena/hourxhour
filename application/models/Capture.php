@@ -7,10 +7,12 @@ class Capture extends CI_Model {
     /*
     * Author: Emanuel Jauregui
     * Date: 04/04/2022
-    * Por medio de esta funcion vamos a obtener la hora basados en el timepo actual
+    * Por medio de esta funcion vamos a obtener la hora de plan basados en el timepo actual
     */
     public function get_current_hour($plan_id)
     {
+        //regresar tambien el item_number
+
         $this->production_plan_id = $plan_id;
 
         $start = new DateTime();

@@ -107,5 +107,12 @@ class Shift extends CI_Model {
     }
 
 
+    public function all()
+    {
+        $query = $this->db->get('shifts');
+        return $query->result();
+    }
+
+
 
 }

@@ -4,7 +4,7 @@
         background-color: transparent;
     }
 </style>
-<?= $now_date ?>
+
 <div class="flex justify-between mb-5" style="margin-top: -4rem;">
     <span class="brand">
         <img width="150" src="<?php echo base_url(); ?>assets/images/transparente.png" alt="">
