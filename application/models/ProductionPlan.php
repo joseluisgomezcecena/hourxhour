@@ -236,4 +236,22 @@ class ProductionPlan extends CI_Model
         //echo json_encode($this->plan_by_hours);
     }
 
+
+    public function getProductionPlan($asset_id, $shift_id, $date)
+    {
+        $this->db->where('asset_id', $asset_id  );
+        $this->db->where('shift_id', $shift_id );
+        $this->db->where('date', $date );
+        $query = $this->db->get('production_plans'); 
+        $result = $query->result(); 
+
+        if( count($result) > 0 )
+        {
+            return $result[0];
+        } else
+        {
+            return NULL;
+        }      
+    }
+
 }

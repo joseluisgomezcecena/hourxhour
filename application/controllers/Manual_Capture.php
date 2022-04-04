@@ -17,11 +17,24 @@ class Manual_Capture extends CI_Controller
         $this->load->view('pages/plan/manual_capture', $data);
         $this->load->view('templates/footer');
     }
+
     public function tablet()
     {
-        $now_date = date("Y-m-d H:i:s");
-        $data['now_date'] = $now_date;
+        //$now_date = date("Y-m-d H:i:s");
+        //$data['now_date'] = $now_date;
+        $this->load->model('capture');
+        $this->load->model('shift');
+        $this->load->model('productionplan');
+  
 
+        $now = new DateTime;
+        //$asset_id, $shift_id, $date
+        $plan = $this->productionplan->getProductionPlan( $this->input->get('asset_id'), $this->shift->getIdFromCurrentTime( $now ), $now->format(DATE_FORMAT) );
+        $result = $this->capture->get_current_hour($plan->plan_id);
+
+        
+        //Pending by Magui
+        /*
         $sql = "SELECT * FROM plan_hourxhour.plan_by_hours WHERE time <= time_end";
         $query = $this->db->query($sql);
         $data['plan'] =   $query->result_array();
@@ -30,6 +43,7 @@ class Manual_Capture extends CI_Controller
         $this->load->view('templates/header_logged_out');
         $this->load->view('pages/plan/tablet/button_tablet', $data);
         $this->load->view('templates/footer');
+        */
     }
     public function select_plant_button()
     {
@@ -74,4 +88,8 @@ class Manual_Capture extends CI_Controller
         $this->load->view('pages/plan/tablet/select_measuring_point_tablet', $data);
         $this->load->view('templates/footer');
     }
+
+
+
+
 }
