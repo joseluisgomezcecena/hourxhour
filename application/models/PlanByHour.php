@@ -53,7 +53,7 @@ class PlanByHour extends CI_Model
             return false;
         }
 
-        $this->item_number = $items[0].item_number;
+        $this->item_number = $items[0]->item_number;
         return true;
     }
 

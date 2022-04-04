@@ -42,12 +42,9 @@ class Manual_Capture extends CI_Controller
         $this->planbyhour->Load($plan_by_hour_id);
 
         echo json_encode($this->planbyhour);
+        $this->planbyhour->item_number;
 
-    
-        $sql = "SELECT * FROM plan_hourxhour.plan_by_hours WHERE time <= time_end";
-        $query = $this->db->query($sql);
-        $data['plan'] =   $query->result_array();
-
+        $data['item_number'] = $this->planbyhour->item_number;
         $data['title'] = "Captura manual";
         $this->load->view('templates/header_logged_out');
         $this->load->view('pages/plan/tablet/button_tablet', $data);
