@@ -22,11 +22,12 @@ class Capture extends CI_Model {
         $end = clone $start;
         $end->add(new DateInterval('PT60M'));
         
+        $this->db->select('plan_by_hour_id');
         $this->db->where('plan_id', $plan_id);
         $this->db->where('time',   $start->format(DATETIME_FORMAT));
         $this->db->where('time_end', $end->format(DATETIME_FORMAT));
         $query = $this->db->get('plan_by_hours'); 
-        return $query->result_array();
+        return $query->result_array()[0]['plan_by_hour_id'];
     }
 
 

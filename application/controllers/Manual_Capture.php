@@ -30,6 +30,7 @@ class Manual_Capture extends CI_Controller
         $this->load->model('capture');
         $this->load->model('shift');
         $this->load->model('productionplan');
+        $this->load->model('planbyhour');
        
         $now = new DateTime;
 
@@ -37,10 +38,12 @@ class Manual_Capture extends CI_Controller
         $plan = $this->productionplan->getProductionPlan( $this->input->get('asset_id'), $this->shift->getIdFromCurrentTime( $now ), $now->format(DATE_FORMAT) );
         
         //Aqui ya traes los datos de plan_hourxhour.plan_by_hours si no lo encontro
-        $result = $this->capture->get_current_hour($plan->plan_id); 
-        
-        
-        
+        $plan_by_hour_id = $this->capture->get_current_hour($plan->plan_id); 
+        $this->planbyhour->Load($plan_by_hour_id);
+
+        echo json_encode($this->planbyhour);
+
+    
         $sql = "SELECT * FROM plan_hourxhour.plan_by_hours WHERE time <= time_end";
         $query = $this->db->query($sql);
         $data['plan'] =   $query->result_array();
@@ -52,6 +55,19 @@ class Manual_Capture extends CI_Controller
         
     }
 
+
+    //add capture
+    public function add_capture($number)
+    {
+        //i need plan_hour_by_id
+        
+    }
+
+    //Modify entire capture
+    public function modify_capture()
+    {
+        //I need plan_hour_by_id
+    }
 
 
     public function select_plant_button()
