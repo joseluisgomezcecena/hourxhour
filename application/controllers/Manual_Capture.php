@@ -57,8 +57,30 @@ class Manual_Capture extends CI_Controller
     //add capture
     public function add_capture($number)
     {
-        //i need plan_hour_by_id
+        $plan_by_hour_id = $this->input->post('plan_by_hour_id');
+        $reset = $this->input->post('reset');
+        $capture_type = $this->input->post('capture_type '); //0 es para sensor, 1 es para tablet, 2 es para desktop
 
+        //i need plan_hour_by_id
+        $this->load->model('planbyhour');
+        $this->load->model('productionplan');
+
+        $this->planbyhour->Load($plan_by_hour_id);
+
+        //retrieve an object of table productions_plans
+        $plan = $this->productionplan->getProductionPlanById($this->planbyhour->plan_id);
+
+        $last_value = intval($this->planbyhour->completed);
+
+        $mult_factor = 1;
+        if ($plan->use_multitplier_factor == 1) {
+            $mult_factor =  $plan->multiplier_factor;
+        }
+
+        //$last_value += $mult_factor; //capture_type
+        $this->planbyhour->IncrementCompleted($mult_factor, $reset,  $capture_type);
+
+        echo json_encode($this->planbyhour);
     }
 
     //Modify entire capture
