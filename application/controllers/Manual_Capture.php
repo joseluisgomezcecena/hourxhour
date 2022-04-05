@@ -41,7 +41,7 @@ class Manual_Capture extends CI_Controller
         $plan_by_hour_id = $this->capture->get_current_hour($plan->plan_id); 
         $this->planbyhour->Load($plan_by_hour_id);
 
-        echo json_encode($this->planbyhour);
+        //echo json_encode($this->planbyhour);
         $this->planbyhour->item_number;
 
         $data['item_number'] = $this->planbyhour->item_number;
