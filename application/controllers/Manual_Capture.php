@@ -42,13 +42,14 @@ class Manual_Capture extends CI_Controller
         //$now_date = date("Y-m-d H:i:s");
         //$data['now_date'] = $now_date;
         $this->load->model('capture');
+        //$this->load->model('shift');
         $this->load->model('productionplan');
         $this->load->model('planbyhour');
        
-        
+        $now = new DateTime;
 
         //$asset_id, $shift_id, $date, si no hay plan regresa NULL
-        $plan = $this->productionplan->getProductionPlan( $this->input->get('asset_id') );
+        $plan = $this->productionplan->getProductionPlan( $this->input->get('asset_id'), $this->shift->getIdFromCurrentTime( $now ), $now->format(DATE_FORMAT) );
         
         //Aqui ya traes los datos de plan_hourxhour.plan_by_hours si no lo encontro
         $plan_by_hour_id = $this->capture->get_current_hour($plan->plan_id);
