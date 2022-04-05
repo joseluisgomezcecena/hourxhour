@@ -10,7 +10,7 @@ class Measuring_Point extends CI_Controller{
 		$this->load->model('shift');
 		
 		
-		$shift_date['shift_id'] = $this->shift->getIdFromCurrentTime(  new DateTime() );
+		$shift_date = $this->shift->getIdFromCurrentTime(  new DateTime() );
 
 		$plant_id  = $this->input->get('plant_id');
 		$site_id  =   $this->input->get('site_id');

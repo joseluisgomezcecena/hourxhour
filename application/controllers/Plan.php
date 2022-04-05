@@ -205,7 +205,8 @@ class Plan extends CI_Controller
     public function select_cell()
     {
         //se obtiene el turno en base al DateTime y se carga el modelo del shift
-        $shift_date['shift_id'] = $this->shift->getIdFromCurrentTime( new DateTime() );
+        $shift_date = $this->shift->getIdFromCurrentTime( new DateTime() );
+
         $plant_id = $this->input->get('plant_id');
         $this->shift->Load( $shift_date['shift_id'] );
 
