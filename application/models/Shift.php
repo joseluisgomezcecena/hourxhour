@@ -39,9 +39,12 @@ class Shift extends CI_Model {
 
 
 
+
     public function getIdFromCurrentTime($now)
     {
-        $result_id = -1;
+        $result['shift_id'] = -1;
+        $result['date'] = $now;
+
         $this->db->select("*, TIMEDIFF(shift_end_time, shift_start_time) as difference");
         $this->db->from('shifts');
         $query = $this->db->get();
@@ -57,6 +60,8 @@ class Shift extends CI_Model {
         //Organizar los datos para incluir todas las horas de tal manera
         foreach($data as $shift)
         {
+            //$shift['date'] = $now;
+
             $str_to_search = '-';
             //Si hay una fecha negativa debemos de acomodar las horas de tal manera que se cuenten las que sobrepasan
             //de las 23 horas con 59 minutos
@@ -99,11 +104,16 @@ class Shift extends CI_Model {
             
             if ($current_millis >= $start_millis && $current_millis < $end_millis)
             {
-                $result_id = $shift['shift_id'];
+                $result['shift_id'] = $shift['shift_id'];
+
+                if ($shift['shift_start_time'] == '00:00:00' )
+                    $result['date'] = $now->modify("-1 day");
+
                 break;
             }
         }
-        return $result_id; 
+
+        return $result; 
     }
 
 

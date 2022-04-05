@@ -16,11 +16,16 @@ class Manual_Capture extends CI_Controller
         $data['title'] = "Manual Capture";
         $data['shifts'] = $this->shift->all();
 
-        //echo json_encode($data);
 
-        $this->load->view('templates/header');
-        $this->load->view('pages/plan/manual_capture', $data);
-        $this->load->view('templates/footer');
+        $now = new DateTime;
+        $now->setTime(0, 0, 0);
+
+        //$shift_date = $this->shift->getIdFromCurrentTime($now);
+        //echo json_encode($shift_date);
+
+        //$this->load->view('templates/header');
+        //$this->load->view('pages/plan/manual_capture', $data);
+        //$this->load->view('templates/footer');
     }
 
     public function tablet()
@@ -30,10 +35,10 @@ class Manual_Capture extends CI_Controller
         $this->load->model('productionplan');
         $this->load->model('planbyhour');
 
-        $now = new DateTime;
-
+        
+        $shift_date = $this->shift->getIdFromCurrentTime(new DateTime);    
         //$asset_id, $shift_id, $date, si no hay plan regresa NULL
-        $plan = $this->productionplan->getProductionPlan($this->input->get('asset_id'), $this->shift->getIdFromCurrentTime($now), $now->format(DATE_FORMAT));
+        $plan = $this->productionplan->getProductionPlan($this->input->get('asset_id'), $shift_date['shift_id'], $shift_date['date']->format(DATE_FORMAT));
 
         //Aqui ya traes los datos de plan_hourxhour.plan_by_hours si no lo encontro
         $plan_by_hour_id = $this->capture->get_current_hour($plan->plan_id);
@@ -112,13 +117,14 @@ class Manual_Capture extends CI_Controller
     {
         $this->load->model('plant');
         $this->load->model('shift');
-        $now = new DateTime();
-        $shift_id = $this->shift->getIdFromCurrentTime($now);
+        
+        $shift_date = $this->shift->getIdFromCurrentTime( new DateTime );
+
         $plant_id = $this->input->get('plant_id');
         $site_id  =   $this->input->get('site_id');
 
         $sql = "SELECT assets.asset_id, assets.site_id, assets.asset_name, ";
-        $sql .= "(SELECT plan_id FROM production_plans WHERE production_plans.asset_id = assets.asset_id AND production_plans.date = '{$now->format(DATE_FORMAT)}' AND shift_id = {$shift_id}) as plan_id FROM assets ";
+        $sql .= "(SELECT plan_id FROM production_plans WHERE production_plans.asset_id = assets.asset_id AND production_plans.date = '{$shift_date['date']->format(DATE_FORMAT)}' AND shift_id = {$shift_date['shift_id']}) as plan_id FROM assets ";
         $sql .= "WHERE assets.asset_active=1 AND assets.site_id = {$site_id} AND assets.asset_is_pom = 1";
 
         $query = $this->db->query($sql);
@@ -127,7 +133,7 @@ class Manual_Capture extends CI_Controller
         $data['title'] = "Measuring Point";
         $data['plant_id'] = $plant_id;
         $data['site_id'] = $site_id;
-        $data['shift_id'] = $shift_id;
+        $data['shift_id'] = $shift_date['shift_id'];
         $this->plant->Load($plant_id);
         $this->load->view('templates/header_logged_out');
         $this->load->view('pages/plan/tablet/select_measuring_point_tablet', $data);

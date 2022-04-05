@@ -8,8 +8,9 @@ class Measuring_Point extends CI_Controller{
 	public function index() {
 
 		$this->load->model('shift');
-		$now = new DateTime();
-		$shift_id = $this->shift->getIdFromCurrentTime( $now );
+		
+		
+		$shift_date['shift_id'] = $this->shift->getIdFromCurrentTime(  new DateTime() );
 
 		$plant_id  = $this->input->get('plant_id');
 		$site_id  =   $this->input->get('site_id');
@@ -22,7 +23,7 @@ class Measuring_Point extends CI_Controller{
 		// as plan_id FROM assets WHERE assets.asset_active=1 AND assets.site_id = 8
 
 		$sql = "SELECT assets.asset_id, assets.site_id, assets.asset_name, ";
-		$sql .= "(SELECT plan_id FROM production_plans WHERE production_plans.asset_id = assets.asset_id AND production_plans.date = '{$now->format(DATE_FORMAT)}' AND shift_id = {$shift_id}) as plan_id FROM assets ";
+		$sql .= "(SELECT plan_id FROM production_plans WHERE production_plans.asset_id = assets.asset_id AND production_plans.date = '{$shift_date['date']->format(DATE_FORMAT)}' AND shift_id = {$shift_date['shift_id']}) as plan_id FROM assets ";
 		$sql .= "WHERE assets.asset_active=1 AND assets.site_id = {$site_id} AND assets.asset_is_pom = 1";
 
 		

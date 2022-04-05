@@ -23,12 +23,13 @@ class Plan extends CI_Controller
         $data['title'] = "Plan";
 		$data['asset_id'] = $asset_id = $this->input->get('asset_id');
 
-		$data['shift_id'] = $this->shift->getIdFromCurrentTime( $now );
-		$data['date'] = $date = $now->format(DATE_FORMAT);
+		$shift_date = $this->shift->getIdFromCurrentTime( $now );
+        //$data['shift_id'] = $shift_date['shift_id'];
+		//$data['date'] = $date = $now->format(DATE_FORMAT);
 
    
 		$this->load->view('templates/header');
-        $this->load->view('pages/plan/index', $data);
+        $this->load->view('pages/plan/index', $shift_date);
         $this->load->view('templates/footer');
     }
 
@@ -204,9 +205,9 @@ class Plan extends CI_Controller
     public function select_cell()
     {
         //se obtiene el turno en base al DateTime y se carga el modelo del shift
-        $shift_id = $this->shift->getIdFromCurrentTime( new DateTime() );
+        $shift_date['shift_id'] = $this->shift->getIdFromCurrentTime( new DateTime() );
         $plant_id = $this->input->get('plant_id');
-        $this->shift->Load( $shift_id);
+        $this->shift->Load( $shift_date['shift_id'] );
 
         $this->load->model('plant');
         $this->plant->Load($plant_id);
