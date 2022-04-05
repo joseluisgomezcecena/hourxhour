@@ -39,9 +39,14 @@ class Manual_Capture extends CI_Controller
         $plan_by_hour_id = $this->capture->get_current_hour($plan->plan_id);
         $this->planbyhour->Load($plan_by_hour_id);
 
+<<<<<<< HEAD
         $plan_id = $this->planbyhour->plan_id;
         $item_id = $this->planbyhour->item_id;
 
+=======
+        //echo json_encode($this->planbyhour);
+        $this->planbyhour->item_number;
+>>>>>>> fd34cf6c7bb931c3d49210304b90f637dbd70631
 
         $data['plan_id'] = $plan_id;
         $data['item_id'] = $item_id;
@@ -55,9 +60,36 @@ class Manual_Capture extends CI_Controller
 
 
     //add capture
-    public function add_capture($number)
+    public function add_capture()
     {
+        $plan_by_hour_id = $this->input->post('plan_by_hour_id');
+        $reset = $this->input->post('reset');
+        $capture_type = $this->input->post('capture_type '); //0 es para sensor, 1 es para tablet, 2 es para desktop
+
         //i need plan_hour_by_id
+<<<<<<< HEAD
+=======
+        $this->load->model('planbyhour');
+        $this->load->model('productionplan');
+
+        $this->planbyhour->Load($plan_by_hour_id);
+
+        //retrieve an object of table productions_plans
+        $plan = $this->productionplan->getProductionPlanById( $this->planbyhour->plan_id );
+        
+        $last_value = intval( $this->planbyhour->completed );
+
+        $mult_factor = 1;
+        if($plan->use_multitplier_factor == 1)
+        {
+            $mult_factor =  $plan->multiplier_factor;
+        }
+
+        //$last_value += $mult_factor; //capture_type
+        $this->planbyhour->IncrementCompleted($mult_factor, $reset,  $capture_type);
+    
+        echo json_encode($this->planbyhour);
+>>>>>>> fd34cf6c7bb931c3d49210304b90f637dbd70631
 
     }
 

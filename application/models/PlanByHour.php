@@ -57,4 +57,39 @@ class PlanByHour extends CI_Model
         return true;
     }
 
+
+    public function IncrementCompleted($value, $reset = false, $capture_type = 0)
+    {
+        
+
+        $data['plan_by_hour_id'] = $this->plan_by_hour_id;
+        $data['completed_init'] = $this->completed;
+        $data['completed_increment'] = $reset ? 0 : $value;
+        $data['capture_type'] = $capture_type;
+
+        $current = new DateTime;
+        $data['created_at'] =  $current->format(FORMAT_DATETIME);
+        $data['updated_at'] = $current->format(FORMAT_DATETIME);
+
+        if(reset)
+        {
+            $this->completed = $value;
+        } else
+        {
+            $this->completed += $value;
+        }
+        $data['completed'] = $this->completed; 
+        
+        //$plan_by_hour_id;
+        $this->db->set('completed', $this->completed);
+        $this->db->where('plan_by_hour_id', $this->plan_by_hour_id);
+        $this->db->update('plan_by_hours'); // gives UPDATE `mytable` SET `field` = 'field+1' WHERE `id` = 2
+
+        //insert register production_records
+        //plan_by_hour_id, completed_init, completed_increment, completed, created_at, updated_at, capture_type = 0 sensor, 1 table, 2 desktop
+        $this->db->set($data);
+        $this->db->insert('production_records');
+
+    }
+
 }

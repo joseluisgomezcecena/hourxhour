@@ -67,7 +67,7 @@
             </thead>
         </table>
       <div style="display: flex; justify-content:flex-end;">
-      <div class=" my-3 px-5 text-right"  >
+      <div class=" my-3 px-5 text-right mt-3"  >
             <input class="form-check-input mt-1" id="flexCheckDefault" ng-model="production_plan.use_multiplier_factor"  type="checkbox" value="">
             <label class="form-check-label px-3 mt-0" for="flexCheckDefault">Factor multiplicador</label>
             <input class="form-control" style="width: 12rem;" type="number" min="1" ng-model="production_plan.multiplier_factor" ng-disabled="!production_plan.use_multiplier_factor" value="1" id="" >
@@ -123,7 +123,7 @@
 
                         <!-- PLANNED INTERRUPTION -->
                         <td>
-                            <select ng-model="plan_item.selected_interruption" ng-change="interruption_changed(plan_item)"  ng-options="interruption as interruption.interruption_name for interruption in interruptions">
+                            <select class="form-control input_invisible" ng-model="plan_item.selected_interruption" ng-change="interruption_changed(plan_item)"  ng-options="interruption as interruption.interruption_name for interruption in interruptions">
                                 <option value="" ng-if="false"></option>
                             </select>
                         </td>
@@ -409,9 +409,12 @@ fetch.controller('planController', ['$scope', '$http', function ($scope, $http) 
   $scope.calculate_formula = function(plan_item)
   { 
     //console.log("calculate formula....")
-    console.log(plan_item);
+    //console.log(plan_item);
 
-    if(plan_item.planned == undefined||plan_item.std_time == undefined)
+    if(plan_item == undefined)
+        return; 
+
+    if(plan_item.planned == undefined|| plan_item.std_time == undefined)
     {
         plan_item.formula = undefined;
     }

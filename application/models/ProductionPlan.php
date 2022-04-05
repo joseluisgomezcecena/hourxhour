@@ -254,4 +254,19 @@ class ProductionPlan extends CI_Model
         }      
     }
 
+    public function getProductionPlanById($plan_id)
+    {
+        $this->db->where('plan_id', $plan_id  );
+        $query = $this->db->get('production_plans'); 
+        $result = $query->result(); 
+
+        if( count($result) > 0 )
+        {
+            return $result[0];
+        } else
+        {
+            return NULL;
+        }      
+    }
+
 }
