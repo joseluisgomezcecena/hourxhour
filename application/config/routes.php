@@ -112,3 +112,5 @@ $route['manual_capture/measuring_point'] = '/manual_capture/measuring_point';
 $route['test/angular'] = 'testscontroller/test_angular';
 $route['api/plants/all'] = 'plants/api_all';
 $route['api/sites/all/(:num)'] = 'sites/api_all_by_plant/$1';
+//error
+$route['manual_capture/error'] = '/manual_capture/tablet';

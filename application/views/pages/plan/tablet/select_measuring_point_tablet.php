@@ -14,7 +14,12 @@
          <?php
 
             foreach ($item_by_plan as $item) {
-                echo '<a href="' . base_url() . '/manual_capture/button_tablet?asset_id=' . $item['asset_id'] . '">';
+                if($item['plan_id'] != null){
+                    echo '<a href="' . base_url() . '/manual_capture/button_tablet?asset_id=' . $item['asset_id'] . '">';
+                }else{
+                    echo '<a href="#"';
+                    echo 'style="cursor: no-drop; color: gray;" >';
+                }
                 echo '<div class="card p-5">';
                 echo '<div class="items-center px-5 py-2">';
                 echo '<h5 class="mb-0 uppercase">' . $item['asset_name'] . '</h5>';

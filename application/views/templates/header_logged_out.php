@@ -16,6 +16,7 @@
 
     <script src='<?= base_url() ?>assets/angular-1.8.2/angular.min.js'></script>
 
+    <script src="<?php echo  base_url() ?>assets/js/sweetalert.min.js"></script>
     <title>Hour By Hour | Andon</title>
 </head>
 
