@@ -47,6 +47,15 @@ class Site extends CI_Model {
 		return $query->result_array();
 	}
 
+    public function getAllFromPlant($plant_id)
+	{
+		$this->db->select ( '*' );
+		$this->db->from ( 'sites' );
+        $this->db->where('plant_id', $plant_id); 
+		$query = $this->db->get();
+		return $query->result_array();
+	}
+
 	public function getSingle($id)
 	{
 		$query = $this->db->get_where("sites", array('site_id' => $id));

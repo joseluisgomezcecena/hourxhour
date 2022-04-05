@@ -179,7 +179,7 @@
                             echo '<a href="' . base_url() . 'index.php/cell?plant_id=' . $plant['plant_id'] .'">';
                             echo '    Load Plan';
                             echo '</a>';
-                            echo '<a href="' . base_url() . 'index.php/manual_capture">';
+                            echo '<a href="' . base_url() . 'index.php/manual_capture?plant_id=' . $plant['plant_id'] . '">';
                             echo '    Manual Capture';
                             echo '</a>';
                             echo '<a href="' . base_url() . 'index.php/measuring_point">';

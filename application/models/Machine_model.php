@@ -38,7 +38,25 @@ class Machine_model extends CI_Model
 		return $query->result_array();
 	}
 
+	/*
+	*	Author: Emanuel Jaureugi
+	* 	Date: 05/04/2022	
+	* 	This returns all point of measurement or filtered by site_id
+	* 
+	*/
+	public function get_pom_active($site_id = NULL)
+	{
+		$this->db->select ( '*' );
+		$this->db->from ( 'assets' );
+		$this->db->where ( 'asset_active', 1 );
+		$this->db->where ( 'asset_is_pom', 1 );
+		
+		if($site_id != NULL)
+			$this->db->where ( 'site_id',  $site_id);
 
+		$query = $this->db->get();
+		return $query->result_array();
+	}
 
 	public function display_single($id)
 	{
