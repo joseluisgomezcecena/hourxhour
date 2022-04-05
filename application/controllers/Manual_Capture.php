@@ -20,12 +20,12 @@ class Manual_Capture extends CI_Controller
         $now = new DateTime;
         $now->setTime(0, 0, 0);
 
-        //$shift_date = $this->shift->getIdFromCurrentTime($now);
+        $shift_date = $this->shift->getIdFromCurrentTime($now);
         //echo json_encode($shift_date);
 
-        //$this->load->view('templates/header');
-        //$this->load->view('pages/plan/manual_capture', $data);
-        //$this->load->view('templates/footer');
+        $this->load->view('templates/header');
+        $this->load->view('pages/plan/manual_capture', $data);
+        $this->load->view('templates/footer');
     }
 
     public function tablet()
