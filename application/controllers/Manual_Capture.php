@@ -1,5 +1,7 @@
 <?php
 
+use LDAP\Result;
+
 class Manual_Capture extends CI_Controller
 {
 
@@ -113,6 +115,7 @@ class Manual_Capture extends CI_Controller
         $this->load->view('pages/plan/tablet/select_plant_button', $data);
         $this->load->view('templates/footer');
     }
+
     public function measuring_point()
     {
         $this->load->model('plant');
