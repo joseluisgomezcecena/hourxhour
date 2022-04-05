@@ -3,7 +3,7 @@
 	    <h1><?= $title ?></h1>
 	    <ul>
 			<ul>
-				<li><a href= "<?php echo base_url(); ?>index.php" >Pages</a></li>
+				<li><a href= "<?php echo base_url(); ?>index.php" >Home</a></li>
 				<li class="divider la la-arrow-right"></li>
 				<li> <a href= "<?php echo base_url(); ?>index.php/cell?plant_id=<?php echo $plant_id; ?>" >Select a Cell</a></li>
 				<li class="divider la la-arrow-right"></li>

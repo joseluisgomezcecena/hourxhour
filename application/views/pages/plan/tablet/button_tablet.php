@@ -9,7 +9,7 @@
     <span class="brand">
         <img width="150" src="<?php echo base_url(); ?>assets/images/transparente.png" alt="">
     </span>
-</div>;
+</div>
 <div class="card w-50 text-center" ng-controller="buttonController" ng-app="buttonApp">
     <div class="container mt-5">
         <p>Item number:</p>
