@@ -22,14 +22,13 @@ class Plan extends CI_Controller
 
         $data['title'] = "Plan";
 		$data['asset_id'] = $asset_id = $this->input->get('asset_id');
-
 		$shift_date = $this->shift->getIdFromCurrentTime( $now );
-        //$data['shift_id'] = $shift_date['shift_id'];
-		//$data['date'] = $date = $now->format(DATE_FORMAT);
-
-   
+    
+        $data['shift_id'] = $shift_date['shift_id'];
+		$data['date'] = $date = $shift_date['date']->format(DATE_FORMAT);
+            
 		$this->load->view('templates/header');
-        $this->load->view('pages/plan/index', $shift_date);
+        $this->load->view('pages/plan/index', $data);
         $this->load->view('templates/footer');
     }
 
