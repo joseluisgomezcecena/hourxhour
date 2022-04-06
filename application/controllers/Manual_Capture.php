@@ -21,6 +21,13 @@ class Manual_Capture extends CI_Controller
         $plant_id = $this->input->get('plant_id');
         $data['plant_id'] = $plant_id;
 
+        $data['plants'] = $this->db->get('plants')->result_array();
+
+        /*if(true)
+        {
+            echo json_encode( $data['plants'] );
+        }*/
+
         $shifts = $this->shift->get_shifts_with_date();
         for($i = 0; $i < count($shifts) ;$i++)
         {
@@ -63,6 +70,9 @@ class Manual_Capture extends CI_Controller
 
     public function save_manual_capture()
     {
+        $this->load->model('planbyhour');
+        //$this->load->model('productionplan');
+        
        // echo json_encode($this->input->post());
        //$input_data = $this->input->post();
         $first_part = 'plan_by_hour_id_';
@@ -71,6 +81,10 @@ class Manual_Capture extends CI_Controller
        {
             if (str_starts_with($key, $first_part)) {
                $plan_by_hour_id = intval(  substr($key, strlen($first_part) ) );
+
+               $this->planbyhour->Load($plan_by_hour_id);
+               $this->planbyhour->IncrementCompleted($value, true,  CAPTURE_MANUAL);
+
             } 
        }
 
@@ -116,7 +130,7 @@ class Manual_Capture extends CI_Controller
     {
         $plan_by_hour_id = $this->input->get('plan_by_hour_id');
         $reset = $this->input->get('reset');
-        $capture_type = $this->input->get('capture_type '); //0 es para sensor, 1 es para tablet, 2 es para desktop
+        $capture_type = $this->input->get('capture_type '); //0 es para manual, 1 es para sensor, 2 es para button
 
         //i need plan_hour_by_id
         $this->load->model('planbyhour');
