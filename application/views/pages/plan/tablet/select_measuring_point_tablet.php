@@ -12,7 +12,6 @@
      </ul>
      <div class="grid lg:grid-cols-4 gap-5 p-5">
          <?php
-
             foreach ($item_by_plan as $item) {
                 if($item['plan_id'] != null){
                     echo '<a href="' . base_url() . '/manual_capture/button_tablet?asset_id=' . $item['asset_id'] . '">';

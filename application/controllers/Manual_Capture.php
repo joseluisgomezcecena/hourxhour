@@ -86,8 +86,8 @@ class Manual_Capture extends CI_Controller
         $this->load->model('productionplan');
         $this->load->model('planbyhour');
 
-        
-        $shift_date = $this->shift->getIdFromCurrentTime(new DateTime);    
+
+        $shift_date = $this->shift->getIdFromCurrentTime(new DateTime);
         //$asset_id, $shift_id, $date, si no hay plan regresa NULL
         $plan = $this->productionplan->getProductionPlan($this->input->get('asset_id'), $shift_date['shift_id'], $shift_date['date']->format(DATE_FORMAT));
 
@@ -104,6 +104,7 @@ class Manual_Capture extends CI_Controller
         $data['item_number'] = $this->planbyhour->item_number;
         $data['planned'] = $this->planbyhour->planned;
         $data['title'] = "Captura manual";
+        $data['plan_by_hour_id'] = $plan_by_hour_id;
         $this->load->view('templates/header_logged_out');
         $this->load->view('pages/plan/tablet/button_tablet', $data);
         $this->load->view('templates/footer');
@@ -111,11 +112,11 @@ class Manual_Capture extends CI_Controller
 
 
     //add capture
-    public function add_capture($number)
+    public function add_capture()
     {
-        $plan_by_hour_id = $this->input->post('plan_by_hour_id');
-        $reset = $this->input->post('reset');
-        $capture_type = $this->input->post('capture_type '); //0 es para sensor, 1 es para tablet, 2 es para desktop
+        $plan_by_hour_id = $this->input->get('plan_by_hour_id');
+        $reset = $this->input->get('reset');
+        $capture_type = $this->input->get('capture_type '); //0 es para sensor, 1 es para tablet, 2 es para desktop
 
         //i need plan_hour_by_id
         $this->load->model('planbyhour');
@@ -124,19 +125,15 @@ class Manual_Capture extends CI_Controller
         $this->planbyhour->Load($plan_by_hour_id);
 
         //retrieve an object of table productions_plans
+
         $plan = $this->productionplan->getProductionPlanById($this->planbyhour->plan_id);
-
-        $last_value = intval($this->planbyhour->completed);
-
         $mult_factor = 1;
-        if ($plan->use_multitplier_factor == 1) {
+        if (isset($plan->use_multitplier_factor) && $plan->use_multitplier_factor == 1) {
             $mult_factor =  $plan->multiplier_factor;
         }
 
         //$last_value += $mult_factor; //capture_type
         $this->planbyhour->IncrementCompleted($mult_factor, $reset,  $capture_type);
-
-        echo json_encode($this->planbyhour);
     }
 
     //Modify entire capture
@@ -169,8 +166,8 @@ class Manual_Capture extends CI_Controller
     {
         $this->load->model('plant');
         $this->load->model('shift');
-        
-        $shift_date = $this->shift->getIdFromCurrentTime( new DateTime );
+
+        $shift_date = $this->shift->getIdFromCurrentTime(new DateTime);
 
         $plant_id = $this->input->get('plant_id');
         $site_id  =   $this->input->get('site_id');

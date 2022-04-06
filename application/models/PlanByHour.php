@@ -26,52 +26,55 @@ class PlanByHour extends CI_Model
         $this->db->where('plan_by_hour_id', $id );
         $query = $this->db->get('plan_by_hours');
 
-        $data = $query->result();
-
+        $data = $query->result_array();
         if(count($data) == 0)
         {
+            echo ">>", $id, "<br>";
+            echo "<br> entre x2 <br>";
+            echo json_encode($data);
             $error = self::NOT_FOUND_PLAN_BY_HOUR_ID;
-            return false;
+            return $error;
         }
 
         $plan_by_hour = $data[0]; 
 
-        $this->plan_by_hour_id = $plan_by_hour->plan_by_hour_id;
-        $this->plan_id = $plan_by_hour->plan_id;
-        $this->time = $plan_by_hour->time;
-        $this->time_end = $plan_by_hour->time_end;
-        $this->planned = $plan_by_hour->planned;
-        $this->item_id = $plan_by_hour->item_id;
-        $this->completed = $plan_by_hour->completed;
+        $this->plan_by_hour_id = $plan_by_hour['plan_by_hour_id'];
+        $this->plan_id = $plan_by_hour['plan_id'];
+        $this->time = $plan_by_hour['time'];
+        $this->time_end = $plan_by_hour['time_end'];
+        $this->planned = $plan_by_hour['planned'];
+        $this->item_id = $plan_by_hour['item_id'];
+        $this->completed = $plan_by_hour['completed'];
 
-        $this->db->where('item_id', $plan_by_hour->item_id );
+        $this->db->where('item_id', $plan_by_hour['item_id'] );
         $query = $this->db->get('items_pph');
-        $items = $query->result();
+        $items = $query->result_array();
         if(count($items) == 0 )
         {
+            echo "<br> entre <br>";
             $error = self::NOT_FOUND_ITEM_ID;
             return false;
         }
 
-        $this->item_number = $items[0]->item_number;
+        $this->item_number = $items[0]['item_number'];
         return true;
     }
 
 
     public function IncrementCompleted($value, $reset = false, $capture_type = 0)
     {
-        
-
         $data['plan_by_hour_id'] = $this->plan_by_hour_id;
         $data['completed_init'] = $this->completed;
         $data['completed_increment'] = $reset ? 0 : $value;
         $data['capture_type'] = $capture_type;
 
         $current = new DateTime;
-        $data['created_at'] =  $current->format(FORMAT_DATETIME);
-        $data['updated_at'] = $current->format(FORMAT_DATETIME);
+        $data['created_at'] =  $current->format(DATETIME_FORMAT);
+        $data['updated_at'] = $current->format(DATETIME_FORMAT);
 
-        if(reset)
+        echo "<br> ==>", $this->plan_by_hour_id;
+
+        if($reset)
         {
             $this->completed = $value;
         } else
