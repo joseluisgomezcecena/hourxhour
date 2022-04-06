@@ -337,6 +337,7 @@
             console.log('hc: ' + $scope.production_plan.hc)
             for (var i = 0; i < $scope.production_plan.plan_by_hours.length; i++) {
                 $scope.production_plan.plan_by_hours[i].planned_head_count = $scope.production_plan.hc;
+                $scope.calculate_formula( $scope.production_plan.plan_by_hours[i] );
             }
         }
 
@@ -364,45 +365,8 @@
             $scope.calculate_formula(plan_item);
             $scope.update_acum();
         }
-  }
+ 
 
-  $scope.sethc = function()
-  {
-    console.log('hc: ' +  $scope.production_plan.hc)
-    for(var i = 0; i < $scope.production_plan.plan_by_hours.length ;i++)
-    {
-        $scope.production_plan.plan_by_hours[i].planned_head_count = $scope.production_plan.hc;
-        $scope.calculate_formula( $scope.production_plan.plan_by_hours[i] );
-    }
-  }
-
-  $scope.partnumber_changed = function(plan_item) 
-  {
-
-    var found = $scope.items.filter(function(item) {
-        return item.item_number === plan_item.item_number;
-    })[0];
-
-    if(found) {    
-        plan_item.item_id = found.item_id;
-        plan_item.std_time = parseFloat(found.item_run_labor);
-        $scope.calculate_formula(plan_item);
-        //console.log('item_id loaded...')
-    } else 
-    {
-        console.log('not found item');
-        plan_item.item_id = undefined;
-        plan_item.std_time = undefined;
-        $scope.calculate_formula(plan_item);
-    } 
-  }
-
-
-  $scope.planned_changed = function(plan_item) 
-  {
-    $scope.calculate_formula(plan_item);
-    $scope.update_acum();
-  }
 
   $scope.update_acum = function(){
     var count = $scope.production_plan.plan_by_hours.length;

@@ -58,42 +58,44 @@
 
 					foreach($shift['assets'] as $asset)
 					{
-						
+						$production_plan = $asset['production_plan'];
 						echo '<table class="table w-full mt-3">';
 
-						$production_plan = $asset['production_plan'];
-						
-						$head = '<thead><tr>';
-						$head .= '<th>Station</th>';
+						//THEAD	
+						echo '<thead><tr>';
+						echo '<th>Estación</th>';
+						foreach( $production_plan->plan_by_hours as $plan_by_hour )
+						{				
+							echo '<th id="th_2">' . date( HOUR_MINUTE_FORMAT, strtotime( $plan_by_hour['time'] ) ) . '</th>';
+						}
+						echo '</tr></thead>';
 
-						$part_row = '<tr>';
-						$part_row .= '<div> <td> <p>' .  $asset['asset_name']  .  '</p> </td> </div>';
-			
+						//TBODY
+						echo '<tbody class="text-center">';
+						echo '<tr>';
+
+						echo '<td>';
+	                    echo '    <div>';
+	                    echo '       <p>TIP32</p>';
+	                    echo '       <p>AC1004HFC</p>';
+	                    echo '       <p>AC1004HFC</p>';
+	                    echo '    </div>';
+	                	echo '</td>';
 
 						foreach( $production_plan->plan_by_hours as $plan_by_hour )
-						{
-							//echo json_encode($plan_by_hour);
-							$converted_date = date(HOUR_MINUTE_FORMAT, strtotime($plan_by_hour['time']) );
-							$head .= '<th>' . $converted_date . '</th>'; 
-
-							$item_number = $plan_by_hour['item_number'];
-							$part_row .= '<td>' . ($item_number == null ? 'N/A' : $item_number )  . '</td>'; 
+						{				
+							echo '<td>';
+							echo '       <p>TIP32</p>';
+							echo '	<input class="form-control" type="number" value="0" style="min-width: 8rem;" />';
+							echo '	<button type="button" class="btn mt-4 btn-icon btn-icon_large btn_success uppercase">';
+							echo '		<span class="la la-save"></span>';
+							echo '	</button>';
+							echo '</td>';
 						}
-
-						$head .= '</tr></thead>';
-
-						$part_row .= '</tr>';
-
-						echo $head;
-
-						echo '<tbody class="text-center">';
-
-						echo $part_row;
-
+						
+				
+						echo '</tr>';
 						echo '</tbody>';
-
-						echo '</table>';
-
 					}
 
 					echo '</table>';
@@ -205,8 +207,8 @@
 	                    </table>
 
 	                </div>
+			
 			-->
-					
 
 	                <!-- Shift two -->
 
