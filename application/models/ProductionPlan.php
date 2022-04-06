@@ -44,6 +44,11 @@ class ProductionPlan extends CI_Model
 
     public function LoadPlan($asset_id, $date, $shift_id, $start_hour, $end_hour)
     {
+        //initialize variables
+        $this->plan_id = NULL;
+        unset($this->plan_by_hours);
+        $this->plan_by_hours = array(); 
+
         //echo "load plan" . $asset_id . ", " . $date . ", " . $shift_id . ", " . $start_hour . ", " . $end_hour ;
  
         $this->start_hour = $start_hour;
@@ -112,7 +117,6 @@ class ProductionPlan extends CI_Model
             $this->GenerateHours();
         } else
         {
-   
 
             $row = $data[0];
             $this->LoadProperties($row);
@@ -177,6 +181,8 @@ class ProductionPlan extends CI_Model
 
     public function GenerateHours()
     {
+        
+
         $interval_in_milliseconds = self::time_interval_in_minutes  * 60 * 1000;
 
         //echo $interval_in_milliseconds;
@@ -230,7 +236,7 @@ class ProductionPlan extends CI_Model
         //$this->db->order_by('time', 'ASC');
         //$this->table_hours
 
-        $query = $this->db->query('SELECT * from plan_by_hours WHERE plan_id = ' . $this->plan_id . " ORDER BY time ASC");
+        $query = $this->db->query('SELECT plan_by_hours.*, items_pph.item_number from plan_by_hours LEFT JOIN items_pph ON plan_by_hours.item_id = items_pph.item_id WHERE plan_id = ' . $this->plan_id . " ORDER BY time ASC");
         $this->plan_by_hours = $query->result_array();   
         
         //echo json_encode($this->plan_by_hours);

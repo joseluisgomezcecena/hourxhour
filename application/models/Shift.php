@@ -70,7 +70,6 @@ class Shift extends CI_Model {
                 //create dos nuevos
                $first_item = $shift;
                $first_item['shift_end_time'] = '23:59:59';
-
                 
                 $second_item = $shift;
                 $second_item['shift_start_time'] = '00:00:00';
@@ -123,6 +122,39 @@ class Shift extends CI_Model {
         return $query->result();
     }
 
+
+    /*
+    * Author: Emanuel Jauregui
+    * Date: 04/05/2022
+    * El proposito de esta funcion es traer un arreglo con los turonos y con el dia
+    */
+    public function get_shifts_with_date()
+    {
+        $current = new DateTime();
+        
+        $query = $this->db->get('shifts');
+        $shifts = $query->result_array();
+
+        for($i = 0; $i < count($shifts) ;$i++)
+        {       
+            $shifts[$i]['date'] = $current;
+        }
+
+        $hour = $current->format(TIME_FORMAT);
+
+        //$compare = new DateTime();
+        $compare = $shifts[0]['shift_start_time'];
+        
+        if ( strcmp($hour, $compare) < 0 )
+        {
+            $shift_removed = array_pop($shifts);
+            $date_removed = new DateTime();
+            $shift_removed['date'] = $date_removed->modify("-1 day");
+            array_unshift($shifts, $shift_removed);
+        }
+
+        return $shifts;
+    }   
 
 
 }

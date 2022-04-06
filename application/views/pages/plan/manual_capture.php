@@ -11,21 +11,100 @@
 	<div class="grid lg:grid-cols-1 gap-5">
 	    <div class="p-5">
 	        <div class="tabs">
+
 	            <nav class="tab-nav mt-5">
-	                <button class="nav-link h5 uppercase active" data-toggle="tab" data-target="#tab-1">
+	                
+					<?php
+
+						foreach($shifts as $index => $shift)
+						{
+							echo '<button class="nav-link h5 uppercase' . (($index == 0) ? ' active' : ' ')  . '" data-toggle="tab" data-target="#tab-' . $shift['shift_id']  .'">';
+							echo '<span class="las ' . $shift['icon'] .'"></span>';
+							echo $shift['shift_name'];
+							echo '</button>';
+						}
+					?>
+
+					 <!--
+					<button class="nav-link h5 uppercase active" data-toggle="tab" data-target="#tab-1">
                     <span class="las la-sun"></span>
-	                    Shift One</button>
-	                <button class="nav-link h5 uppercase mr-5" data-toggle="tab" data-target="#tab-2">
+	                    Shift One
+					</button>
+	                
+					<button class="nav-link h5 uppercase mr-5" data-toggle="tab" data-target="#tab-2">
                     <span class="las la-cloud-moon"></span>
-	                    Shift Two</button>
-	                <button class="nav-link h5 uppercase" data-toggle="tab" data-target="#tab-3">
+	                    Shift Two
+					</button>
+	                
+					<button class="nav-link h5 uppercase" data-toggle="tab" data-target="#tab-3">
                     <span class="las la-moon"></span>
-	                    Shift Three</button>
+	                    Shift Three
+					</button>
+					-->
 	            </nav>
 
 	            <!-- Shift one -->
 
 	            <div class="tab-content mt-5">
+
+
+				<?php
+
+				foreach($shifts as $index => $shift)
+				{
+					echo '<div id="tab-' . $shift['shift_id'] . '" class="collapse' . (($index == 0) ? ' open' : ' ') . '">';
+					
+					echo '<table class="table w-full mt-3">';
+
+					foreach($shift['assets'] as $asset)
+					{
+						
+						echo '<table class="table w-full mt-3">';
+
+						$production_plan = $asset['production_plan'];
+						
+						$head = '<thead><tr>';
+						$head .= '<th>Station</th>';
+
+						$part_row = '<tr>';
+						$part_row .= '<div> <td> <p>' .  $asset['asset_name']  .  '</p> </td> </div>';
+			
+
+						foreach( $production_plan->plan_by_hours as $plan_by_hour )
+						{
+							//echo json_encode($plan_by_hour);
+							$converted_date = date(HOUR_MINUTE_FORMAT, strtotime($plan_by_hour['time']) );
+							$head .= '<th>' . $converted_date . '</th>'; 
+
+							$item_number = $plan_by_hour['item_number'];
+							$part_row .= '<td>' . ($item_number == null ? 'N/A' : $item_number )  . '</td>'; 
+						}
+
+						$head .= '</tr></thead>';
+
+						$part_row .= '</tr>';
+
+						echo $head;
+
+						echo '<tbody class="text-center">';
+
+						echo $part_row;
+
+						echo '</tbody>';
+
+						echo '</table>';
+
+					}
+
+					echo '</table>';
+
+					echo '</div>';
+				}
+
+				?>
+
+
+					<!--
 	                <div id="tab-1" class="collapse open">
 	                    <table class="table w-full mt-3">
 	                        <thead>
@@ -124,10 +203,14 @@
 	                            </tr>
 	                        </tbody>
 	                    </table>
+
 	                </div>
+			-->
+					
 
 	                <!-- Shift two -->
 
+					<!--
 	                <div id="tab-2" class="collapse">
 	                    <table class="table w-full mt-3">
 	                        <thead>
@@ -205,9 +288,11 @@
 	                        </tbody>
 	                    </table>
 	                </div>
+					-->
+
 
 	                <!-- Shift three -->
-
+					<!--
 	                <div id="tab-3" class="collapse">
 	                    <table class="table w-full mt-3">
 	                        <thead>
@@ -270,6 +355,8 @@
 	                        </tbody>
 	                    </table>
 	                </div>
+					-->
+
 	            </div>
 	        </div>
 	    </div>

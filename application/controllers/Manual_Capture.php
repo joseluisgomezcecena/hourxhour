@@ -14,17 +14,48 @@ class Manual_Capture extends CI_Controller
 
     public function index()
     {
+        $this->load->model('machine_model');
+        $this->load->model('productionplan');
 
         $data['title'] = "Manual Capture";
-        $data['shifts'] = $this->shift->all();
+        //$data['shifts'] = $this->shift->all();
 
+        $shifts = $this->shift->get_shifts_with_date();
+        for($i = 0; $i < count($shifts) ;$i++)
+        {
+            //En los shifts traigo el shift_id y el date, solo me falta el asset_id para saber de que plan se trata
+            $assets = $this->machine_model->get_pom_active();
+            $assets_with_plan = array();
+            //$shifts[$i]['assets'] = $this->machine_model->get_pom_active();
 
-        $now = new DateTime;
-        $now->setTime(0, 0, 0);
+            $shift_id = $shifts[$i]['shift_id'];
+            $date = $shifts[$i]['date'];
+            $shift_start_time = $shifts[$i]['shift_start_time'];
+            $shift_end_time = $shifts[$i]['shift_end_time'];
 
-        $shift_date = $this->shift->getIdFromCurrentTime($now);
-        //echo json_encode($shift_date);
+            for($a = 0; $a < count($assets); $a++)
+            {
+                $asset_id = $assets[$a]['asset_id'];
+                     
+                //Cargar el production plan
+                $this->productionplan->LoadPlan($asset_id, $date->format(DATE_FORMAT), $shift_id,  $shift_start_time, $shift_end_time);
+                if( $this->productionplan->plan_id != NULL )
+                {
+                    //Si no hay production plan
+                    //$assets[$a]['production_plan'] = $this->productionplan;
 
+                    $assets[$a]['production_plan'] =  clone $this->productionplan;
+                    array_push($assets_with_plan, $assets[$a]);
+                } 
+            }
+
+            //if($i == 0)
+            $shifts[$i]['assets'] = $assets_with_plan;
+        }
+        //pass the site_id
+        $data['shifts'] = $shifts;
+
+        //echo json_encode($data);   
         $this->load->view('templates/header');
         $this->load->view('pages/plan/manual_capture', $data);
         $this->load->view('templates/footer');
