@@ -97,6 +97,7 @@ $route['custom_report'] = 'reports/custom_report';
 $route['measuring_point'] = '/measuring_point/index';
 //manual_capture
 $route['manual_capture'] = '/manual_capture/index';
+$route['manual_capture/save']['post'] = '/manual_capture/save_manual_capture';
 //trigger
 $route['trigger'] = '/trigger/index';
 //login

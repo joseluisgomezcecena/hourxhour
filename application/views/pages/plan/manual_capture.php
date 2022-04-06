@@ -49,24 +49,42 @@
 
 
 				<?php
+				$current = new DateTime();
 
 				foreach($shifts as $index => $shift)
 				{
 					echo '<div id="tab-' . $shift['shift_id'] . '" class="collapse' . (($index == 0) ? ' open' : ' ') . '">';
 					
-					echo '<table class="table w-full mt-3">';
-
+					
+					//One table by asset
 					foreach($shift['assets'] as $asset)
 					{
+						echo '<table class="table w-full mt-3">';
+
 						$production_plan = $asset['production_plan'];
 						echo '<table class="table w-full mt-3">';
 
+						$current_item_number = 'N/A';
 						//THEAD	
 						echo '<thead><tr>';
-						echo '<th>Estación</th>';
+						echo '<th >Estación</th>';
 						foreach( $production_plan->plan_by_hours as $plan_by_hour )
-						{				
-							echo '<th id="th_2">' . date( HOUR_MINUTE_FORMAT, strtotime( $plan_by_hour['time'] ) ) . '</th>';
+						{		
+							$start = new DateTime( $plan_by_hour['time'] );
+							$end = new DateTime( $plan_by_hour['time_end'] );
+
+							if($current >= $start && $current < $end )
+							{
+								if(isset($plan_by_hour['item_number']))
+									$current_item_number = $plan_by_hour['item_number'];
+								else
+									$current_item_number = 'N/A';
+								//"background-color", "#BAE6FD"
+								echo '<th id="th_2" style="background-color: #BAE6FD;">' . date( HOUR_MINUTE_FORMAT, strtotime( $plan_by_hour['time'] ) ) . '</th>';
+							} else
+							{
+								echo '<th id="th_2">' . date( HOUR_MINUTE_FORMAT, strtotime( $plan_by_hour['time'] ) ) . '</th>';
+							}						
 						}
 						echo '</tr></thead>';
 
@@ -76,29 +94,41 @@
 
 						echo '<td>';
 	                    echo '    <div>';
-	                    echo '       <p>TIP32</p>';
-	                    echo '       <p>AC1004HFC</p>';
-	                    echo '       <p>AC1004HFC</p>';
+	                    echo '       <p>' . $asset['asset_name'] . '</p>';
+	                    echo '       <p>' . $asset['site_name'] .'</p>';
+	                    echo '       <p>' . $current_item_number .'</p>';
 	                    echo '    </div>';
 	                	echo '</td>';
 
+					
 						foreach( $production_plan->plan_by_hours as $plan_by_hour )
 						{				
+							$is_enable = isset($plan_by_hour['item_number']);
+							
 							echo '<td>';
-							echo '       <p>TIP32</p>';
-							echo '	<input class="form-control" type="number" value="0" style="min-width: 8rem;" />';
-							echo '	<button type="button" class="btn mt-4 btn-icon btn-icon_large btn_success uppercase">';
+							echo ' <p>' . ( $is_enable ? $plan_by_hour['item_number'] : 'N/A')  .'</p>';
+
+							echo '<form action="' . base_url() . 'manual_capture/save" method="post">';
+							echo '<input type="number" name="plant_id" value="' . $plant_id . '" hidden/>';
+							echo '	<input class="form-control" type="number" name="plan_by_hour_id_' . $plan_by_hour['plan_by_hour_id'] . '" value="' . $plan_by_hour['completed'] . '" style="min-width: 8rem;" ' . ($is_enable ? '' : 'disabled') . '/>';
+							echo '	<button type="submit" class="btn mt-4 btn-icon btn-icon_large btn_success uppercase" ' . ($is_enable ? '' : 'disabled') . '>';
 							echo '		<span class="la la-save"></span>';
 							echo '	</button>';
+							echo '</form>';	
+
 							echo '</td>';
 						}
 						
-				
 						echo '</tr>';
 						echo '</tbody>';
+
+						echo '</table>';
+
+						echo '<hr style="border-top: 1px solid #bbb;">';
+						
 					}
 
-					echo '</table>';
+				
 
 					echo '</div>';
 				}
@@ -207,8 +237,8 @@
 	                    </table>
 
 	                </div>
-			
-			-->
+					-->
+				
 
 	                <!-- Shift two -->
 

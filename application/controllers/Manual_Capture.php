@@ -18,16 +18,16 @@ class Manual_Capture extends CI_Controller
         $this->load->model('productionplan');
 
         $data['title'] = "Manual Capture";
-        //$data['shifts'] = $this->shift->all();
+        $plant_id = $this->input->get('plant_id');
+        $data['plant_id'] = $plant_id;
 
         $shifts = $this->shift->get_shifts_with_date();
         for($i = 0; $i < count($shifts) ;$i++)
         {
             //En los shifts traigo el shift_id y el date, solo me falta el asset_id para saber de que plan se trata
-            $assets = $this->machine_model->get_pom_active();
+            $assets = $this->machine_model->get_pom_active($plant_id);
             $assets_with_plan = array();
-            //$shifts[$i]['assets'] = $this->machine_model->get_pom_active();
-
+            
             $shift_id = $shifts[$i]['shift_id'];
             $date = $shifts[$i]['date'];
             $shift_start_time = $shifts[$i]['shift_start_time'];
@@ -43,7 +43,6 @@ class Manual_Capture extends CI_Controller
                 {
                     //Si no hay production plan
                     //$assets[$a]['production_plan'] = $this->productionplan;
-
                     $assets[$a]['production_plan'] =  clone $this->productionplan;
                     array_push($assets_with_plan, $assets[$a]);
                 } 
@@ -60,6 +59,25 @@ class Manual_Capture extends CI_Controller
         $this->load->view('pages/plan/manual_capture', $data);
         $this->load->view('templates/footer');
     }
+
+
+    public function save_manual_capture()
+    {
+       // echo json_encode($this->input->post());
+       //$input_data = $this->input->post();
+        $first_part = 'plan_by_hour_id_';
+
+       foreach($this->input->post() as $key => $value)
+       {
+            if (str_starts_with($key, $first_part)) {
+               $plan_by_hour_id = intval(  substr($key, strlen($first_part) ) );
+            } 
+       }
+
+       redirect( base_url() . 'manual_capture?plant_id=' . $this->input->post('plant_id'));
+       
+    }
+
 
     public function tablet()
     {

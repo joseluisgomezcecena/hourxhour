@@ -44,13 +44,17 @@ class Machine_model extends CI_Model
 	* 	This returns all point of measurement or filtered by site_id
 	* 
 	*/
-	public function get_pom_active($site_id = NULL)
+	public function get_pom_active($plant_id = NULL, $site_id = NULL)
 	{
-		$this->db->select ( '*' );
+		$this->db->select ( 'assets.*, sites.site_name, sites.plant_id' );
 		$this->db->from ( 'assets' );
 		$this->db->where ( 'asset_active', 1 );
 		$this->db->where ( 'asset_is_pom', 1 );
-		
+		$this->db->join('sites', 'assets.site_id = sites.site_id', 'left');
+
+		if($plant_id != NULL)
+			$this->db->where ( 'plant_id',  $plant_id);
+
 		if($site_id != NULL)
 			$this->db->where ( 'site_id',  $site_id);
 
