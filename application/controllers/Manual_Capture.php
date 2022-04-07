@@ -22,6 +22,8 @@ class Manual_Capture extends CI_Controller
         $data['plant_id'] = $plant_id;
 
         $site_id =  $this->input->get('site_id');
+        if($site_id == -1) $site_id = NULL;
+
         $data['site_id'] = $site_id;
 
         $data['plants'] = $this->db->get('plants')->result_array();
@@ -31,7 +33,7 @@ class Manual_Capture extends CI_Controller
         for($i = 0; $i < count($shifts) ;$i++)
         {
             //En los shifts traigo el shift_id y el date, solo me falta el asset_id para saber de que plan se trata
-            $assets = $this->machine_model->get_pom_active($plant_id);
+            $assets = $this->machine_model->get_pom_active($plant_id, $site_id);
             $assets_with_plan = array();
             
             $shift_id = $shifts[$i]['shift_id'];
@@ -128,9 +130,10 @@ class Manual_Capture extends CI_Controller
     //add capture
     public function add_capture()
     {
-        $plan_by_hour_id = $this->input->get('plan_by_hour_id');
-        $reset = $this->input->get('reset');
-        $capture_type = $this->input->get('capture_type '); //0 es para manual, 1 es para sensor, 2 es para button
+
+        $plan_by_hour_id = $this->input->post('plan_by_hour_id');
+        $reset = $this->input->post('reset');
+        $capture_type = $this->input->post('capture_type '); //0 es para manual, 1 es para sensor, 2 es para button
 
         //i need plan_hour_by_id
         $this->load->model('planbyhour');

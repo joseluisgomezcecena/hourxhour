@@ -60,6 +60,17 @@
 					echo '<div id="tab-' . $shift['shift_id'] . '" class="collapse' . (($index == 0) ? ' open' : ' ') . '">';
 					
 					
+					if (count( $shift['assets']) == 0) 
+					{	
+						echo <<<_EOF
+						<div class="alert alert_primary">
+							<strong class="uppercase"><bdi>Info!</bdi></strong>
+							This turn does not have plan production for any machine or workstation
+							
+						</div>
+						_EOF;
+					}
+
 					//One table by asset
 					foreach($shift['assets'] as $asset)
 					{
@@ -114,13 +125,18 @@
 
 						
 							echo '<input type="number" name="plant_id" value="' . $plant_id . '" hidden/>';
-							echo '	<input class="form-control" type="number" name="plan_by_hour_id_' . $plan_by_hour['plan_by_hour_id'] . '" value="' . $plan_by_hour['completed'] . '" style="min-width: 8rem;" ' . ($is_enable ? '' : 'disabled') . '/>';
+							echo '	<input class="form-control" type="number" id="input_plan_by_hour_id_' . $plan_by_hour['plan_by_hour_id'] . '" value="' . $plan_by_hour['completed'] . '" style="min-width: 8rem;" ' . ($is_enable ? '' : 'disabled') . '/>';
 							
-							echo '	<button id="button_plan_by_hour_id_' . $plan_by_hour['plan_by_hour_id'] . '" class="btn mt-4 btn-icon btn-icon_large btn_success uppercase" ' . ($is_enable ? '' : 'disabled') . ' ng-click="save()">';
-							echo '		<span class="la la-save"></span>';
+							echo '	<button id="button_plan_by_hour_id_' . $plan_by_hour['plan_by_hour_id'] . '" class="btn mt-4 btn-icon btn-icon_large btn_success uppercase" ' . ($is_enable ? '' : 'disabled') . ' ng-click="save(' . $plan_by_hour['plan_by_hour_id'] . ')">';
+							echo '		<span id="span_plan_by_hour_id_' . $plan_by_hour['plan_by_hour_id'] . '" class="la la-save"></span>';
 							echo '	</button>';
 							
-								
+							/* 
+							la la-save
+							la la-spinner animate-spin-slow
+							la la-check
+							*/	
+
 							echo '</td>';
 						}
 						
@@ -156,7 +172,7 @@
      * 
      */
     var fetch = angular.module('manualCaptureApp', []);
-    fetch.controller('manualCaptureController', ['$scope', '$http', function($scope, $http) {
+    fetch.controller('manualCaptureController', ['$scope', '$http', '$httpParamSerializerJQLike', function($scope, $http, $httpParamSerializerJQLike) {
 
 			$scope.plants = null;
 			$scope.selected_plant = null;
@@ -234,8 +250,50 @@
 			}
 
 
-			$scope.save = function(){
-				console.log('save');
+			/* 
+							la la-save
+							la la-spinner animate-spin-slow
+							la la-check
+			*/
+
+			$scope.save = function(plan_by_hour_id){
+				//console.log('save ' + plan_by_hour_id);
+				
+				var inputIdString = 'input_plan_by_hour_id_' + plan_by_hour_id;
+				var value = document.getElementById(inputIdString).value;
+
+				var spanIdString = 'span_plan_by_hour_id_' + plan_by_hour_id;
+
+				//console.log(value);		
+				document.getElementById(spanIdString).classList.remove('la-save');	
+				document.getElementById(spanIdString).classList.add('la-spinner');
+				document.getElementById(spanIdString).classList.add('animate-spin-slow');
+				
+				var data = {
+					"plan_by_hour_id" : plan_by_hour_id,
+					"reset" : 1,
+					"capture_type" : <?= CAPTURE_MANUAL?>
+				};
+
+				$http({
+					url: '<?=base_url()?>api/manual_capture/save',
+					method: 'POST',
+					data: $httpParamSerializerJQLike(data), // Make sure to inject the service you choose to the controller
+					headers: {
+						'Content-Type': 'application/x-www-form-urlencoded' // Note the appropriate header
+					}
+					}).then(function(response) { 
+						/* do something here */
+						console.log(response); 
+						document.getElementById(spanIdString).classList.remove('la-spinner');
+						document.getElementById(spanIdString).classList.remove('animate-spin-slow');
+						document.getElementById(spanIdString).classList.add('la-check');
+
+						setTimeout(function(){ 
+							document.getElementById(spanIdString).classList.remove('la-check');
+							document.getElementById(spanIdString).classList.add('la-save');
+						}, 2000);
+					});
 			}
 
 
