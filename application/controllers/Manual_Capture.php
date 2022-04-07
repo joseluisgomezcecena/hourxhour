@@ -21,12 +21,11 @@ class Manual_Capture extends CI_Controller
         $plant_id = $this->input->get('plant_id');
         $data['plant_id'] = $plant_id;
 
+        $site_id =  $this->input->get('site_id');
+        $data['site_id'] = $site_id;
+
         $data['plants'] = $this->db->get('plants')->result_array();
 
-        /*if(true)
-        {
-            echo json_encode( $data['plants'] );
-        }*/
 
         $shifts = $this->shift->get_shifts_with_date();
         for($i = 0; $i < count($shifts) ;$i++)

@@ -1,7 +1,10 @@
+	
+	<div ng-app='manualCaptureApp' ng-controller='manualCaptureController'>
+	
 	<!-- Breadcrumb -->
-	<section class="breadcrumb lg:flex items-start" ng-app='manualCaptureApp' >
+	<section class="breadcrumb lg:flex items-start" >
 		<div>
-			<h1><?= $title ?></h1>
+			<h1><?= $title ?> in {{selected_plant.plant_name}}</h1>
 			<ul>
 				<li><a href="#">Pages</a></li>
 				<li class="divider la la-arrow-right"></li>
@@ -11,34 +14,23 @@
 	   
 		<div class="flex flex-wrap gap-2 items-center ltr:ml-auto rtl:mr-auto mt-5 lg:mt-0">
 
-
-		
-		<div class="input-group mt-5" ng-controller='filterController'>
-                        <div class="input-addon input-addon-prepend input-group-item">Plant</div>
-                        
-						<select ng-options="plant as item.label for plant in plants track by plant.plant_id" ng-model="selected"></select>
-
-						<!--
-						<select type="text"  class="form-control input-group-item" style="width: 10rem;" placeholder="First name">
-							<option>All Plants</option>
-						</select>
-						-->
+							
+					<div class="input-group mt-5" >
+                        <div class="input-addon input-addon-prepend input-group-item">Plant</div>				
+						<select ng-options="plant as plant.plant_name for plant in plants track by plant.plant_id" ng-model="selected_plant"></select>
 
 						<div class="input-addon input-addon-prepend input-group-item">Site</div>
-                        
-						<select type="text" class="form-control input-group-item"  style="width: 10rem;" placeholder="Last name">
-							<option>All Sites</option>
-						</select>
-						
-						<button class="btn btn_primary uppercase input-group-item">Filter</button>
+						<select ng-options="site as site.site_name for site in sites track by site.site_id" ng-model="selected_site"></select>
+
+						<button class="btn btn_primary uppercase input-group-item" ng-click="filter_plant_site()">Filter</button>
                     </div>
 		              
         </div>
-		
-
 	</section>
+
+
 	<!-- Tabs -->
-	<div class="grid lg:grid-cols-1 gap-5">
+	<div class="grid lg:grid-cols-1 gap-5" >
 	    <div class="p-5">
 	        <div class="tabs">
 
@@ -120,13 +112,15 @@
 							echo '<td>';
 							echo ' <p>' . ( $is_enable ? $plan_by_hour['item_number'] : 'N/A')  .'</p>';
 
-							echo '<form action="' . base_url() . 'manual_capture/save" method="post">';
+						
 							echo '<input type="number" name="plant_id" value="' . $plant_id . '" hidden/>';
 							echo '	<input class="form-control" type="number" name="plan_by_hour_id_' . $plan_by_hour['plan_by_hour_id'] . '" value="' . $plan_by_hour['completed'] . '" style="min-width: 8rem;" ' . ($is_enable ? '' : 'disabled') . '/>';
-							echo '	<button type="submit" class="btn mt-4 btn-icon btn-icon_large btn_success uppercase" ' . ($is_enable ? '' : 'disabled') . '>';
+							
+							echo '	<button id="button_plan_by_hour_id_' . $plan_by_hour['plan_by_hour_id'] . '" class="btn mt-4 btn-icon btn-icon_large btn_success uppercase" ' . ($is_enable ? '' : 'disabled') . ' ng-click="save()">';
 							echo '		<span class="la la-save"></span>';
 							echo '	</button>';
-							echo '</form>';	
+							
+								
 							echo '</td>';
 						}
 						
@@ -152,6 +146,8 @@
 	</div>
 
 
+	</div>
+
 	<script>
     /*
      * Author: Emanuel Jauregui
@@ -160,29 +156,90 @@
      * 
      */
     var fetch = angular.module('manualCaptureApp', []);
-    fetch.controller('filterController', ['$scope', '$http', function($scope, $http) {
+    fetch.controller('manualCaptureController', ['$scope', '$http', function($scope, $http) {
 
 			$scope.plants = null;
+			$scope.selected_plant = null;
 
-			$scope.init = function(){
-				console.log('init');
+			$scope.sites = null;
+			$scope.selected_site = null;
 
-				$scope.getPlants();
+			$scope.init = function(plant_id, site_id){
+				
+				console.log('init plant_id ' + plant_id);
+				$scope.getPlants(plant_id, site_id);
+			
 			}
 
-			$scope.getPlants = function(){
+			$scope.getPlants = function(plant_id = null, site_id = null){
 				$http({
                 method: 'get',
                 url: '<?= base_url() ?>index.php/api/plants/all',
 				}).then(function successCallback(response) {
-					
+
 					$scope.plants = response.data;
-					console.log($scope.plants);
+					
+					if(plant_id != null)
+					{
+						//Se deben convertir a Number porque el api regresa strings...
+						var plant = $scope.plants.filter(function(plant) {
+							return Number(plant.plant_id) === Number(plant_id);
+						})[0];
+						$scope.selected_plant = plant;
+
+						
+						$scope.getSites(site_id);
+
+						
+					}
 				});
 			}
 
+			$scope.getSites = function(site_id = null){
+				$http({
+				method: 'get',
+				url: '<?= base_url() ?>index.php/api/sites/all/' + $scope.selected_plant.plant_id
+				}).then(function successCallback(response) {
+				
+				// Assign response to users object
+					$scope.sites = response.data;
+					console.log($scope.plants);
+					$scope.sites.unshift({site_name: 'All Sites', site_id:-1});
 
-			$scope.init();
+					if(site_id != null)
+					{
+						var site = $scope.sites.filter(function(site) {
+							return Number(site.site_id) === Number(site_id);
+						})[0];
+						$scope.selected_site = site;
+					} else
+					{
+						var site = $scope.sites.filter(function(site) {
+							return Number(site.site_id) === -1;
+						})[0];
+						$scope.selected_site = site;
+					}
+
+				}); 
+			}
+
+
+			$scope.filter_plant_site = function() 
+			{
+				var url = '<?php echo base_url() ?>manual_capture?';
+				url += 'plant_id=' + $scope.selected_plant.plant_id;
+				if($scope.selected_site != undefined)
+					url += '&site_id=' + $scope.selected_site.site_id;
+				window.open(url,"_self")
+			}
+
+
+			$scope.save = function(){
+				console.log('save');
+			}
+
+
+			$scope.init(<?=$plant_id?>, <?=$site_id?>);
 
 	}]);
 
