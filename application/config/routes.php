@@ -105,6 +105,7 @@ $route['login'] = '/login/index';
 //button_tablet
 $route['manual_capture/button_tablet'] = '/manual_capture/tablet';
 $route['api/manual_capture/save']['post'] = '/manual_capture/add_capture';
+$route['api/manual_capture/modify']['post'] = '/manual_capture/modify_capture';
 //select_plant_button
 $route['manual_capture/select_plant_button'] = '/manual_capture/select_plant_button';
 //$route['manual_capture/measuring_point_button'] = '/manual_capture/measuring_point_button';

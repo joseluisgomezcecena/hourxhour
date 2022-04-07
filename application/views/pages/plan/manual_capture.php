@@ -270,13 +270,14 @@
 				document.getElementById(spanIdString).classList.add('animate-spin-slow');
 				
 				var data = {
+					"value" : value,
 					"plan_by_hour_id" : plan_by_hour_id,
 					"reset" : 1,
 					"capture_type" : <?= CAPTURE_MANUAL?>
 				};
 
 				$http({
-					url: '<?=base_url()?>api/manual_capture/save',
+					url: '<?=base_url()?>api/manual_capture/modify',
 					method: 'POST',
 					data: $httpParamSerializerJQLike(data), // Make sure to inject the service you choose to the controller
 					headers: {

@@ -133,7 +133,7 @@ class Manual_Capture extends CI_Controller
 
         $plan_by_hour_id = $this->input->post('plan_by_hour_id');
         $reset = $this->input->post('reset');
-        $capture_type = $this->input->post('capture_type '); //0 es para manual, 1 es para sensor, 2 es para button
+        $capture_type = $this->input->post('capture_type'); 
 
         //i need plan_hour_by_id
         $this->load->model('planbyhour');
@@ -142,7 +142,6 @@ class Manual_Capture extends CI_Controller
         $this->planbyhour->Load($plan_by_hour_id);
 
         //retrieve an object of table productions_plans
-
         $plan = $this->productionplan->getProductionPlanById($this->planbyhour->plan_id);
         $mult_factor = 1;
         if (isset($plan->use_multitplier_factor) && $plan->use_multitplier_factor == 1) {
@@ -161,7 +160,25 @@ class Manual_Capture extends CI_Controller
     //Modify entire capture
     public function modify_capture()
     {
-        //I need plan_hour_by_id
+        $plan_by_hour_id = $this->input->post('plan_by_hour_id');
+        $capture_type = $this->input->post('capture_type'); 
+        $value = $this->input->post('value');
+
+          //i need plan_hour_by_id
+          $this->load->model('planbyhour');
+          $this->load->model('productionplan');
+          $this->planbyhour->Load($plan_by_hour_id);
+  
+          //retrieve an object of table productions_plans
+          $plan = $this->productionplan->getProductionPlanById($this->planbyhour->plan_id);
+
+          $this->planbyhour->IncrementCompleted($value, 1,  $capture_type);
+
+          $this->db->select('*');
+          $this->db->from('plan_by_hours');
+          $this->db->where('plan_by_hour_id', $plan_by_hour_id);
+          $result = $this->db->get()->result_array()[0];
+          echo json_encode($result);
     }
 
 

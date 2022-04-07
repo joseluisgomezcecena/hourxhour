@@ -27,11 +27,15 @@
 
 							echo '<tr>';
 							echo '<th class="ltr:text-left rtl:text-right uppercase">';
+							
 							echo '<a href="' . base_url() . 'index.php/measuring_point?site_id=' . $site['site_id'] .'&plant_id=' . $site['plant_id'] . '"';
-							if( intval($site['assets_count']) <= 0 ) echo 'style="cursor: no-drop; color: gray;"';
+							if( intval($site['assets_count']) <= 0 ) {
+								echo 'style="cursor: no-drop; color: gray;"';
+							}
 							echo '>' . $site['site_name'];
-
 							echo '</a>';
+
+
 							echo '</th>';
 							
 							echo '<th class="w-px uppercase">';
