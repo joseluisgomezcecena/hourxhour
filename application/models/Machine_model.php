@@ -56,7 +56,7 @@ class Machine_model extends CI_Model
 			$this->db->where ( 'plant_id',  $plant_id);
 
 		if($site_id != NULL)
-			$this->db->where ( 'site_id',  $site_id);
+			$this->db->where ( 'assets.site_id',  $site_id);
 
 		$query = $this->db->get();
 		return $query->result_array();
