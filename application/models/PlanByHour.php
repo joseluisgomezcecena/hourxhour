@@ -67,7 +67,7 @@ class PlanByHour extends CI_Model
         $current = new DateTime;
         $data['created_at'] =  $current->format(DATETIME_FORMAT);
         $data['updated_at'] = $current->format(DATETIME_FORMAT);
-
+   
         if($reset)
         {
             $this->completed = $value;

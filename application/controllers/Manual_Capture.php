@@ -116,6 +116,7 @@ class Manual_Capture extends CI_Controller
         $data['item_id'] = $item_id;
         $data['item_number'] = $this->planbyhour->item_number;
         $data['planned'] = $this->planbyhour->planned;
+        $data['completed'] = $this->planbyhour->completed;
         $data['title'] = "Captura manual";
         $data['plan_by_hour_id'] = $plan_by_hour_id;
         $this->load->view('templates/header_logged_out');
@@ -147,6 +148,11 @@ class Manual_Capture extends CI_Controller
 
         //$last_value += $mult_factor; //capture_type
         $this->planbyhour->IncrementCompleted($mult_factor, $reset,  $capture_type);
+        $this->db->select('*');
+        $this->db->from('plan_by_hours');
+        $this->db->where('plan_by_hour_id', $plan_by_hour_id);
+        $result = $this->db->get()->result_array()[0];
+        echo json_encode($result);
     }
 
     //Modify entire capture

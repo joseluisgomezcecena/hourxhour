@@ -15,7 +15,7 @@
             <strong class="uppercase"><bdi>Agrega nueva captura en el campo color verde!<br /></bdi></strong>
             No olvides guardar la nueva captura agregada.
         </div>
-        <div ng-show="verified" >
+        <div ng-show="verified">
             <p>Item number:</p>
             <h1 class="text-primary mb-8"><b><?= $item_number ?></b></h1>
             <div class="alert alert_success my-5" ng-if="!IsDisabledButtonModify">
@@ -23,7 +23,7 @@
                 No olvides guardar la nueva captura agregada.
             </div>
             <div class="mt-5 mb-5">
-                <input type="text" ng-style="!IsDisabledButtonModify && {'background-color':'#b8d5cd'}" class="form-control h3" ng-disabled="IsDisabledButtonModify" style="width: 4.5rem; text-align: right !important;"> / <span class="h3" style="margin-left: 1rem !important;"><?= $planned ?></span>
+                <input value="<?= $completed ?>" ng-model="completed" type="text" ng-style="!IsDisabledButtonModify && {'background-color':'#b8d5cd'}" class="form-control h3" ng-disabled="IsDisabledButtonModify" style="width: 4.5rem; text-align: right !important;"> / <span class="h3" style="margin-left: 1rem !important;"><?= $planned ?></span>
             </div>
             <div>
                 <button class="btn btn_warning" style="width: 15em; margin:auto; display:block;" ng-click="capture()" ng-disabled="!IsDisabledButtonModify">Capturar</button>
@@ -35,7 +35,7 @@
                         <span></span>
                         <span>Modificar captura</span>
                     </label>
-                    <button ng-disabled="IsDisabledButtonModify" class="btn btn_success mt-4">Guardar nueva captura</button>
+                    <button ng-disabled="IsDisabledButtonModify" ng-click="modify_item()" class="btn btn_success mt-4">Guardar nueva captura</button>
                 </div>
             </div>
             <div class="flex flex justify-between mt-5 mb-5">
@@ -52,15 +52,14 @@
         $scope.verified = true;
 
         $scope.isVerify = function() {
-            var item_id = '<?= $item_id?>';
+            var item_id = '<?= $item_id ?>';
 
-           if(item_id == ''){
-            $scope.verified = false;
-           }else{
-            $scope.verified = true; 
-           }
+            if (item_id == '') {
+                $scope.verified = false;
+            } else {
+                $scope.verified = true;
+            }
         };
-
 
         $scope.EnableDisableButtonModify = function() {
             $scope.IsDisabledButtonModify = !$scope.isModify;
@@ -70,8 +69,8 @@
             var url = '<?= base_url() ?>api/manual_capture/save';
             var params = {
                 plan_by_hour_id: <?= $plan_by_hour_id ?>,
-                reset: false,
-                capture_type: 0
+                reset: 0,
+                capture_type: <?= CAPTURE_BUTTON ?>
             }
             var config = {
                 headers: {
@@ -83,13 +82,14 @@
                 method: "POST",
                 params: params
             }).then(function(response) {
-                console.log(response);
-                swal("Good job!", "The plan has been saved.", "success");
+                $scope.completed = response.data.completed;
             }, function(response) {
-                console.log({
-                    response
-                });
+                swal("Something was wrong!", response, "error");
             });
+        };
+
+        $scope.modify_item = function() {
+            //code
         };
 
         $scope.isFinished = function() {
