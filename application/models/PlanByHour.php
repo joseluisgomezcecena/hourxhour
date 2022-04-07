@@ -29,9 +29,6 @@ class PlanByHour extends CI_Model
         $data = $query->result_array();
         if(count($data) == 0)
         {
-            echo ">>", $id, "<br>";
-            echo "<br> entre x2 <br>";
-            echo json_encode($data);
             $error = self::NOT_FOUND_PLAN_BY_HOUR_ID;
             return $error;
         }
@@ -51,7 +48,6 @@ class PlanByHour extends CI_Model
         $items = $query->result_array();
         if(count($items) == 0 )
         {
-            echo "<br> entre <br>";
             $error = self::NOT_FOUND_ITEM_ID;
             return false;
         }
@@ -71,8 +67,6 @@ class PlanByHour extends CI_Model
         $current = new DateTime;
         $data['created_at'] =  $current->format(DATETIME_FORMAT);
         $data['updated_at'] = $current->format(DATETIME_FORMAT);
-
-        echo "<br> ==>", $this->plan_by_hour_id;
 
         if($reset)
         {
