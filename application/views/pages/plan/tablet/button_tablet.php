@@ -23,7 +23,7 @@
                 No olvides guardar la nueva captura agregada.
             </div>
             <div class="mt-5 mb-5">
-                <input value="<?= $completed ?>" ng-model="completed" type="text" ng-style="!IsDisabledButtonModify && {'background-color':'#b8d5cd'}" class="form-control h3" ng-disabled="IsDisabledButtonModify" style="width: 4.5rem; text-align: right !important;"> / <span class="h3" style="margin-left: 1rem !important;"><?= $planned ?></span>
+                <input ng-model="completed" type="text" ng-style="!IsDisabledButtonModify && {'background-color':'#b8d5cd'}" class="form-control h3" ng-disabled="IsDisabledButtonModify" style="width: 4.5rem; text-align: right !important;"> / <span class="h3" style="margin-left: 1rem !important;"><?= $planned ?></span>
             </div>
             <div>
                 <button class="btn btn_warning" style="width: 15em; margin:auto; display:block;" ng-click="capture()" ng-disabled="!IsDisabledButtonModify">Capturar</button>
@@ -31,7 +31,7 @@
             <div class="flex  justify-end mt-8">
                 <div>
                     <label class="switch">
-                        <input type="checkbox" ng-model="isModify" ng-change="EnableDisableButtonModify()">
+                        <input type="checkbox" ng-model="isModify"  ng-change="EnableDisableButtonModify()">
                         <span></span>
                         <span>Modificar captura</span>
                     </label>
@@ -46,10 +46,11 @@
 </div>
 <script>
     var fetch = angular.module('buttonApp', []);
-    fetch.controller('buttonController', ['$scope', '$http', function($scope, $http) {
+    fetch.controller('buttonController', ['$scope', '$http', '$httpParamSerializerJQLike', function($scope, $http, $httpParamSerializerJQLike) {
 
         $scope.IsDisabledButtonModify = true;
         $scope.verified = true;
+        $scope.completed = <?= $completed ?>;
 
         $scope.isVerify = function() {
             var item_id = '<?= $item_id ?>';
@@ -84,12 +85,30 @@
             }).then(function(response) {
                 $scope.completed = response.data.completed;
             }, function(response) {
-                swal("Something was wrong!", response, "error");
+                swal("Something was wrong!", '', "error");
             });
         };
 
         $scope.modify_item = function() {
-            //code
+            var data = {
+                value: $scope.completed,
+                plan_by_hour_id: <?= $plan_by_hour_id ?>,
+                reset: 1,
+                capture_type: <?= CAPTURE_BUTTON ?>
+            };
+            $http({
+                url: '<?= base_url() ?>api/manual_capture/modify',
+                method: 'POST',
+                data: $httpParamSerializerJQLike(data), // Make sure to inject the service you choose to the controller
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded' // Note the appropriate header
+                }
+            }).then(function(response) {
+                $scope.IsDisabledButtonModify = true;
+                /* do something here */
+            }).catch((error) => {
+                console.log(error);
+            });
         };
 
         $scope.isFinished = function() {

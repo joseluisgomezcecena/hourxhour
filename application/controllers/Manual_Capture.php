@@ -131,16 +131,16 @@ class Manual_Capture extends CI_Controller
     public function add_capture()
     {
 
-        $plan_by_hour_id = $this->input->post('plan_by_hour_id');
-        $reset = $this->input->post('reset');
-        $capture_type = $this->input->post('capture_type'); 
+        $plan_by_hour_id = $this->input->get('plan_by_hour_id');
+        $reset = $this->input->get('reset');
+        $capture_type = $this->input->get('capture_type'); 
 
         //i need plan_hour_by_id
         $this->load->model('planbyhour');
         $this->load->model('productionplan');
 
         $this->planbyhour->Load($plan_by_hour_id);
-
+ 
         //retrieve an object of table productions_plans
         $plan = $this->productionplan->getProductionPlanById($this->planbyhour->plan_id);
         $mult_factor = 1;
@@ -163,6 +163,8 @@ class Manual_Capture extends CI_Controller
         $plan_by_hour_id = $this->input->post('plan_by_hour_id');
         $capture_type = $this->input->post('capture_type'); 
         $value = $this->input->post('value');
+
+        echo "=>", $value;
 
           //i need plan_hour_by_id
           $this->load->model('planbyhour');
