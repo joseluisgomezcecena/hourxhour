@@ -225,6 +225,7 @@ class Plan extends CI_Controller
         $this->load->view('templates/footer');
     }
 
+    
     public function select_measuring_point()
     {
         $data['title'] = "Select a Cell";

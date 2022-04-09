@@ -62,7 +62,7 @@
                     </th>
                     <th scope="col" class="bg-[#D1FAE5]"><small>DATE:</small></th>
                     <th scope="col">
-                        <input style="min-width: 10rem; border: 0;" name="date" ng-model="production_plan.date_display" class="form-control input_invisible size-sm" type="date">
+                        <input style="min-width: 10rem; border: 0;" name="date" ng-model="production_plan.date_display" ng-change="change_date()" class="form-control size-sm" type="date">
                     </th>
                     <th scope="col" class="bg-[#D1FAE5]"><small>SUPERVISOR:</small></th>
                     <th scope="col">
@@ -186,6 +186,7 @@
 
         //El plan de produccion
         $scope.production_plan = null;
+        //$scope.plan_date = null;
 
         //La lista de items (item_number, etc..)
         $scope.items = null;
@@ -198,9 +199,16 @@
             $scope.asset_id = asset_id;
             $scope.date = date;
 
+            console.log('date de hoy ' + $scope.date);
+
             $scope.getInterruptions();
             $scope.getPlan();
             $scope.getItems();
+        }
+
+        $scope.change_date = function() {
+            var changed_date = $scope.production_plan.date_display.toISOString().split('T')[0];
+            $scope.init($scope.asset_id,   $scope.shift_id, changed_date);
         }
 
         $scope.getPlan = function() {
@@ -217,7 +225,14 @@
                 console.log(response.data);
 
                 $scope.production_plan = response.data;
-                $scope.production_plan.date_display = new Date(response.data.date);
+                
+                //$scope.plan_date = new Date(response.data.date);
+                const separated_date = response.data.date.split("-");
+
+                console.log(separated_date);
+
+                $scope.production_plan.date_display =  new Date( parseInt(separated_date[0]),parseInt(separated_date[1]-1),parseInt(separated_date[2]) );
+                 
 
                 for (var i = 0; i < $scope.production_plan.plan_by_hours.length; i++) {
                     var plan_item = response.data.plan_by_hours[i];
@@ -251,9 +266,6 @@
                         plan_item.less_time = Number($scope.production_plan.plan_by_hours[i].less_time);
                     //plan_item.interruption_id = plan_item.selected_interruption.interruption_id;
                 }
-
-
-
 
             });
         }
@@ -502,8 +514,7 @@
                 }
             }
             $http.post(url, data, config).then(function(response) {
-
-                console.log(response);
+                $scope.init($scope.asset_id,   $scope.shift_id, $scope.date);
                 swal("Good job!", "The plan has been saved.", "success");
             }, function(response) {
 
@@ -571,8 +582,10 @@
 
             })();
         }
-
+        //2022-03-29 11:05:52
         //este es al cargar
+        
+
         $scope.init(<?php echo $asset_id . ", " . $shift_id . ", '" . $date . "'" ?>);
     }]);
 </script>
