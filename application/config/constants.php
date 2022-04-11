@@ -94,3 +94,5 @@ defined('CAPTURE_MANUAL')      OR define('CAPTURE_MANUAL', 0);
 defined('CAPTURE_SENSOR')      OR define('CAPTURE_SENSOR', 1);
 defined('CAPTURE_BUTTON')      OR define('CAPTURE_BUTTON', 2);
 
+// Path to Composer's vendor/ directory, it should end with a trailing slash.
+defined('VENDORPATH') OR define('VENDORPATH', rtrim(str_replace('\\', '/', realpath(dirname(APPPATH.'vendor/autoload.php'))), '/').'/');
