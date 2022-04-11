@@ -16,7 +16,6 @@
         color: white;
     }
 </style>
-
 <!-- Breadcrumb -->
 <section class="breadcrumb">
     <h1><?= $title ?></h1>
@@ -31,7 +30,7 @@
     <div class="lg:col-span-3 xl:col-span-3">
         <div class="card p-5">
             <div class="mt-5">
-                <table id="report-table" class="table table-auto w-full mb-5 cell-border">
+                <table id="report-table" class="table table-auto w-full mb-5">
                     <thead>
                         <tr>
                             <th style="font-size: 11px !important;" class="text-center uppercase">Plant</th>
@@ -43,58 +42,32 @@
                             <th style="font-size: 11px !important;" class="text-center uppercase table-row-shift-two">Completed (Shift two)</th>
                             <th style="font-size: 11px !important;" class="text-center uppercase table-row-shift-three">Planned (Shift three)</th>
                             <th style="font-size: 11px !important;" class="text-center uppercase table-row-shift-three">Completed (Shift three)</th>
-                            <th style="font-size: 11px !important;" class="text-center uppercase">Total</th>
+                            <th style="font-size: 11px !important;" class="text-center uppercase">Total Planned</th>
+                            <th style="font-size: 11px !important;" class="text-center uppercase">Total Completed</th>
+
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td class="text-center">Planta 1</td>
-                            <td class="text-center">MPMG370</td>
-                            <td class="text-center">AC7802A</td>
-                            <td class="text-center">520</td>
-                            <td class="text-center">ATJ01</td>
-                            <td class="text-center">03/30/2021 17:13:00</td>
-                            <td class="text-center">03/31/2021 09:21:13</td>
-                            <td class="text-center">100</td>
-                            <td class="text-center">547</td>
-                            <td class="text-center">ATJ01</td>
-                        </tr>
-                        <tr>
-                            <td class="text-center">Planta 2</td>
-                            <td class="text-center">MPMG370</td>
-                            <td class="text-center">AC7802A</td>
-                            <td class="text-center">510</td>
-                            <td class="text-center">ATJ01</td>
-                            <td class="text-center">03/30/2021 17:13:00</td>
-                            <td class="text-center">03/31/2021 09:21:13</td>
-                            <td class="text-center">100</td>
-                            <td class="text-center">547</td>
-                            <td class="text-center">547</td>
-                        </tr>
-                        <tr>
-                            <td class="text-center">Planta 3</td>
-                            <td class="text-center">MPMG370</td>
-                            <td class="text-center">AC7802A</td>
-                            <td class="text-center">530</td>
-                            <td class="text-center">ATJ01</td>
-                            <td class="text-center">03/30/2021 17:13:00</td>
-                            <td class="text-center">03/31/2021 09:21:13</td>
-                            <td class="text-center">100</td>
-                            <td class="text-center">547</td>
-                            <td class="text-center">547</td>
-                        </tr>
-                        <tr>
-                            <td class="text-center">Planta 1</td>
-                            <td class="text-center">MPMG370</td>
-                            <td class="text-center">AC7802A</td>
-                            <td class="text-center">520</td>
-                            <td class="text-center">ATJ01</td>
-                            <td class="text-center">03/30/2021 17:13:00</td>
-                            <td class="text-center">03/31/2021 09:21:13</td>
-                            <td class="text-center">100</td>
-                            <td class="text-center">547</td>
-                            <td class="text-center">ATJ01</td>
-                        </tr>
+                        <?php foreach ($daily_report as $report) : ?>
+                            <tr>
+                                <td class="text-center"><?= $report['plant_name'] ?></td>
+                                <td class="text-center"><?= $report['site_name'] ?></td>
+                                <td class="text-center"><?= $report['asset_name'] ?></td>
+
+                                <td class="text-center"><?= $report['planned_shift_one']  ?></td>
+                                <td class="text-center"><?= $report['completed_shift_one']  ?></td>
+
+                                <td class="text-center"><?= $report['planned_shift_two'] ?></td>
+                                <td class="text-center"><?= $report['completed_shift_two'] ?></td>
+
+                                <td class="text-center"><?= $report['planned_shift_three'] ?></td>
+                                <td class="text-center"><?= $report['completed_shift_three'] ?></td>
+
+                                <td class="text-center"><?= $report['total_planned'] ?></td>
+                                <td class="text-center"><?= $report['total_completed']?></td>
+
+                            </tr>
+                        <?php endforeach; ?>
                     </tbody>
                 </table>
             </div>
@@ -105,9 +78,9 @@
     $(document).ready(function() {
         var table = $('#report-table').DataTable({
             dom: 'Bfrtip',
-			buttons: [
-				'copy', 'csv', 'excel', 'pdf', 'print'
-			],
+            buttons: [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ],
             "columnDefs": [{
                 "visible": false,
                 "targets": 0
@@ -128,7 +101,7 @@
                 }).data().each(function(group, i) {
                     if (last !== group) {
                         $(rows).eq(i).before(
-                            '<tr class="group table-row-group"><td colspan="9"><b>' + group + '</b></td></tr>'
+                            '<tr class="group table-row-group"><td colspan="10"><b>' + group + '</b></td></tr>'
                         );
 
                         last = group;
