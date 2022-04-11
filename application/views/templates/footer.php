@@ -15,10 +15,7 @@
 <!-- Scripts -->
 <script src="<?php echo  base_url() ?>assets/js/vendor.js"></script>
 <script src="<?php echo  base_url() ?>assets/js/script.js"></script>
-<script src="<?php echo  base_url() ?>assets/js/jquery.min.js"></script>
-
-
-
+s
 <!-- Datatables -->
 <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>

@@ -205,7 +205,7 @@ class Manual_Capture extends CI_Controller
 
     public function measuring_point()
     {
-        $this->load->model('plant');
+        $this->load->model('plant');-
         $this->load->model('shift');
 
         $shift_date = $this->shift->getIdFromCurrentTime(new DateTime);

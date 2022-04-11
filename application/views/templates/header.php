@@ -15,7 +15,7 @@
 	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/custom_datatables_styles.css">
 
     <script src='<?= base_url() ?>assets/angular-1.8.2/angular.min.js'></script>
-
+    <script src="<?php echo  base_url() ?>assets/js/jquery.min.js"></script>
     <script src="<?php echo  base_url() ?>assets/js/sweetalert.min.js"></script>
 
     <title>Hour By Hour | Andon</title>
@@ -174,16 +174,12 @@
                             echo '<span class="collapse-indicator la la-arrow-circle-down"></span>';
                             echo $plant['plant_name'];
                             echo '</a>';
-
                             echo '<div id="plant_' . $plant['plant_id'] . '" class="collapse">';
                             echo '<a href="' . base_url() . 'index.php/cell?plant_id=' . $plant['plant_id'] .'">';
                             echo '    Load Plan';
                             echo '</a>';
                             echo '<a href="' . base_url() . 'index.php/manual_capture?plant_id=' . $plant['plant_id'] . '">';
                             echo '    Manual Capture';
-                            echo '</a>';
-                            echo '<a href="' . base_url() . 'index.php/measuring_point">';
-                            echo '    Measuring Point';
                             echo '</a>';
                             echo '</div>';
                         }
