@@ -125,8 +125,11 @@
 
 						
 							echo '<input type="number" name="plant_id" value="' . $plant_id . '" hidden/>';
-							echo '	<input class="form-control" type="number" id="input_plan_by_hour_id_' . $plan_by_hour['plan_by_hour_id'] . '" value="' . $plan_by_hour['completed'] . '" style="min-width: 8rem;" ' . ($is_enable ? '' : 'disabled') . '/>';
+							echo '	<input class="form-control" type="number" id="input_plan_by_hour_id_' . $plan_by_hour['plan_by_hour_id'] . '" value="' . $plan_by_hour['completed'] . '" style="min-width: 8rem;" ' . ($is_enable ? '' : 'disabled') . ' onchange="onchangeinput(this)" />';
 							
+							//echo '<p>' . $plan_by_hour['completed'] . '/' . $plan_by_hour['plan_by_hour_id'] . '<p/>';
+							echo '<div>  <span id="span_completed_plan_by_hour_id_' . $plan_by_hour['plan_by_hour_id'] . '">' . $plan_by_hour['completed'] . '</span><span>/</span><span>' . $plan_by_hour['plan_by_hour_id'] . '</span> </div>';
+
 							echo '	<button id="button_plan_by_hour_id_' . $plan_by_hour['plan_by_hour_id'] . '" class="btn mt-4 btn-icon btn-icon_large btn_success uppercase" ' . ($is_enable ? '' : 'disabled') . ' ng-click="save(' . $plan_by_hour['plan_by_hour_id'] . ')">';
 							echo '		<span id="span_plan_by_hour_id_' . $plan_by_hour['plan_by_hour_id'] . '" class="la la-save"></span>';
 							echo '	</button>';
@@ -165,6 +168,12 @@
 	</div>
 
 	<script>
+
+	function onchangeinput(control)
+	{
+		console.log(control.value);
+	}
+
     /*
      * Author: Emanuel Jauregui
      * Date: 04/04/2022  
@@ -293,7 +302,12 @@
 						setTimeout(function(){ 
 							document.getElementById(spanIdString).classList.remove('la-check');
 							document.getElementById(spanIdString).classList.add('la-save');
-						}, 2000);
+
+							var spanIdCompetedString = 'span_completed_plan_by_hour_id_' + plan_by_hour_id;
+							document.getElementById(spanIdCompetedString).innerHTML = value;
+							//update field
+
+						}, 500);
 					});
 			}
 
