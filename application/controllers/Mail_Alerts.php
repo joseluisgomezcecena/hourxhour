@@ -31,4 +31,11 @@ class Mail_Alerts extends CI_Controller
 	}
 
 
+
+	public function send_daily_report()
+	{
+
+	}
+
+
 }

@@ -4,6 +4,7 @@ class Machines extends CI_Controller{
 
 	public function index(){
 
+
 		$data['title'] = "Machines";
 		//$data['plants'] = $this->Machine_model->get_plants();
 

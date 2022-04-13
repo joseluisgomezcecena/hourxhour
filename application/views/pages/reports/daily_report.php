@@ -44,7 +44,7 @@
                             <th style="font-size: 11px !important;" class="text-center uppercase table-row-shift-three">Completed (Shift three)</th>
                             <th style="font-size: 11px !important;" class="text-center uppercase">Total Planned</th>
                             <th style="font-size: 11px !important;" class="text-center uppercase">Total Completed</th>
-
+							<th style="font-size: 11px !important;" class="text-center uppercase">Total Efficiency</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -66,7 +66,22 @@
                                 <td class="text-center"><?= $report['total_planned'] ?></td>
                                 <td class="text-center"><?= $report['total_completed']?></td>
 
-                            </tr>
+								<td class="text-center">
+									<?php
+									if($report['total_completed']>0)
+									{
+										echo ceil($report['total_completed']/$report['total_planned'] * 100);
+									}
+									else
+									{
+										echo "0";
+									}
+									?>
+									%
+								</td>
+
+
+							</tr>
                         <?php endforeach; ?>
                     </tbody>
                 </table>
