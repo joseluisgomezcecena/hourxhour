@@ -12,34 +12,34 @@
 <div class="card w-50 text-center" ng-controller="buttonController" ng-app="buttonApp">
     <div class="container mt-5">
         <div class="alert alert_danger my-5" ng-hide="verified">
-            <strong class="uppercase"><bdi>Agrega nueva captura en el campo color verde!<br /></bdi></strong>
-            No olvides guardar la nueva captura agregada.
+            <strong class="uppercase"><bdi>There is no item number.<br /></bdi></strong>
+            contact your supervisor
         </div>
         <div ng-show="verified">
             <p>Item number:</p>
             <h1 class="text-primary mb-8"><b><?= $item_number ?></b></h1>
             <div class="alert alert_success my-5" ng-if="!IsDisabledButtonModify">
-                <strong class="uppercase"><bdi>Agrega nueva captura en el campo color verde!<br /></bdi></strong>
-                No olvides guardar la nueva captura agregada.
+                <strong class="uppercase"><bdi>Add new capture in the green field!<br /></bdi></strong>
+                Don't forget to save the new capture added.
             </div>
             <div class="mt-5 mb-5">
                 <input ng-model="completed" type="text" ng-style="!IsDisabledButtonModify && {'background-color':'#b8d5cd'}" class="form-control h3" ng-disabled="IsDisabledButtonModify" style="width: 4.5rem; text-align: right !important;"> / <span class="h3" style="margin-left: 1rem !important;"><?= $planned ?></span>
             </div>
             <div>
-                <button class="btn btn_warning" style="width: 15em; margin:auto; display:block;" ng-click="capture()" ng-disabled="!IsDisabledButtonModify">Capturar</button>
+                <button class="btn btn_warning" style="width: 15em; margin:auto; display:block;" ng-click="capture()" ng-disabled="!IsDisabledButtonModify">Capture</button>
             </div>
             <div class="flex  justify-end mt-8">
                 <div>
                     <label class="switch">
-                        <input type="checkbox" ng-model="isModify"  ng-change="EnableDisableButtonModify()">
+                        <input type="checkbox" ng-model="isModify" ng-change="EnableDisableButtonModify()">
                         <span></span>
-                        <span>Modificar captura</span>
+                        <span>Modify capture</span>
                     </label>
-                    <button ng-disabled="IsDisabledButtonModify" ng-click="modify_item()" class="btn btn_success mt-4">Guardar nueva captura</button>
+                    <button ng-disabled="IsDisabledButtonModify" ng-click="modify_item()" class="btn btn_success mt-4">Save new capture</button>
                 </div>
             </div>
             <div class="flex flex justify-between mt-5 mb-5">
-                <button class="btn btn_danger" ng-click="isFinished()">Finalizar Captura</button>
+                <button class="btn btn_danger" ng-click="isFinished()">Finish capture</button>
             </div>
         </div>
     </div>

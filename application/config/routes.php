@@ -93,6 +93,7 @@ $route['andon_dashboard'] = 'andon/index';
 //reports
 $route['daily_report'] = 'reports/daily_report';
 $route['custom_report'] = 'reports/custom_report';
+$route['api/custom_report/save']['post'] = 'reports/save_custom_report';
 //measuring_point
 $route['measuring_point'] = '/measuring_point/index';
 //manual_capture
@@ -100,6 +101,8 @@ $route['manual_capture'] = '/manual_capture/index';
 $route['manual_capture/save']['post'] = '/manual_capture/save_manual_capture';
 //trigger
 $route['trigger'] = '/trigger/index';
+//Output vs plan
+$route['output_vs_plan'] = 'output_vs_plan/index';
 //login
 $route['login'] = '/login/index';
 //button_tablet

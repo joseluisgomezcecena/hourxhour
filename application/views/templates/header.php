@@ -33,7 +33,7 @@
         <!-- Right -->
         <div class="flex items-center ltr:ml-auto rtl:mr-auto">
             <!-- Notifications -->
-            <div class="dropdown self-stretch">
+            <!--<div class="dropdown self-stretch">
                 <button type="button" class="relative flex items-center h-full btn-link ltr:ml-1 rtl:mr-1 px-2 text-2xl leading-none la la-bell" data-toggle="custom-dropdown-menu" data-tippy-arrow="true" data-tippy-placement="bottom-end">
                     <span class="absolute top-0 right-0 rounded-full border border-primary -mt-1 -mr-1 px-2 leading-tight text-xs font-body text-primary">3</span>
                 </button>
@@ -67,7 +67,7 @@
                         <small>Last Week</small>
                     </div>
                 </div>
-            </div>
+            </div>-->
 
             <!-- User Menu -->
             <div class="dropdown">
@@ -119,17 +119,17 @@
                 <span class="icon las la-tachometer-alt"></span>
                 <span class="title">Dashboard</span>
             </a>
-            <a href="#no-link" class="link" data-target="[data-menu=ui]" data-toggle="tooltip-menu" data-tippy-content="UI">
+            <!--<a href="#no-link" class="link" data-target="[data-menu=ui]" data-toggle="tooltip-menu" data-tippy-content="UI">
                 <span class="icon las la-traffic-light"></span>
                 <span class="title">Andon</span>
-            </a>
+            </a>-->
             <a href="#no-link" class="link" data-target="[data-menu=pages]" data-toggle="tooltip-menu" data-tippy-content="Pages">
                 <span class="icon las la-hourglass-half"></span>
                 <span class="title">Hour by Hour</span>
             </a>
         </div>
         <!-- UI -->
-        <div class="menu-detail" data-menu="ui">
+        <!--<div class="menu-detail" data-menu="ui">
             <div class="menu-detail-wrapper">
                 <a href="<?php echo base_url(); ?>index.php/andon_dashboard">
                     <span class="icon las la-tachometer-alt"></span>
@@ -148,7 +148,7 @@
                     Assets
                 </a>
             </div>
-        </div>
+        </div>-->
 
         <!-- Pages -->
         <div class="menu-detail" data-menu="pages">
@@ -186,7 +186,7 @@
                     ?>
 
                 </div>
-                <a href="#no-link" class="active" data-toggle="collapse" data-target="#production">
+                <!--<a href="#no-link" class="active" data-toggle="collapse" data-target="#production">
                     <span class="collapse-indicator la la-arrow-circle-down"></span>
                     Production Plan
                 </a>
@@ -194,7 +194,7 @@
                     <a href="<?php echo base_url(); ?>index.php/planners">
                         Load Plan
                     </a>
-                </div>
+                </div>-->
                 <a href="#no-link" class="active" data-toggle="collapse" data-target="#reports">
                     <span class="collapse-indicator la la-arrow-circle-down"></span>
                     Reports
@@ -207,6 +207,14 @@
                         Custom Report
                     </a>
                 </div>
+                <a href="<?php echo base_url(); ?>index.php/output_vs_plan">
+                    <span class="icon las la-tv"></span>
+                    Output vs Plan
+                </a>
+                <a href="<?php echo base_url(); ?>index.php/">
+                    <span class="icon las la-stop-circle"></span>
+                    Interruption cause
+                </a>
             </div>
         </div>
     </aside>
