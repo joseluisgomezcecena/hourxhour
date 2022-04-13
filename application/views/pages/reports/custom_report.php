@@ -129,7 +129,7 @@
                 }).data().each(function(group, i) {
                     if (last !== group) {
                         $(rows).eq(i).before(
-                            '<tr class="group table-row-group"><td colspan="10"><b>' + group + '</b></td></tr>'
+                            '<tr class="group table-row-group"><td colspan="11"><b>' + group + '</b></td></tr>'
                         );
 
                         last = group;
