@@ -3,20 +3,73 @@
         border: transparent;
         background-color: transparent;
     }
+    th{
+        color: black;
+        font-weight: 100 !important;
+    }
+    .table-disabled {
+        background-color: #c2c3c4 !important;
+    }
+    .table-color {
+        background-color: #4B5563 !important;
+        color: white;
+    }
+    .table-green {
+        background-color: #b8efc1 !important;
+    }
+    .text-bold{
+        font-weight: bold !important;
+    }
 </style>
-<div class="flex justify-between mb-5" style="margin-top: -4rem;">
+<div class="flex justify-between mb-5" style="margin-top: -6rem;">
     <span class="brand">
         <img width="150" src="<?php echo base_url(); ?>assets/images/transparente.png" alt="">
     </span>
 </div>
+<?=$plan_by_hour_id?>
 <div class="card w-50 text-center" ng-controller="buttonController" ng-app="buttonApp">
     <div class="container mt-5">
         <div class="alert alert_danger my-5" ng-hide="verified">
             <strong class="uppercase"><bdi>There is no item number.<br /></bdi></strong>
             contact your supervisor
         </div>
+        <div class="mt-5">
+        <table class="table w-full">
+                    <tr>
+                        <th class="text-center uppercase table-green text-bold">Plant</th>
+                        <th class="text-center uppercase table-green">gg</th>
+                        <th class="text-center uppercase table-green text-bold">Area</th>
+                        <th class="text-center uppercase table-green">Dilators</th>
+                        <th class="text-center uppercase table-green text-bold">Output</th>
+                        <th class="text-center uppercase table-green">TIP 31</th>
+                    </tr>
+                </thead>
+            </table>
+            <table class="table w-full mb-5">
+                <thead>
+                    <tr>
+                        <th class="text-center uppercase table-color text-bold">Last Hour</th>
+                        <th class="text-center uppercase table-color text-bold">HR</th>
+                        <th class="text-center uppercase table-color text-bold">Item number</th>
+                        <th class="text-center uppercase table-color text-bold">WO number</th>
+                        <th class="text-center uppercase table-color text-bold">Output QTY</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="text-center">
+                        <td class="table-disabled">8:00-9:00</td>
+                        <td class="table-disabled">10</td>
+                        <td class="table-disabled">AAC02106</td>
+                        <td class="table-disabled">TRF-001</td>
+                        <td class="table-disabled">400</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
         <div ng-show="verified">
-            <p>Item number:</p>
+            <h6>WO Number:</h6>
+            <p>GFE-00</p>
+            <h5 class="mt-4">Item number:</h5>
             <h1 class="text-primary mb-8"><b><?= $item_number ?></b></h1>
             <div class="alert alert_success my-5" ng-if="!IsDisabledButtonModify">
                 <strong class="uppercase"><bdi>Add new capture in the green field!<br /></bdi></strong>
@@ -28,7 +81,9 @@
             <div>
                 <button class="btn btn_warning" style="width: 15em; margin:auto; display:block;" ng-click="capture()" ng-disabled="!IsDisabledButtonModify">Capture</button>
             </div>
-            <div class="flex  justify-end mt-8">
+            <h6 class="mt-5">Current Hour</h6>
+            <p>14:00-15:00</p>
+            <div class="flex  justify-end mt-8 mb-8">
                 <div>
                     <label class="switch">
                         <input type="checkbox" ng-model="isModify" ng-change="EnableDisableButtonModify()">
@@ -37,9 +92,6 @@
                     </label>
                     <button ng-disabled="IsDisabledButtonModify" ng-click="modify_item()" class="btn btn_success mt-4">Save new capture</button>
                 </div>
-            </div>
-            <div class="flex flex justify-between mt-5 mb-5">
-                <button class="btn btn_danger" ng-click="isFinished()">Finish capture</button>
             </div>
         </div>
     </div>
@@ -109,28 +161,6 @@
             }).catch((error) => {
                 console.log(error);
             });
-        };
-
-        $scope.isFinished = function() {
-            swal({
-                    title: "Are you sure?",
-                    text: "Once finished, you will not be able to recover this Item!",
-                    icon: "warning",
-                    buttons: true,
-                    dangerMode: true,
-                })
-                .then((willDelete) => {
-                    if (willDelete) {
-                        swal("Your Item has been deleted!", {
-                            icon: "success",
-                        });
-                        setTimeout(() => {
-                            window.location = "<?php echo base_url(); ?>/manual_capture/select_plant_button";
-                        }, 1600);
-                    } else {
-                        swal.close();
-                    }
-                });
         };
         $scope.isVerify();
     }]);

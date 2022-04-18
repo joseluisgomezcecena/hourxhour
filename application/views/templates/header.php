@@ -215,6 +215,10 @@
                     <span class="icon las la-stop-circle"></span>
                     Interruption cause
                 </a>
+                <a href="<?php echo base_url(); ?>assets/docs/Template_Upload_Plan.xlsx" download>
+                    <span class="icon lar la-file-excel"></span>
+                    Template to load plan
+                </a>
             </div>
         </div>
     </aside>

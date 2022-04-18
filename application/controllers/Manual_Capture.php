@@ -22,7 +22,7 @@ class Manual_Capture extends CI_Controller
         $data['plant_id'] = $plant_id;
 
         $site_id =  $this->input->get('site_id');
-        if($site_id == -1) $site_id = NULL;
+        if ($site_id == -1) $site_id = NULL;
 
         $data['site_id'] = $site_id;
 
@@ -30,30 +30,27 @@ class Manual_Capture extends CI_Controller
 
 
         $shifts = $this->shift->get_shifts_with_date();
-        for($i = 0; $i < count($shifts) ;$i++)
-        {
+        for ($i = 0; $i < count($shifts); $i++) {
             //En los shifts traigo el shift_id y el date, solo me falta el asset_id para saber de que plan se trata
             $assets = $this->machine_model->get_pom_active($plant_id, $site_id);
             $assets_with_plan = array();
-            
+
             $shift_id = $shifts[$i]['shift_id'];
             $date = $shifts[$i]['date'];
             $shift_start_time = $shifts[$i]['shift_start_time'];
             $shift_end_time = $shifts[$i]['shift_end_time'];
 
-            for($a = 0; $a < count($assets); $a++)
-            {
+            for ($a = 0; $a < count($assets); $a++) {
                 $asset_id = $assets[$a]['asset_id'];
-                     
+
                 //Cargar el production plan
                 $this->productionplan->LoadPlan($asset_id, $date->format(DATE_FORMAT), $shift_id,  $shift_start_time, $shift_end_time);
-                if( $this->productionplan->plan_id != NULL )
-                {
+                if ($this->productionplan->plan_id != NULL) {
                     //Si no hay production plan
                     //$assets[$a]['production_plan'] = $this->productionplan;
                     $assets[$a]['production_plan'] =  clone $this->productionplan;
                     array_push($assets_with_plan, $assets[$a]);
-                } 
+                }
             }
 
             //if($i == 0)
@@ -73,24 +70,21 @@ class Manual_Capture extends CI_Controller
     {
         $this->load->model('planbyhour');
         //$this->load->model('productionplan');
-        
-       // echo json_encode($this->input->post());
-       //$input_data = $this->input->post();
+
+        // echo json_encode($this->input->post());
+        //$input_data = $this->input->post();
         $first_part = 'plan_by_hour_id_';
 
-       foreach($this->input->post() as $key => $value)
-       {
+        foreach ($this->input->post() as $key => $value) {
             if (str_starts_with($key, $first_part)) {
-               $plan_by_hour_id = intval(  substr($key, strlen($first_part) ) );
+                $plan_by_hour_id = intval(substr($key, strlen($first_part)));
 
-               $this->planbyhour->Load($plan_by_hour_id);
-               $this->planbyhour->IncrementCompleted($value, true,  CAPTURE_MANUAL);
+                $this->planbyhour->Load($plan_by_hour_id);
+                $this->planbyhour->IncrementCompleted($value, true,  CAPTURE_MANUAL);
+            }
+        }
 
-            } 
-       }
-
-       redirect( base_url() . 'manual_capture?plant_id=' . $this->input->post('plant_id'));
-       
+        redirect(base_url() . 'manual_capture?plant_id=' . $this->input->post('plant_id'));
     }
 
 
@@ -110,10 +104,17 @@ class Manual_Capture extends CI_Controller
         $plan_by_hour_id = $this->capture->get_current_hour($plan->plan_id);
         $this->planbyhour->Load($plan_by_hour_id);
 
+        echo json_encode($plan_by_hour_id);
+
         $plan_id = $this->planbyhour->plan_id;
         $item_id = $this->planbyhour->item_id;
+        //$plant_name = $this->planbyhour->plant_name;
+        //$asset_name = $this->planbyhour->asset_name;
+        //$site_name = $this->planbyhour->site_name;
 
-
+        //$data['plant_name'] = $plant_name;
+        //$data['site_name'] = $site_name;
+        //$data['asset_name'] = $asset_name;
         $data['plan_id'] = $plan_id;
         $data['item_id'] = $item_id;
         $data['item_number'] = $this->planbyhour->item_number;
@@ -133,14 +134,14 @@ class Manual_Capture extends CI_Controller
 
         $plan_by_hour_id = $this->input->get('plan_by_hour_id');
         $reset = $this->input->get('reset');
-        $capture_type = $this->input->get('capture_type'); 
+        $capture_type = $this->input->get('capture_type');
 
         //i need plan_hour_by_id
         $this->load->model('planbyhour');
         $this->load->model('productionplan');
 
         $this->planbyhour->Load($plan_by_hour_id);
- 
+
         //retrieve an object of table productions_plans
         $plan = $this->productionplan->getProductionPlanById($this->planbyhour->plan_id);
         $mult_factor = 1;
@@ -161,26 +162,26 @@ class Manual_Capture extends CI_Controller
     public function modify_capture()
     {
         $plan_by_hour_id = $this->input->post('plan_by_hour_id');
-        $capture_type = $this->input->post('capture_type'); 
+        $capture_type = $this->input->post('capture_type');
         $value = $this->input->post('value');
 
         echo "=>", $value;
 
-          //i need plan_hour_by_id
-          $this->load->model('planbyhour');
-          $this->load->model('productionplan');
-          $this->planbyhour->Load($plan_by_hour_id);
-  
-          //retrieve an object of table productions_plans
-          $plan = $this->productionplan->getProductionPlanById($this->planbyhour->plan_id);
+        //i need plan_hour_by_id
+        $this->load->model('planbyhour');
+        $this->load->model('productionplan');
+        $this->planbyhour->Load($plan_by_hour_id);
 
-          $this->planbyhour->IncrementCompleted($value, 1,  $capture_type);
+        //retrieve an object of table productions_plans
+        $plan = $this->productionplan->getProductionPlanById($this->planbyhour->plan_id);
 
-          $this->db->select('*');
-          $this->db->from('plan_by_hours');
-          $this->db->where('plan_by_hour_id', $plan_by_hour_id);
-          $result = $this->db->get()->result_array()[0];
-          echo json_encode($result);
+        $this->planbyhour->IncrementCompleted($value, 1,  $capture_type);
+
+        $this->db->select('*');
+        $this->db->from('plan_by_hours');
+        $this->db->where('plan_by_hour_id', $plan_by_hour_id);
+        $result = $this->db->get()->result_array()[0];
+        echo json_encode($result);
     }
 
 
