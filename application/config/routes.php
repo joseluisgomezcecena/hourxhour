@@ -1,5 +1,5 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
 /*
 | -------------------------------------------------------------------------
@@ -104,7 +104,9 @@ $route['trigger'] = '/trigger/index';
 //Output vs plan
 $route['output_vs_plan'] = 'output_vs_plan/index';
 //login
-$route['login'] = '/login/index';
+$route['login'] = '/login/verify_login';
+$route['logout'] = '/login/logout';
+
 //button_tablet
 $route['manual_capture/button_tablet'] = '/manual_capture/tablet';
 $route['api/manual_capture/save']['post'] = '/manual_capture/add_capture';

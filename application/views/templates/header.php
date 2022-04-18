@@ -7,12 +7,12 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/style.css">
 
-	<link rel="shortcut icon" href="<?php echo base_url(); ?>assets/images/favicon/favicon.ico">
+    <link rel="shortcut icon" href="<?php echo base_url(); ?>assets/images/favicon/favicon.ico">
 
     <!--data tables-->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css">
-	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/custom_datatables_styles.css">
+    <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/custom_datatables_styles.css">
 
     <script src='<?= base_url() ?>assets/angular-1.8.2/angular.min.js'></script>
     <script src="<?php echo  base_url() ?>assets/js/jquery.min.js"></script>
@@ -72,14 +72,30 @@
             <!-- User Menu -->
             <div class="dropdown">
                 <button class="flex items-center ltr:ml-4 rtl:mr-4" data-toggle="custom-dropdown-menu" data-tippy-arrow="true" data-tippy-placement="bottom-end">
-                    <span class="avatar">JD</span>
+                    <span class="avatar">
+                        <?php
+                        $full = substr($this->session->userdata(NAME), 0, 1) . substr($this->session->userdata(LASTNAME), 0, 1);
+                        echo $full;
+                        ?>
+                    </span>
                 </button>
                 <div class="custom-dropdown-menu w-64">
                     <div class="p-5">
-                        <h5 class="uppercase">John Doe</h5>
-                        <p>Editor</p>
+                        <h5 class="uppercase">
+                            <?php
+                            $full = $this->session->userdata(NAME) . ' ' . $this->session->userdata(LASTNAME);
+                            echo $full;
+                            ?>
+                        </h5>
+                        <p>
+                            <?php
+                            echo $this->session->userdata(LEVEL_NAME);
+                            ?>
+                        </p>
                     </div>
                     <hr>
+
+                    <!--
                     <div class="p-5">
                         <a href="#" class="flex items-center text-normal hover:text-primary">
                             <span class="la la-user-circle text-2xl leading-none ltr:mr-2 rtl:ml-2"></span>
@@ -90,9 +106,11 @@
                             Change Password
                         </a>
                     </div>
+                    -->
+
                     <hr>
                     <div class="p-5">
-                        <a href="#" class="flex items-center text-normal hover:text-primary">
+                        <a href="<?php echo base_url() ?>logout" class="flex items-center text-normal hover:text-primary">
                             <span class="la la-power-off text-2xl leading-none ltr:mr-2 rtl:ml-2"></span>
                             Logout
                         </a>
@@ -164,25 +182,24 @@
                 <div id="plant_admon" class="collapse">
 
                     <?php
-                        $CI =& get_instance();
-                        $CI->load->model('plant');
-                        $plants = $CI->plant->getAllActive();
+                    $CI = &get_instance();
+                    $CI->load->model('plant');
+                    $plants = $CI->plant->getAllActive();
 
-                        foreach($plants as $plant)
-                        {
-                            echo '<a class="active" data-toggle="collapse" data-target="#plant_' . $plant['plant_id'] . '">';
-                            echo '<span class="collapse-indicator la la-arrow-circle-down"></span>';
-                            echo $plant['plant_name'];
-                            echo '</a>';
-                            echo '<div id="plant_' . $plant['plant_id'] . '" class="collapse">';
-                            echo '<a href="' . base_url() . 'index.php/cell?plant_id=' . $plant['plant_id'] .'">';
-                            echo '    Load Plan';
-                            echo '</a>';
-                            echo '<a href="' . base_url() . 'index.php/manual_capture?plant_id=' . $plant['plant_id'] . '">';
-                            echo '    Manual Capture';
-                            echo '</a>';
-                            echo '</div>';
-                        }
+                    foreach ($plants as $plant) {
+                        echo '<a class="active" data-toggle="collapse" data-target="#plant_' . $plant['plant_id'] . '">';
+                        echo '<span class="collapse-indicator la la-arrow-circle-down"></span>';
+                        echo $plant['plant_name'];
+                        echo '</a>';
+                        echo '<div id="plant_' . $plant['plant_id'] . '" class="collapse">';
+                        echo '<a href="' . base_url() . 'index.php/cell?plant_id=' . $plant['plant_id'] . '">';
+                        echo '    Load Plan';
+                        echo '</a>';
+                        echo '<a href="' . base_url() . 'index.php/manual_capture?plant_id=' . $plant['plant_id'] . '">';
+                        echo '    Manual Capture';
+                        echo '</a>';
+                        echo '</div>';
+                    }
                     ?>
 
                 </div>
