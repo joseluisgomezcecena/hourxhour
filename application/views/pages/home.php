@@ -42,48 +42,59 @@
 					//print_r($moldeo);
 					foreach ($moldeo as $m) :
 
+						if(date("H:i:s") >= "06:00:00" && date("H:i:s") < "16:00:00" )
+						{
+							if($m['planned_shift_one'] > 0)
+							{
+								$percentm = ceil(($m['completed_shift_one']/$m['planned_shift_one']) * 100);
+							}
+							else
+							{
+								$percentm = 0;
+							}
+						}
+						elseif(date("H:i:s") >= "16:00:00" && date("H:i:s") < "23:59:59" )
+						{
+							if($m['planned_shift_two'] > 0)
+							{
+								$percentm = ceil(($m['completed_shift_two']/$m['planned_shift_two']) * 100);
+							}
+							else
+							{
+								$percentm = 0;
+							}
+						}
+						elseif(date("H:i:s") >= "00:00:00" && date("H:i:s") < "05:59:59" )
+						{
+							if($m['planned_shift_three'] > 0)
+							{
+								$percentm = ceil(($m['completed_shift_three']/$m['planned_shift_three']) * 100);
+							}
+							else
+							{
+								$percentm = 0;
+							}
+						}
+
+						if($percentm >= 99)
+						{
+							$color = "table-success";
+						}
+						elseif($percentm > 85 && $percentm < 99)
+						{
+							$color = "table-warning";
+						}
+						else
+						{
+							$color = "table-danger";
+						}
 					?>
 					<tr>
 						<td><?php echo $m['site_name'] ?></td>
 						<td><?php echo $m['asset_name'] ?></td>
-						<td class="table-warning">
+						<td class="<?php echo $color ?>">
 							<b>
-							<?php
-
-							if(date("H:i:s") >= "06:00:00" && date("H:i:s") < "16:00:00" )
-							{
-								if($m['planned_shift_one'] > 0)
-								{
-									echo ceil(($m['completed_shift_one']/$m['planned_shift_one']) * 100);
-								}
-								else
-								{
-									echo "0";
-								}
-							}
-							elseif(date("H:i:s") >= "16:00:00" && date("H:i:s") < "23:59:59" )
-							{
-								if($m['planned_shift_two'] > 0)
-								{
-									echo ceil(($m['completed_shift_two']/$m['planned_shift_two']) * 100);
-								}
-								else
-								{
-									echo "0";
-								}
-							}
-							elseif(date("H:i:s") >= "00:00:00" && date("H:i:s") < "05:59:59" )
-							{
-								if($m['planned_shift_three'] > 0)
-								{
-									echo ceil(($m['completed_shift_three']/$m['planned_shift_three']) * 100);
-								}
-								else
-								{
-									echo "0";
-								}
-							}
-							?>
+							<?php echo $percentm; ?>
 								%
 							</b>
 						</td>
@@ -113,50 +124,58 @@
 					<?php
 					//print_r($moldeo);
 					foreach ($ensamble as $e) :
-
+						if(date("H:i:s") >= "06:00:00" && date("H:i:s") < "16:00:00" )
+						{
+							if($e['planned_shift_one'] > 0)
+							{
+								$percente = ceil(($e['completed_shift_one']/$e['planned_shift_one']) * 100);
+							}
+							else
+							{
+								$percente = 0;
+							}
+						}
+						elseif(date("H:i:s") >= "16:00:00" && date("H:i:s") < "23:59:59" )
+						{
+							if($e['planned_shift_two'] > 0)
+							{
+								$percente = ceil(($e['completed_shift_two']/$e['planned_shift_two']) * 100);
+							}
+							else
+							{
+								$percente = 0;
+							}
+						}
+						elseif(date("H:i:s") >= "00:00:00" && date("H:i:s") < "05:59:59" )
+						{
+							if($e['planned_shift_three'] > 0)
+							{
+								$percente = ceil(($e['completed_shift_three']/$e['planned_shift_three']) * 100);
+							}
+							else
+							{
+								$percente = 0;
+							}
+						}
+						if($percente >= 99)
+						{
+							$color = "table-success";
+						}
+						elseif($percente > 85 && $percentm < 99)
+						{
+							$color = "table-warning";
+						}
+						else
+						{
+							$color = "table-danger";
+						}
 						?>
 						<tr>
 							<td><?php echo $e['site_name'] ?></td>
 							<td><?php echo $e['asset_name'] ?></td>
-							<td class="table-warning">
+							<td class="<?php echo $color ?>">
 								<b>
-									<?php
-
-									if(date("H:i:s") >= "06:00:00" && date("H:i:s") < "16:00:00" )
-									{
-										if($e['planned_shift_one'] > 0)
-										{
-											echo ceil(($e['completed_shift_one']/$e['planned_shift_one']) * 100);
-										}
-										else
-										{
-											echo "0";
-										}
-									}
-									elseif(date("H:i:s") >= "16:00:00" && date("H:i:s") < "23:59:59" )
-									{
-										if($e['planned_shift_two'] > 0)
-										{
-											echo ceil(($e['completed_shift_two']/$e['planned_shift_two']) * 100);
-										}
-										else
-										{
-											echo "0";
-										}
-									}
-									elseif(date("H:i:s") >= "00:00:00" && date("H:i:s") < "05:59:59" )
-									{
-										if($e['planned_shift_three'] > 0)
-										{
-											echo ceil(($e['completed_shift_three']/$e['planned_shift_three']) * 100);
-										}
-										else
-										{
-											echo "0";
-										}
-									}
-									?>
-									%
+									<?php echo $percente ?> %
 								</b>
 							</td>
 
@@ -185,50 +204,58 @@
 					<?php
 					//print_r($moldeo);
 					foreach ($planta3 as $p) :
-
+						if(date("H:i:s") >= "06:00:00" && date("H:i:s") < "16:00:00" )
+						{
+							if($p['planned_shift_one'] > 0)
+							{
+								$percentp = ceil(($p['completed_shift_one']/$p['planned_shift_one']) * 100);
+							}
+							else
+							{
+								$percentp = 0;
+							}
+						}
+						elseif(date("H:i:s") >= "16:00:00" && date("H:i:s") < "23:59:59" )
+						{
+							if($p['planned_shift_two'] > 0)
+							{
+								$percentp = ceil(($p['completed_shift_two']/$p['planned_shift_two']) * 100);
+							}
+							else
+							{
+								$percentp = 0;
+							}
+						}
+						elseif(date("H:i:s") >= "00:00:00" && date("H:i:s") < "05:59:59" )
+						{
+							if($p['planned_shift_three'] > 0)
+							{
+								$percentp = ceil(($p['completed_shift_three']/$p['planned_shift_three']) * 100);
+							}
+							else
+							{
+								$percentp = 0;
+							}
+						}
+						if($percentp >= 99)
+						{
+							$color = "table-success";
+						}
+						elseif($percentp > 85 && $percentp < 99)
+						{
+							$color = "table-warning";
+						}
+						else
+						{
+							$color = "table-danger";
+						}
 						?>
 						<tr>
 							<td><?php echo $p['site_name'] ?></td>
 							<td><?php echo $p['asset_name'] ?></td>
-							<td class="table-warning">
+							<td class="<?php echo $color ?> ">
 								<b>
-									<?php
-
-									if(date("H:i:s") >= "06:00:00" && date("H:i:s") < "16:00:00" )
-									{
-										if($p['planned_shift_one'] > 0)
-										{
-											echo ceil(($p['completed_shift_one']/$p['planned_shift_one']) * 100);
-										}
-										else
-										{
-											echo "0";
-										}
-									}
-									elseif(date("H:i:s") >= "16:00:00" && date("H:i:s") < "23:59:59" )
-									{
-										if($p['planned_shift_two'] > 0)
-										{
-											echo ceil(($p['completed_shift_two']/$p['planned_shift_two']) * 100);
-										}
-										else
-										{
-											echo "0";
-										}
-									}
-									elseif(date("H:i:s") >= "00:00:00" && date("H:i:s") < "05:59:59" )
-									{
-										if($p['planned_shift_three'] > 0)
-										{
-											echo ceil(($p['completed_shift_three']/$p['planned_shift_three']) * 100);
-										}
-										else
-										{
-											echo "0";
-										}
-									}
-									?>
-									%
+									<?php echo $percentp ?> %
 								</b>
 							</td>
 
