@@ -11,10 +11,12 @@ class PlanByHour extends CI_Model
     public $planned;
 
     public $item_id;
+    public $workorder;
 
     //foreign
     public $item_number;
     public $completed;
+    public $planned_head_count;
     
 
     public $error;
@@ -42,6 +44,8 @@ class PlanByHour extends CI_Model
         $this->planned = $plan_by_hour['planned'];
         $this->item_id = $plan_by_hour['item_id'];
         $this->completed = $plan_by_hour['completed'];
+        $this->workorder = $plan_by_hour['workorder'];
+        $this->planned_head_count = $plan_by_hour['planned_head_count'];
 
         $this->db->where('item_id', $plan_by_hour['item_id'] );
         $query = $this->db->get('items_pph');

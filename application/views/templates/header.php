@@ -211,7 +211,7 @@
                     <span class="icon las la-tv"></span>
                     Output vs Plan
                 </a>
-                <a href="<?php echo base_url(); ?>index.php/">
+                <a href="<?php echo base_url(); ?>interruption_cause">
                     <span class="icon las la-stop-circle"></span>
                     Interruption cause
                 </a>

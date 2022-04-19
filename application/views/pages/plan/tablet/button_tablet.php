@@ -26,7 +26,7 @@
         <img width="150" src="<?php echo base_url(); ?>assets/images/transparente.png" alt="">
     </span>
 </div>
-<?=$plan_by_hour_id?>
+<br>
 <div class="card w-50 text-center" ng-controller="buttonController" ng-app="buttonApp">
     <div class="container mt-5">
         <div class="alert alert_danger my-5" ng-hide="verified">
@@ -37,11 +37,12 @@
         <table class="table w-full">
                     <tr>
                         <th class="text-center uppercase table-green text-bold">Plant</th>
-                        <th class="text-center uppercase table-green">gg</th>
+                        <th class="text-center uppercase table-green"><?= $plant_name ?></th>
                         <th class="text-center uppercase table-green text-bold">Area</th>
-                        <th class="text-center uppercase table-green">Dilators</th>
+                        <th class="text-center uppercase table-green"><?= $site_name ?></th>
                         <th class="text-center uppercase table-green text-bold">Output</th>
-                        <th class="text-center uppercase table-green">TIP 31</th>
+                        <th class="text-center uppercase table-green"><?= $asset_name ?></th>
+
                     </tr>
                 </thead>
             </table>
@@ -57,18 +58,18 @@
                 </thead>
                 <tbody>
                     <tr class="text-center">
-                        <td class="table-disabled">8:00-9:00</td>
-                        <td class="table-disabled">10</td>
-                        <td class="table-disabled">AAC02106</td>
-                        <td class="table-disabled">TRF-001</td>
-                        <td class="table-disabled">400</td>
+                        <td class="table-disabled"><?=$last_time, '-', $last_time_end ?></td>
+                        <td class="table-disabled"><?=$last_hc?></td>
+                        <td class="table-disabled"><?=$last_item_number?></td>
+                        <td class="table-disabled"><?=$last_workorder?></td>
+                        <td class="table-disabled"><?=$last_completed?></td>
                     </tr>
                 </tbody>
             </table>
         </div>
         <div ng-show="verified">
             <h6>WO Number:</h6>
-            <p>GFE-00</p>
+            <p><?=$workorder?></p>
             <h5 class="mt-4">Item number:</h5>
             <h1 class="text-primary mb-8"><b><?= $item_number ?></b></h1>
             <div class="alert alert_success my-5" ng-if="!IsDisabledButtonModify">
@@ -82,7 +83,7 @@
                 <button class="btn btn_warning" style="width: 15em; margin:auto; display:block;" ng-click="capture()" ng-disabled="!IsDisabledButtonModify">Capture</button>
             </div>
             <h6 class="mt-5">Current Hour</h6>
-            <p>14:00-15:00</p>
+            <p><?=$time, '-', $time_end ?></p>
             <div class="flex  justify-end mt-8 mb-8">
                 <div>
                     <label class="switch">

@@ -103,6 +103,8 @@ $route['manual_capture/save']['post'] = '/manual_capture/save_manual_capture';
 $route['trigger'] = '/trigger/index';
 //Output vs plan
 $route['output_vs_plan'] = 'output_vs_plan/index';
+//Interruption Cause
+$route['interruption_cause'] = 'interruption_cause/index';
 //login
 $route['login'] = '/login/index';
 //button_tablet

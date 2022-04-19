@@ -95,38 +95,60 @@ class Manual_Capture extends CI_Controller
         $this->load->model('productionplan');
         $this->load->model('planbyhour');
 
-
         $shift_date = $this->shift->getIdFromCurrentTime(new DateTime);
-        //$asset_id, $shift_id, $date, si no hay plan regresa NULL
         $plan = $this->productionplan->getProductionPlan($this->input->get('asset_id'), $shift_date['shift_id'], $shift_date['date']->format(DATE_FORMAT));
+        $plan_by_hour_id = $this->capture->get_current_hour($plan->plan_id, new DateTime());
 
-        //Aqui ya traes los datos de plan_hourxhour.plan_by_hours si no lo encontro
-        $plan_by_hour_id = $this->capture->get_current_hour($plan->plan_id);
         $this->planbyhour->Load($plan_by_hour_id);
-
-        echo json_encode($plan_by_hour_id);
 
         $plan_id = $this->planbyhour->plan_id;
         $item_id = $this->planbyhour->item_id;
-        //$plant_name = $this->planbyhour->plant_name;
-        //$asset_name = $this->planbyhour->asset_name;
-        //$site_name = $this->planbyhour->site_name;
+        $time = $this->planbyhour->time;
+        $time_end = $this->planbyhour->time_end;
+        $time = date(HOUR_MINUTE_FORMAT, strtotime($time));
+        $time_end = date(HOUR_MINUTE_FORMAT, strtotime($time_end));
 
-        //$data['plant_name'] = $plant_name;
-        //$data['site_name'] = $site_name;
-        //$data['asset_name'] = $asset_name;
+        //Last Hour
+        $timestamp = strtotime($this->planbyhour->time) - 60*60;
+        //echo $timestamp,' <br>';
+        $result = new DateTime();
+        $result->setTimestamp($timestamp);
+        
+        //Last Hour End
         $data['plan_id'] = $plan_id;
+        $data['site_name'] = $plan->site_name;
+        $data['asset_name'] = $plan->asset_name;
+        $data['plant_name'] = $plan->plant_name;
         $data['item_id'] = $item_id;
         $data['item_number'] = $this->planbyhour->item_number;
+        $data['workorder'] = $this->planbyhour->workorder;
         $data['planned'] = $this->planbyhour->planned;
         $data['completed'] = $this->planbyhour->completed;
+        $data['time'] = $time;
+        $data['time_end'] = $time_end;
         $data['title'] = "Captura manual";
         $data['plan_by_hour_id'] = $plan_by_hour_id;
+
+        //Last hour info
+        $last_hour_id = $this->capture->get_current_hour($plan->plan_id, $result);
+        $this->planbyhour->Load($last_hour_id);
+
+        $data['last_item_number'] = $this->planbyhour->item_number;
+        $data['last_workorder'] = $this->planbyhour->workorder;
+        $data['last_completed'] = $this->planbyhour->completed;
+        $data['last_hc'] = $this->planbyhour->planned_head_count;
+
+        $last_time = $this->planbyhour->time;
+        $last_time_end = $this->planbyhour->time_end;
+        $last_time = date(HOUR_MINUTE_FORMAT, strtotime($last_time));
+        $last_time_end = date(HOUR_MINUTE_FORMAT, strtotime($last_time_end));
+
+        $data['last_time'] = $last_time;
+        $data['last_time_end'] = $last_time_end;
         $this->load->view('templates/header_logged_out');
         $this->load->view('pages/plan/tablet/button_tablet', $data);
         $this->load->view('templates/footer');
     }
-
 
     //add capture
     public function add_capture()
