@@ -16,7 +16,7 @@ class ProductionPlan extends CI_Model
 
     public $shift_id;
     public $shift_name;
-     
+
     public $site_id;
     public $site_name;
 

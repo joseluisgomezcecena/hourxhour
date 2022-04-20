@@ -103,7 +103,7 @@ class Plan extends CI_Controller
                 $data_item['created_at'] = $now->format(DATETIME_FORMAT);
 
 
-                $sql = "INSERT INTO plan_by_hours (`plan_id`, `time`, `time_end`, `planned`, `planned_head_count`, `workorder`, `item_id`, `interruption_id`, `less_time`, `std_time`, `updated_at`, `created_at`)";
+                $sql = "INSERT INTO plan_by_hours (`plan_id`, `time`, `time_end`, `planned`, `planned_head_count`, `workorder`, `item_id`, `interruption_id`, `interruption_value`, `std_time`, `updated_at`, `created_at`)";
                 $sql .= " VALUES (";
 
                 $sql .= $plan->plan_id . ", ";
@@ -114,7 +114,8 @@ class Plan extends CI_Controller
                 $sql .= (isset($item->workorder) ? "'" . $item->workorder . "'" : 'NULL') . ", ";
                 $sql .= (isset($item->item_id) ? $item->item_id : 'NULL') . ", ";
                 $sql .= (isset($item->interruption_id) ? $item->interruption_id : 'NULL') . ", ";
-                $sql .= (isset($item->less_time) ? $item->less_time : 'NULL') . ", ";
+                $sql .= (isset($item->interruption_value) ? $item->interruption_value : 'NULL') . ", ";
+                //$sql .= (isset($item->less_time) ? $item->less_time : 'NULL') . ", ";
                 $sql .= (isset($item->std_time) ? $item->std_time : 'NULL') . ", ";
                 $sql .= "'" . $data_item['updated_at'] . "', ";
                 $sql .= "'" . $data_item['created_at'] . "'";
@@ -152,8 +153,17 @@ class Plan extends CI_Controller
                 $sql .= "interruption_id = ";
                 $sql .= (isset($item->interruption_id) ? $item->interruption_id : 'NULL') . ", ";
 
-                $sql .= "less_time = ";
-                $sql .= (isset($item->less_time) ? $item->less_time : 'NULL') . ", ";
+                $sql .= "interruption_value = ";
+                $sql .= (isset($item->interruption_value) ? $item->interruption_value : 'NULL') . ", ";
+
+                //$sql .= "not_planned_interruption_id = ";
+                //$sql .= (isset($item->not_planned_interruption_id) ? $item->not_planned_interruption_id : 'NULL') . ", ";
+
+                //$sql .= "not_planned_interruption_value = ";
+                //$sql .= (isset($item->not_planned_interruption_value) ? $item->not_planned_interruption_value : 'NULL') . ", ";
+
+                //$sql .= "less_time = ";
+                //$sql .= (isset($item->less_time) ? $item->less_time : 'NULL') . ", ";
 
                 $sql .= "std_time = ";
                 $sql .= (isset($item->std_time) ? $item->std_time : 'NULL') . ", ";
