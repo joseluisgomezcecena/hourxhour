@@ -90,6 +90,9 @@ defined('TIME_FORMAT')      or define('TIME_FORMAT', 'H:i:s');
 defined('HOUR_MINUTE_FORMAT')      or define('HOUR_MINUTE_FORMAT', 'H:i a');
 
 
+defined('DATETIME_FORMAT_ZERO_MINUTES_AND_SECONDS')      or define('DATETIME_FORMAT_ZERO_MINUTES_AND_SECONDS', 'Y-m-d H:00:00');
+
+
 defined('CAPTURE_MANUAL')      or define('CAPTURE_MANUAL', 0);
 defined('CAPTURE_SENSOR')      or define('CAPTURE_SENSOR', 1);
 defined('CAPTURE_BUTTON')      or define('CAPTURE_BUTTON', 2);

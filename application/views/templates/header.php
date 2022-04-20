@@ -224,7 +224,7 @@
                         Custom Report
                     </a>
                 </div>
-                <a href="<?php echo base_url(); ?>index.php/output_vs_plan">
+                <a href="<?php echo base_url(); ?>index.php/output_vs_plan/select_site">
                     <span class="icon las la-tv"></span>
                     Output vs Plan
                 </a>
