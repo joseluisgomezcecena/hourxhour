@@ -34,7 +34,7 @@
 					<tr>
 						<th class="text-center uppercase">Area</th>
 						<th class="text-center uppercase">Output</th>
-						<th class="text-cente uppercaser">Shift Status</th>
+						<th class="text-center uppercase">Shift Status</th>
 					</tr>
 					</thead>
 					<tbody>
@@ -117,7 +117,7 @@
 					<tr>
 						<th class="text-center uppercase">Area</th>
 						<th class="text-center uppercase">Output</th>
-						<th class="text-cente uppercaser">Shift Status</th>
+						<th class="text-center uppercase">Shift Status</th>
 					</tr>
 					</thead>
 					<tbody>
@@ -197,7 +197,7 @@
 					<tr>
 						<th class="text-center uppercase">Area</th>
 						<th class="text-center uppercase">Output</th>
-						<th class="text-cente uppercaser">Shift Status</th>
+						<th class="text-center uppercase">Shift Status</th>
 					</tr>
 					</thead>
 					<tbody>

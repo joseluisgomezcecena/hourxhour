@@ -27,7 +27,13 @@
         text-align: center;
     }
 </style>
-<section>
+<section class="breadcrumb">
+    <h1><?= $title ?></h1>
+    <ul>
+    <li><a href="<?php echo base_url(); ?>">Home</a></li>
+        <li class="divider la la-arrow-right"></li>
+        <li><?= $title ?></li>
+    </ul>
     <table class="table w-full mt-3">
         <thead>
             <tr>
@@ -60,28 +66,28 @@
         </thead>
         <tbody>
             <tr>
-                <td class="table-gray"><b>6:00-7:00</b></td>
-                <td class="table-gray">10</td>
-                <td class="table-gray">AAC19521</td>
-                <td class="table-gray">GFC-00</td>
-                <td class="table-gray">200</td>
-                <td class="table-gray">200</td>
-                <td class="table-gray">400</td>
-                <td class="table-gray">200</td>
-                <td class="table-gray">Material shortage</td>
-                <td class="table-gray">0.5</td>
+                <td><b>6:00-7:00</b></td>
+                <td>10</td>
+                <td>AAC19521</td>
+                <td>GFC-00</td>
+                <td>200</td>
+                <td>200</td>
+                <td>400</td>
+                <td>200</td>
+                <td>Material shortage</td>
+                <td>0.5</td>
             </tr>
-            <tr>
-                <td class="table-success"><b>7:00-8:00</b></td>
-                <td class="table-success">35</td>
-                <td class="table-success">10034-815-401C</td>
-                <td class="table-success">GFC-01</td>
-                <td class="table-success">450</td>
-                <td class="table-success">650</td>
-                <td class="table-success">200</td>
-                <td class="table-success">300</td>
-                <td class="table-success"></td>
-                <td class="table-success"></td>
+            <tr> 
+                <td><b>7:00-8:00</b></td>
+                <td>35</td>
+                <td>10034-815-401C</td>
+                <td>GFC-01</td>
+                <td>450</td>
+                <td>650</td>
+                <td>200</td>
+                <td>300</td>
+                <td></td>
+                <td></td>
             </tr>
             <tr>
                 <td><b>8:00-9:00</b></td>

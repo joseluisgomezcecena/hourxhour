@@ -23,26 +23,26 @@
 
 						foreach($sites as $site)
 						{
-							//echo $site['site_name'];
-
-							echo '<tr>';
-							echo '<th class="ltr:text-left rtl:text-right uppercase">';
-							
-							echo '<a href="' . base_url() . 'index.php/measuring_point?site_id=' . $site['site_id'] .'&plant_id=' . $site['plant_id'] . '"';
-							if( intval($site['assets_count']) <= 0 ) {
-								echo 'style="cursor: no-drop; color: gray;"';
-							}
-							echo '>' . $site['site_name'];
-							echo '</a>';
-
-
-							echo '</th>';
-							
-							echo '<th class="w-px uppercase">';
-							echo '<div class="badge badge_warning uppercase">' . $site['assets_count'] .'</div>';
-							echo '</th>';
-							
-							echo '<th>';
+                            echo ' <table class="table table_list mt-3 w-full">
+                            <thead>
+                                <tr> ';
+                            echo '
+                                    <th class="ltr:text-left rtl:text-right uppercase">';
+                            if (intval($site['assets_count']) <= 0) {
+                                echo '<a href="#" ';
+                            } else {
+                                echo '<a href="' . base_url() . 'index.php/measuring_point?site_id=' . $site['site_id'] .'&plant_id=' . $site['plant_id'] . '"';
+                            }
+                            if (intval($site['assets_count']) <= 0) echo 'style="cursor: no-drop; color: gray;"';
+                            echo '>' . $site['site_name'];
+                            echo '    
+                                    <th class="w-px uppercase">
+                                    <div class="badge badge_warning uppercase">' . $site['assets_count'] . '</div>
+                                    </th>
+                                </tr>
+                            </thead>
+                            </table>
+                        ';
 						}
 						?>
 

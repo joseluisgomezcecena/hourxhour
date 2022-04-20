@@ -1,7 +1,3 @@
- <!-- Brand -->
- <span class="brand" style="margin-top: -6.5rem;">
-     <img width="150" src="<?php echo base_url(); ?>assets/images/transparente.png" alt="">
- </span>
  <!-- Breadcrumb -->
  <section class="breadcrumb">
      <h1><?= $title ?></h1>
@@ -20,7 +16,7 @@
                     <small>Selet a cell</small>
                 </div>
                 <hr>';
-                foreach($assets as $asset) {   
+                foreach ($assets as $asset) {
                     echo ' <table class="table table_list mt-3 w-full">
                     <thead>
                         <tr> ';
@@ -29,7 +25,7 @@
                     if (intval($asset['assets_count']) <= 0) {
                         echo '<a href="#" ';
                     } else {
-                        echo '<a href="' . base_url() . 'manual_capture/measuring_point?site_id=' . $asset['site_id'] .'&plant_id=' . $asset['plant_id'] . '" ';
+                        echo '<a href="' . base_url() . 'interruption_cause/measuring_point?site_id=' . $asset['site_id'] . '&plant_id=' . $asset['plant_id'] . '" ';
                     }
                     if (intval($asset['assets_count']) <= 0) echo 'style="cursor: no-drop; color: gray;"';
                     echo '>' . $asset['site_name'];
