@@ -22,6 +22,106 @@
     .red {
         border: solid 1px red;
     }
+
+
+    .lds-spinner {
+        color: official;
+        display: inline-block;
+        position: relative;
+        width: 80px;
+        height: 80px;
+    }
+
+    .lds-spinner div {
+        transform-origin: 40px 40px;
+        animation: lds-spinner 1.2s linear infinite;
+    }
+
+    .lds-spinner div:after {
+        content: " ";
+        display: block;
+        position: absolute;
+        top: 3px;
+        left: 37px;
+        width: 6px;
+        height: 18px;
+        border-radius: 20%;
+        background: #000000;
+    }
+
+    .lds-spinner div:nth-child(1) {
+        transform: rotate(0deg);
+        animation-delay: -1.1s;
+    }
+
+    .lds-spinner div:nth-child(2) {
+        transform: rotate(30deg);
+        animation-delay: -1s;
+    }
+
+    .lds-spinner div:nth-child(3) {
+        transform: rotate(60deg);
+        animation-delay: -0.9s;
+    }
+
+    .lds-spinner div:nth-child(4) {
+        transform: rotate(90deg);
+        animation-delay: -0.8s;
+    }
+
+    .lds-spinner div:nth-child(5) {
+        transform: rotate(120deg);
+        animation-delay: -0.7s;
+    }
+
+    .lds-spinner div:nth-child(6) {
+        transform: rotate(150deg);
+        animation-delay: -0.6s;
+    }
+
+    .lds-spinner div:nth-child(7) {
+        transform: rotate(180deg);
+        animation-delay: -0.5s;
+    }
+
+    .lds-spinner div:nth-child(8) {
+        transform: rotate(210deg);
+        animation-delay: -0.4s;
+    }
+
+    .lds-spinner div:nth-child(9) {
+        transform: rotate(240deg);
+        animation-delay: -0.3s;
+    }
+
+    .lds-spinner div:nth-child(10) {
+        transform: rotate(270deg);
+        animation-delay: -0.2s;
+    }
+
+    .lds-spinner div:nth-child(11) {
+        transform: rotate(300deg);
+        animation-delay: -0.1s;
+    }
+
+    .lds-spinner div:nth-child(12) {
+        transform: rotate(330deg);
+        animation-delay: 0s;
+    }
+
+    @keyframes lds-spinner {
+        0% {
+            opacity: 1;
+        }
+
+        100% {
+            opacity: 0;
+        }
+    }
+
+    .table-success {
+        background-color: green;
+    }
 </style>
 <!-- Breadcrumb -->
 <section class="breadcrumb" ng-app='plannerApp' ng-controller='planController'>
@@ -31,7 +131,28 @@
         <li class="divider la la-arrow-right"></li>
         <li><?= $title ?></li>
     </ul>
-    <form method="POST" enctype="multipart/form-data">
+
+    <div style="position: absolute; width: 100%; height: 100%;" ng-hide="production_plan">
+        <div style=" display: flex; justify-content:center">
+            <div class="lds-spinner">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+        </div>
+
+    </div>
+
+    <form method="POST" enctype="multipart/form-data" ng-show="production_plan">
         <div style="display:flex; justify-content: flex-end;">
             <button type="button" ng-click="copy_clipboard()" class="btn btn-icon btn-icon_large btn_info uppercase" data-toggle="tooltip" data-tippy-content="Paste the information of the excel table" data-tippy-placement="right" aria-expanded="false"> <span class="las la-paste"></span>
             </button>
@@ -201,9 +322,7 @@
 
             console.log('date de hoy ' + $scope.date);
 
-            $scope.getInterruptions();
-            $scope.getPlan();
-            $scope.getItems();
+            $scope.getData();
         }
 
         $scope.change_date = function() {
@@ -211,10 +330,11 @@
             $scope.init($scope.asset_id, $scope.shift_id, changed_date);
         }
 
-        $scope.getPlan = function() {
+
+        $scope.getData = function() {
             $http({
                 method: 'get',
-                url: '<?= base_url() ?>index.php/api/plan/get',
+                url: '<?= base_url() ?>index.php/api/plan/get_data',
                 params: {
                     asset_id: $scope.asset_id,
                     shift_id: $scope.shift_id,
@@ -224,24 +344,28 @@
 
                 console.log(response.data);
 
-                $scope.production_plan = response.data;
+                //Load items
+                $scope.items = response.data.items;
+
+                //Load interruptions
+                $scope.interruptions = response.data.interruptions;
+
+                //Load production_plan
+                $scope.production_plan = response.data.production_plan;
 
                 //$scope.plan_date = new Date(response.data.date);
-                const separated_date = response.data.date.split("-");
+                const separated_date = response.data.production_plan.date.split("-");
 
                 console.log(separated_date);
 
                 $scope.production_plan.date_display = new Date(parseInt(separated_date[0]), parseInt(separated_date[1] - 1), parseInt(separated_date[2]));
 
-
                 for (var i = 0; i < $scope.production_plan.plan_by_hours.length; i++) {
-                    var plan_item = response.data.plan_by_hours[i];
+                    var plan_item = response.data.production_plan.plan_by_hours[i];
 
                     //plan_item.invalid_planned_head_count = false;
-
-
-                    plan_item.time_display = new Date(response.data.plan_by_hours[i].time);
-                    plan_item.time_end_display = new Date(response.data.plan_by_hours[i].time_end);
+                    plan_item.time_display = new Date(response.data.production_plan.plan_by_hours[i].time);
+                    plan_item.time_end_display = new Date(response.data.production_plan.plan_by_hours[i].time_end);
 
                     //Estos numeros necesitan estar definidos como numteros
                     //console.log($scope.production_plan.plan_by_hours[i].planned_head_count);
@@ -267,22 +391,14 @@
                     //plan_item.interruption_id = plan_item.selected_interruption.interruption_id;
                 }
 
-            });
-        }
-
-        $scope.getItems = function() {
-            $http({
-                method: 'get',
-                url: '<?= base_url() ?>index.php/api/items/get',
-            }).then(function successCallback(response) {
-                console.log(response.data);
-                $scope.items = response.data.items;
                 $scope.updateItems();
+
             });
         }
 
 
         $scope.updateItems = function() {
+
 
             for (var i = 0; i < $scope.production_plan.plan_by_hours.length; i++) {
 
@@ -321,17 +437,6 @@
             }
 
 
-        }
-
-
-        $scope.getInterruptions = function() {
-            $http({
-                method: 'get',
-                url: '<?= base_url() ?>index.php/api/interruptions/get',
-            }).then(function successCallback(response) {
-                $scope.interruptions = response.data.interruptions;
-                console.log($scope.interruptions);
-            });
         }
 
 
@@ -518,6 +623,7 @@
                 }
             }
             $http.post(url, data, config).then(function(response) {
+                $scope.production_plan = null;
                 $scope.init($scope.asset_id, $scope.shift_id, $scope.date);
                 swal("Good job!", "The plan has been saved.", "success");
             }, function(response) {

@@ -15,7 +15,7 @@ class Plan extends CI_Controller
     public function index()
     {
         if (!$this->session->userdata(IS_LOGGED_IN))
-            redirect(LOGIN_URL . current_url());
+            redirect(LOGIN_URL);
 
         //necesitamos la fecha de hoy, el shift_id y el asset_id
         $now = new DateTime();
@@ -33,34 +33,22 @@ class Plan extends CI_Controller
     }
 
 
-    public function api_get_plan()
+    public function api_get_data()
     {
+        $query = $this->db->query('SELECT item_id, item_number, max( CAST(item_pph AS DECIMAL(10,2)) ) as item_pph, item_run_labor, item_pph FROM plan_hourxhour.items_pph GROUP BY item_number ORDER BY item_number');
+        $data['items'] =   $query->result_array();
+
+        $query = $this->db->query('SELECT * FROM interruptions');
+        $data['interruptions'] =   $query->result_array();
+
         $this->load->model('productionplan');
         $asset_id = $this->input->get('asset_id');
         $shift_id = $this->input->get('shift_id');
         $date = $this->input->get('date');
-
         $this->shift->Load($shift_id);
-        //Cargar Plan
         $this->productionplan->LoadPlan($asset_id, $date, $shift_id, $this->shift->shift_start_time, $this->shift->shift_end_time);
+        $data['production_plan'] =  $this->productionplan;
 
-        echo json_encode($this->productionplan);
-    }
-
-
-    public function api_get_items()
-    {
-        //SELECT item_id, item_number, max( CAST(item_pph AS DECIMAL(10,2)) ) as pph FROM plan_hourxhour.items_pph GROUP BY item_number ORDER BY item_number;
-        $query = $this->db->query('SELECT item_id, item_number, max( CAST(item_pph AS DECIMAL(10,2)) ) as item_pph, item_run_labor, item_pph FROM plan_hourxhour.items_pph GROUP BY item_number ORDER BY item_number');
-        $data['items'] =   $query->result_array();
-        echo json_encode($data);
-    }
-
-
-    public function api_get_interruptions()
-    {
-        $query = $this->db->query('SELECT * FROM interruptions');
-        $data['interruptions'] =   $query->result_array();
         echo json_encode($data);
     }
 
@@ -195,7 +183,7 @@ class Plan extends CI_Controller
     public function select_cell()
     {
         if (!$this->session->userdata(IS_LOGGED_IN))
-            redirect(LOGIN_URL . current_url());
+            redirect(LOGIN_URL);
 
         //se obtiene el turno en base al DateTime y se carga el modelo del shift
         $shift_date = $this->shift->getIdFromCurrentTime(new DateTime());
@@ -223,7 +211,7 @@ class Plan extends CI_Controller
     public function select_measuring_point()
     {
         if (!$this->session->userdata(IS_LOGGED_IN))
-            redirect(LOGIN_URL . current_url());
+            redirect(LOGIN_URL);
 
         $data['title'] = "Select a Cell";
         $this->load->view('templates/header');
