@@ -109,4 +109,4 @@ defined('MARTECH_NUMBER')      or define('MARTECH_NUMBER', 'hour_x_hour_martech_
 defined('LEVEL_NAME')      or define('LEVEL_NAME', 'hour_x_hour_level_name');
 defined('LEVEL_VALUE')      or define('LEVEL_VALUE', 'hour_x_hour_level_value');
 
-defined('LOGIN_URL')      or define('LOGIN_URL', 'http://localhost/authentication/index.php/home/login?from=');
+defined('LOGIN_URL')      or define('LOGIN_URL', 'http://localhost/authentication/index.php/home/login?from=http://localhost/hourxhour/');

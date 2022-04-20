@@ -5,7 +5,7 @@ class Reports extends CI_Controller
     public function daily_report()
     {
         if (!$this->session->userdata(IS_LOGGED_IN))
-            redirect(LOGIN_URL . current_url());
+            redirect(LOGIN_URL);
 
         $start_date = date(DATE_FORMAT) . ' 0:00:00';
         $end_date = date(DATE_FORMAT) . ' 23:59:59';
@@ -137,7 +137,7 @@ class Reports extends CI_Controller
     public function custom_report()
     {
         if (!$this->session->userdata(IS_LOGGED_IN))
-            redirect(LOGIN_URL . current_url());
+            redirect(LOGIN_URL);
 
         $start_date = $this->input->get('start_date');
         $end_date  =   $this->input->get('end_date');
