@@ -343,7 +343,7 @@ class Pages extends CI_Controller
        INNER JOIN assets ON production_plans.asset_id = assets.asset_id
        INNER JOIN sites ON assets.site_id = sites.site_id
        INNER JOIN plants ON sites.plant_id = plants.plant_id
-       WHERE plan_by_hours.time BETWEEN '$start_date' AND '$end_date' AND plants.plant_id = 6;");
+       WHERE plan_by_hours.time BETWEEN '$start_date' AND '$end_date' AND plants.plant_id = 8;");
 
 		$result3 = $query3->result_array();
 
