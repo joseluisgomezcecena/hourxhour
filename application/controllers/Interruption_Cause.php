@@ -1,8 +1,26 @@
 <?php
 class Interruption_Cause extends CI_Controller
 {
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->load->model('shift');
+    }
+
     public function index()
     {
+        $this->load->model('capture');
+        $this->load->model('productionplan');
+        $this->load->model('planbyhour');
+        $asset_id = $this->input->get('asset_id');
+
+        $shift_date = $this->shift->getIdFromCurrentTime(new DateTime);
+
+        $this->shift->Load($shift_date['shift_id']);
+        $this->productionplan->LoadPlan($this->input->get('asset_id'), $shift_date['date']->format(DATE_FORMAT), $shift_date['shift_id'], $this->shift->shift_start_time, $this->shift->shift_end_time);
+        
+        $data['production_plan'] =  $this->productionplan;
         $data['title'] = "Interruption Cause";
         $this->load->view('templates/header');
         $this->load->view('pages/interruption_cause/index', $data);
@@ -26,7 +44,8 @@ class Interruption_Cause extends CI_Controller
         $this->load->view('templates/footer');
     }
     public function select_measuring()
-    {$this->load->model('plant');
+    {
+        $this->load->model('plant');
         $this->load->model('shift');
 
         $shift_date = $this->shift->getIdFromCurrentTime(new DateTime);

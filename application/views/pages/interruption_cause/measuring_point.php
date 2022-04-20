@@ -22,7 +22,6 @@
                 if ($item['plan_id'] != NULL) {
                     echo '<small class="text-primary"><span class="icon las la-exclamation-triangle mt-3"></span> There is already a plan for this day</small>';
                 }
-
                 echo '</div>';
                 echo '</div>';
                 echo '</a>';

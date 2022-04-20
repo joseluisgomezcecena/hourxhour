@@ -30,21 +30,22 @@
 <section class="breadcrumb">
     <h1><?= $title ?></h1>
     <ul>
-    <li><a href="<?php echo base_url(); ?>">Home</a></li>
+        <li><a href="<?php echo base_url(); ?>">Home</a></li>
         <li class="divider la la-arrow-right"></li>
         <li><?= $title ?></li>
     </ul>
+    <!--<?= json_encode($production_plan) ?>-->
     <table class="table w-full mt-3">
         <thead>
             <tr>
                 <th class="uppercase table-green">Plant</th>
-                <th class="uppercase table-success">Ensamble</th>
+                <th class="uppercase table-success"><?= $production_plan->plant_name ?></th>
                 <th class="uppercase table-green">Area</th>
-                <th class="uppercase table-success">Dilators</th>
+                <th class="uppercase table-success"><?= $production_plan->site_name ?></th>
                 <th class="uppercase table-green">Output</th>
-                <th class="uppercase table-success">BOY 25</th>
+                <th class="uppercase table-success"><?= $production_plan->asset_name ?></th>
                 <th class="uppercase table-green">Shift status</th>
-                <th class="uppercase table-success">99%</th>
+                <th class="uppercase table-success" ng-model="production_plan.shift_id"></th>
             </tr>
         </thead>
     </table>
@@ -61,58 +62,29 @@
                 <th class="uppercase table-green">CUM Output</th>
                 <th class="uppercase table-green">Interruption Cause</th>
                 <th class="uppercase table-green">Less Time</th>
-
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td><b>6:00-7:00</b></td>
-                <td>10</td>
-                <td>AAC19521</td>
-                <td>GFC-00</td>
-                <td>200</td>
-                <td>200</td>
-                <td>400</td>
-                <td>200</td>
-                <td>Material shortage</td>
-                <td>0.5</td>
-            </tr>
-            <tr> 
-                <td><b>7:00-8:00</b></td>
-                <td>35</td>
-                <td>10034-815-401C</td>
-                <td>GFC-01</td>
-                <td>450</td>
-                <td>650</td>
-                <td>200</td>
-                <td>300</td>
-                <td></td>
-                <td></td>
-            </tr>
-            <tr>
-                <td><b>8:00-9:00</b></td>
-                <td>20</td>
-                <td>AAC19521</td>
-                <td>GFC-02</td>
-                <td>115</td>
-                <td>765</td>
-                <td>650</td>
-                <td>114</td>
-                <td>Learning curve</td>
-                <td>0.25</td>
-            </tr>
-            <tr>
-                <td><b>9:00-10:00</b></td>
-                <td>16</td>
-                <td>10085-228</td>
-                <td>GFC-03</td>
-                <td>650</td>
-                <td>1,415</td>
-                <td>500</td>
-                <td>200W</td>
-                <td></td>
-                <td></td>
-            </tr>
+            <?php foreach ($production_plan->plan_by_hours as $get_plan) {
+                $start_time = date(TIME_FORMAT, strtotime($get_plan['time']));
+                $end_time = date(TIME_FORMAT, strtotime($get_plan['time_end']));
+
+                echo "
+                    <tr>
+                    <td><b>${start_time} - ${end_time}</b></td>
+                    <td>${get_plan['planned_head_count']}</td>
+                    <td>${get_plan['item_number']}</td>
+                    <td>${get_plan['workorder']}</td>
+                    <td>${get_plan['planned']}</td>
+                    <td>--</td>
+                    <td>${get_plan['completed']}</td>
+                    <td>-</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                ";
+            }
+            ?>
         </tbody>
     </table>
 </section>
