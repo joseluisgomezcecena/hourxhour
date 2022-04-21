@@ -44,8 +44,21 @@
                 <th class="uppercase table-success"><?= $production_plan->site_name ?></th>
                 <th class="uppercase table-green">Output</th>
                 <th class="uppercase table-success"><?= $production_plan->asset_name ?></th>
-                <th class="uppercase table-green">Shift status</th>
-                <th class="uppercase table-success" ng-model="production_plan.shift_id"></th>
+                <th class="uppercase table-green">Shift Status</th>
+                <th class="uppercase table-success">
+                    <?php
+                    $sum_planned = 0;
+                    $sum_completed = 0;
+                    foreach ($production_plan->plan_by_hours as $get_plan) {
+                        $sum_planned += $get_plan['planned'];
+                        $sum_completed += $get_plan['completed'];
+                    }
+                    //planeados 100%
+                    //complete
+                    echo intval(($sum_completed * 100) /  $sum_planned) . '%';
+
+                    ?>
+                </th>
             </tr>
         </thead>
     </table>
@@ -65,9 +78,16 @@
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($production_plan->plan_by_hours as $get_plan) {
+            <?php
+
+            $sum_planned = 0;
+            $sum_completed = 0;
+
+            foreach ($production_plan->plan_by_hours as $get_plan) {
                 $start_time = date(TIME_FORMAT, strtotime($get_plan['time']));
                 $end_time = date(TIME_FORMAT, strtotime($get_plan['time_end']));
+                $sum_planned += $get_plan['planned'];
+                $sum_completed += $get_plan['completed'];
 
                 echo "
                     <tr>
@@ -76,9 +96,9 @@
                     <td>${get_plan['item_number']}</td>
                     <td>${get_plan['workorder']}</td>
                     <td>${get_plan['planned']}</td>
-                    <td>--</td>
+                    <td>${sum_planned}</td>
                     <td>${get_plan['completed']}</td>
-                    <td>-</td>
+                    <td>${sum_completed}</td>
                     <td></td>
                     <td></td>
                 </tr>
@@ -87,4 +107,12 @@
             ?>
         </tbody>
     </table>
+
+    <div class="flex justify-end mt-5">
+        <button type="button" class="btn btn_success uppercase">
+            <span class="la la-save ltr:mr-2 rtl:ml-2"></span>
+            Save
+        </button>
+    </div>
+
 </section>

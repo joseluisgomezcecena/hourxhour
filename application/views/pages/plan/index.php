@@ -256,7 +256,7 @@
 
                         <!-- LESS TIME -->
                         <td class="bg-[#D1FAE5] form-control size-sm" id="">
-                            <input class="size-sm" type="number" ng-model="plan_item.less_time" name="" id="" disabled="true">
+                            <input class="size-sm" type="number" ng-model="plan_item.interruption_value" name="" id="" disabled="true">
                         </td>
 
                         <!-- STD TIME -->
@@ -384,10 +384,10 @@
                     else
                         plan_item.std_time = Number($scope.production_plan.plan_by_hours[i].std_time);
 
-                    if ($scope.production_plan.plan_by_hours[i].less_time == null)
-                        plan_item.less_time = undefined;
+                    if ($scope.production_plan.plan_by_hours[i].interruption_value == null)
+                        plan_item.interruption_value = undefined;
                     else
-                        plan_item.less_time = Number($scope.production_plan.plan_by_hours[i].less_time);
+                        plan_item.interruption_value = Number($scope.production_plan.plan_by_hours[i].interruption_value);
                     //plan_item.interruption_id = plan_item.selected_interruption.interruption_id;
                 }
 
@@ -517,7 +517,7 @@
 
         $scope.interruption_changed = function(plan_item) {
             plan_item.interruption_id = plan_item.selected_interruption.interruption_id;
-            plan_item.less_time = parseFloat(plan_item.selected_interruption.interruption_time);
+            plan_item.interruption_value = parseFloat(plan_item.selected_interruption.interruption_time);
 
             $scope.calculate_formula(plan_item);
         }
@@ -533,7 +533,7 @@
             if (plan_item.planned_head_count == undefined || plan_item.planned == undefined || plan_item.std_time == undefined) {
                 plan_item.formula = undefined;
             } else {
-                plan_item.formula = parseFloat((plan_item.planned_head_count - (plan_item.less_time == undefined ? 0 : plan_item.less_time)) / plan_item.std_time).toFixed(2);
+                plan_item.formula = parseFloat((plan_item.planned_head_count - (plan_item.interruption_value == undefined ? 0 : plan_item.interruption_value)) / plan_item.std_time).toFixed(2);
             }
         }
 
@@ -623,8 +623,11 @@
                 }
             }
             $http.post(url, data, config).then(function(response) {
-                $scope.production_plan = null;
-                $scope.init($scope.asset_id, $scope.shift_id, $scope.date);
+                console.log(response.data);
+
+                //$scope.production_plan = null;
+                //$scope.init($scope.asset_id, $scope.shift_id, $scope.date);
+
                 swal("Good job!", "The plan has been saved.", "success");
             }, function(response) {
 

@@ -86,6 +86,8 @@ class Plan extends CI_Controller
         } else {
             $this->db->where('plan_id', $plan->plan_id);
             $this->db->update('production_plans', $data);
+
+			$this->sendMail($plan->plan_id);
         }
 
 
@@ -103,7 +105,7 @@ class Plan extends CI_Controller
                 $data_item['created_at'] = $now->format(DATETIME_FORMAT);
 
 
-                $sql = "INSERT INTO plan_by_hours (`plan_id`, `time`, `time_end`, `planned`, `planned_head_count`, `workorder`, `item_id`, `interruption_id`, `less_time`, `std_time`, `updated_at`, `created_at`)";
+                $sql = "INSERT INTO plan_by_hours (`plan_id`, `time`, `time_end`, `planned`, `planned_head_count`, `workorder`, `item_id`, `interruption_id`, `interruption_value`, `std_time`, `updated_at`, `created_at`)";
                 $sql .= " VALUES (";
 
                 $sql .= $plan->plan_id . ", ";
@@ -114,7 +116,8 @@ class Plan extends CI_Controller
                 $sql .= (isset($item->workorder) ? "'" . $item->workorder . "'" : 'NULL') . ", ";
                 $sql .= (isset($item->item_id) ? $item->item_id : 'NULL') . ", ";
                 $sql .= (isset($item->interruption_id) ? $item->interruption_id : 'NULL') . ", ";
-                $sql .= (isset($item->less_time) ? $item->less_time : 'NULL') . ", ";
+                $sql .= (isset($item->interruption_value) ? $item->interruption_value : 'NULL') . ", ";
+                //$sql .= (isset($item->less_time) ? $item->less_time : 'NULL') . ", ";
                 $sql .= (isset($item->std_time) ? $item->std_time : 'NULL') . ", ";
                 $sql .= "'" . $data_item['updated_at'] . "', ";
                 $sql .= "'" . $data_item['created_at'] . "'";
@@ -152,8 +155,17 @@ class Plan extends CI_Controller
                 $sql .= "interruption_id = ";
                 $sql .= (isset($item->interruption_id) ? $item->interruption_id : 'NULL') . ", ";
 
-                $sql .= "less_time = ";
-                $sql .= (isset($item->less_time) ? $item->less_time : 'NULL') . ", ";
+                $sql .= "interruption_value = ";
+                $sql .= (isset($item->interruption_value) ? $item->interruption_value : 'NULL') . ", ";
+
+                //$sql .= "not_planned_interruption_id = ";
+                //$sql .= (isset($item->not_planned_interruption_id) ? $item->not_planned_interruption_id : 'NULL') . ", ";
+
+                //$sql .= "not_planned_interruption_value = ";
+                //$sql .= (isset($item->not_planned_interruption_value) ? $item->not_planned_interruption_value : 'NULL') . ", ";
+
+                //$sql .= "less_time = ";
+                //$sql .= (isset($item->less_time) ? $item->less_time : 'NULL') . ", ";
 
                 $sql .= "std_time = ";
                 $sql .= (isset($item->std_time) ? $item->std_time : 'NULL') . ", ";
@@ -218,4 +230,87 @@ class Plan extends CI_Controller
         $this->load->view('pages/plan/measuring_point', $data);
         $this->load->view('templates/footer');
     }
+
+
+
+
+
+
+
+
+	public function sendMail($plan_id)
+	{
+		$id = $plan_id;
+
+		$recipients = array();
+		//getting data for email.
+		$query = $this->db->query('SELECT * FROM production_plans 
+    LEFT JOIN assets ON production_plans.asset_id = assets.asset_id 
+    LEFT JOIN sites ON assets.site_id = sites.site_id 
+    LEFT JOIN plants ON sites.plant_id = plants.plant_id 
+    LEFT JOIN mail_list ON mail_list.plant_id = plants.plant_id 
+	WHERE production_plans.plan_id = $id');
+
+		$result = $query->result_array();
+
+		foreach ($result as $item)
+		{
+			$recipients[] =  $item['email'];
+		}
+
+		echo $emails = implode(',', $recipients);
+
+
+
+
+		$this->load->library('email');
+
+		$subject = 'Plan has been updated!';
+		$message = '
+			<p>Production plan has been updated.</p>';
+
+		// Get full html:
+		$body = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+			<html xmlns="http://www.w3.org/1999/xhtml">
+			<head>
+				<meta http-equiv="Content-Type" content="text/html; charset=' . strtolower(config_item('charset')) . '" />
+				<title>' . html_escape($subject) . '</title>
+				<style type="text/css">
+					body {
+						font-family: Arial, Verdana, Helvetica, sans-serif;
+						font-size: 16px;
+					}
+				</style>
+			</head>
+			<body>
+			' . $message . '
+			</body>
+			</html>';
+		// Also, for getting full html you may use the following internal method:
+		//$body = $this->email->full_html($subject, $message);
+
+
+
+
+		$result = $this->email
+			->from('jgomez@martechmedical.com')
+			->reply_to('jgomez@martechmedical.com')    // Optional, an account where a human being reads.
+			//->to('jgomez@martechmedical.com')
+			->to("$emails")
+			->subject($subject)
+			->message($body)
+			->send();
+
+		var_dump($result);
+		echo '<br />';
+		echo $this->email->print_debugger();
+		exit;
+	}
+
+
+
+
+
+
+
 }
