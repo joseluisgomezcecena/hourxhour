@@ -22,8 +22,6 @@ class Output_VS_Plan extends CI_Controller
         $this->load->view('templates/footer');
     }
 
-
-
     public function index()
     {
         $plant_id = $this->input->get('plant_id');
@@ -34,9 +32,7 @@ class Output_VS_Plan extends CI_Controller
         $data['site_id'] = $site_id;
 
 
-        $this->load->view('templates/header_logged_out');
         $this->load->view('pages/output_vs_plan/index', $data);
-        $this->load->view('pages/output_vs_plan/footer');
     }
 
 
