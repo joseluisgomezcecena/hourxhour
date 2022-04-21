@@ -11,7 +11,7 @@ class Machines extends CI_Controller{
 		$data['machines'] = $this->Machine_model->display_machines();
 
 		//$data['debug'] = print_r($this->db->last_query());
-		$this->sendMail(93);
+		//$this->sendMail(93);
 
 		$this->load->view('templates/header');
 		$this->load->view('machines/index', $data);
