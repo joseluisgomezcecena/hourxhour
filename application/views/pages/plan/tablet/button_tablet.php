@@ -63,7 +63,15 @@
                 </thead>
                 <tbody>
                     <tr class="text-center">
-                        <td class="table-disabled"><?= $last_time, '-', $last_time_end ?></td>
+
+                        <?php
+                        if ($last_time == null)
+                            echo '<td class="table-disabled">' . $last_time_end . '</td>';
+                        else
+                            echo '<td class="table-disabled">' . $last_time . ' - ' . $last_time_end . '</td>';
+                        ?>
+
+
                         <td class="table-disabled"><?= $last_hc ?></td>
                         <td class="table-disabled"><?= $last_item_number ?></td>
                         <td class="table-disabled"><?= $last_workorder ?></td>
@@ -96,7 +104,7 @@
                         <span></span>
                         <span>Modify capture</span>
                     </label>
-                    <button ng-disabled="IsDisabledButtonModify" ng-click="modify_item()" class="btn btn_success mt-4">Save new capture</button>
+                    <button ng-hide="IsDisabledButtonModify" ng-click="modify_item()" class="btn btn_success mt-4">Save new capture</button>
                 </div>
             </div>
         </div>
@@ -142,6 +150,8 @@
                 params: params
             }).then(function(response) {
                 $scope.completed = response.data.completed;
+                $scope.IsDisabledButtonModify = true;
+
             }, function(response) {
                 swal("Something was wrong!", '', "error");
             });
@@ -162,6 +172,8 @@
                     'Content-Type': 'application/x-www-form-urlencoded' // Note the appropriate header
                 }
             }).then(function(response) {
+                if ($scope.isModify == true)
+                    $scope.isModify = false;
                 $scope.IsDisabledButtonModify = true;
                 /* do something here */
             }).catch((error) => {

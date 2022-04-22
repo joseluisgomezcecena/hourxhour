@@ -29,6 +29,11 @@ class Capture extends CI_Model
         $this->db->where('time',   $datetime->format(DATETIME_FORMAT));
         $this->db->where('time_end', $end->format(DATETIME_FORMAT));
         $query = $this->db->get('plan_by_hours');
-        return $query->result_array()[0]['plan_by_hour_id'];
+        $result_array = $query->result_array();
+
+        if (count($result_array) == 0)
+            return null;
+        else
+            return $result_array[0]['plan_by_hour_id'];
     }
 }

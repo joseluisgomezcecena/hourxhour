@@ -95,9 +95,12 @@ class Manual_Capture extends CI_Controller
         $this->load->model('productionplan');
         $this->load->model('planbyhour');
 
-        $shift_date = $this->shift->getIdFromCurrentTime(new DateTime);
+        $current_datetime = new DateTime;
+        //$current_datetime->setTime(6, 0, 0); //for test purposes
+
+        $shift_date = $this->shift->getIdFromCurrentTime($current_datetime);
         $plan = $this->productionplan->getProductionPlan($this->input->get('asset_id'), $shift_date['shift_id'], $shift_date['date']->format(DATE_FORMAT));
-        $plan_by_hour_id = $this->capture->get_current_hour($plan->plan_id, new DateTime());
+        $plan_by_hour_id = $this->capture->get_current_hour($plan->plan_id, $current_datetime);
 
         $this->planbyhour->Load($plan_by_hour_id);
 
@@ -109,11 +112,11 @@ class Manual_Capture extends CI_Controller
         $time_end = date(HOUR_MINUTE_FORMAT, strtotime($time_end));
 
         //Last Hour
-        $timestamp = strtotime($this->planbyhour->time) - 60*60;
+        $timestamp = strtotime($this->planbyhour->time) - 60 * 60;
         //echo $timestamp,' <br>';
-        $result = new DateTime();
+        $result = $current_datetime;
         $result->setTimestamp($timestamp);
-        
+
         //Last Hour End
         $data['plan_id'] = $plan_id;
         $data['site_name'] = $plan->site_name;
@@ -131,20 +134,32 @@ class Manual_Capture extends CI_Controller
 
         //Last hour info
         $last_hour_id = $this->capture->get_current_hour($plan->plan_id, $result);
-        $this->planbyhour->Load($last_hour_id);
 
-        $data['last_item_number'] = $this->planbyhour->item_number;
-        $data['last_workorder'] = $this->planbyhour->workorder;
-        $data['last_completed'] = $this->planbyhour->completed;
-        $data['last_hc'] = $this->planbyhour->planned_head_count;
+        if ($last_hour_id == null) {
+            $data['last_item_number'] = 'N/A';
+            $data['last_workorder'] = 'N/A';
+            $data['last_completed'] = 'N/A';
+            $data['last_hc'] = 'N/A';
+            $data['last_time'] = null;
+            $data['last_time_end'] = 'N/A';
+        } else {
+            $this->planbyhour->Load($last_hour_id);
 
-        $last_time = $this->planbyhour->time;
-        $last_time_end = $this->planbyhour->time_end;
-        $last_time = date(HOUR_MINUTE_FORMAT, strtotime($last_time));
-        $last_time_end = date(HOUR_MINUTE_FORMAT, strtotime($last_time_end));
+            $data['last_item_number'] = $this->planbyhour->item_number;
+            $data['last_workorder'] = $this->planbyhour->workorder;
+            $data['last_completed'] = $this->planbyhour->completed;
+            $data['last_hc'] = $this->planbyhour->planned_head_count;
 
-        $data['last_time'] = $last_time;
-        $data['last_time_end'] = $last_time_end;
+            $last_time = $this->planbyhour->time;
+            $last_time_end = $this->planbyhour->time_end;
+            $last_time = date(HOUR_MINUTE_FORMAT, strtotime($last_time));
+            $last_time_end = date(HOUR_MINUTE_FORMAT, strtotime($last_time_end));
+
+            $data['last_time'] = $last_time;
+            $data['last_time_end'] = $last_time_end;
+        }
+
+
         $this->load->view('templates/header_logged_out');
         $this->load->view('pages/plan/tablet/button_tablet', $data);
         $this->load->view('templates/footer');
