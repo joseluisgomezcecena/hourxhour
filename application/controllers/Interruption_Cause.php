@@ -19,13 +19,58 @@ class Interruption_Cause extends CI_Controller
 
         $this->shift->Load($shift_date['shift_id']);
         $this->productionplan->LoadPlan($this->input->get('asset_id'), $shift_date['date']->format(DATE_FORMAT), $shift_date['shift_id'], $this->shift->shift_start_time, $this->shift->shift_end_time);
-        
+
         $data['production_plan'] =  $this->productionplan;
+        $data['interruptions'] = $this->db->get('interruptions')->result();
+        $data['not_planned_interruptions'] = $this->db->get('not_planned_interruptions')->result();
         $data['title'] = "Interruption Cause";
+
         $this->load->view('templates/header');
         $this->load->view('pages/interruption_cause/index', $data);
         $this->load->view('templates/footer');
+
+        // echo json_encode($data);
     }
+
+    public function save()
+    {
+        //echo json_encode($this->input->post());
+        $array_input = $this->input->post();
+        //not_planned_interruption_id
+
+        //$items = array();
+        $startWithChar = 'not_planned_interruption_id_';
+        foreach ($array_input  as $key => $value) {
+            if (substr($key, 0, strlen($startWithChar)) ===  $startWithChar) {
+
+                $plan_by_hour_id = intval(substr($key, strlen($startWithChar)));
+
+                $key_of_value = 'not_planned_interruption_value_' .  substr($key, strlen($startWithChar));
+                $not_planned_interruption_value = $array_input = $this->input->post($key_of_value);
+
+                $not_planned_interruption_id = null;
+                if (is_numeric($value)) {
+                    $not_planned_interruption_id = intval($value);
+                }
+
+                $less_time = null;
+                if (is_numeric($not_planned_interruption_value)) {
+                    $less_time = (float)intval($not_planned_interruption_value) / 60.0;
+                }
+
+                //array_push($items, $item);
+                $this->db->set('not_planned_interruption_id', $not_planned_interruption_id);
+                $this->db->set('not_planned_interruption_value', $less_time);
+                $this->db->where('plan_by_hour_id', $plan_by_hour_id);
+                $this->db->update('plan_by_hours');
+            }
+        }
+
+        redirect(base_url() . 'interruption_cause/measuring_point?site_id=' . $this->input->post('site_id')  .  '&plant_id=' .  $this->input->post('plant_id'));
+        //$this->db->update_batch('plan_by_hours', $items, 'plan_by_hour_id');
+        //echo json_encode($items);
+    }
+
     public function select_cell()
     {
         $this->load->model('plant');

@@ -87,7 +87,7 @@ defined('EXIT__AUTO_MAX')      or define('EXIT__AUTO_MAX', 125); // highest auto
 defined('DATETIME_FORMAT')      or define('DATETIME_FORMAT', 'Y-m-d H:i:s');
 defined('DATE_FORMAT')      or define('DATE_FORMAT', 'Y-m-d');
 defined('TIME_FORMAT')      or define('TIME_FORMAT', 'H:i:s');
-defined('HOUR_MINUTE_FORMAT')      or define('HOUR_MINUTE_FORMAT', 'H:i a');
+defined('HOUR_MINUTE_FORMAT')      or define('HOUR_MINUTE_FORMAT', 'h:i a');
 
 
 defined('DATETIME_FORMAT_ZERO_MINUTES_AND_SECONDS')      or define('DATETIME_FORMAT_ZERO_MINUTES_AND_SECONDS', 'Y-m-d H:00:00');

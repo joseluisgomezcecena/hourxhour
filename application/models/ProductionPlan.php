@@ -229,7 +229,7 @@ class ProductionPlan extends CI_Model
         //$this->db->order_by('time', 'ASC');
         //$this->table_hours
 
-        $query = $this->db->query('SELECT plan_by_hours.*, items_pph.item_number from plan_by_hours LEFT JOIN items_pph ON plan_by_hours.item_id = items_pph.item_id WHERE plan_id = ' . $this->plan_id . " ORDER BY time ASC");
+        $query = $this->db->query('SELECT plan_by_hours.*, items_pph.item_number, interruptions.interruption_name from plan_by_hours LEFT JOIN items_pph ON plan_by_hours.item_id = items_pph.item_id LEFT JOIN interruptions ON plan_by_hours.interruption_id = interruptions.interruption_id WHERE plan_id = ' . $this->plan_id . " ORDER BY time ASC");
         $this->plan_by_hours = $query->result_array();
 
         //echo json_encode($this->plan_by_hours);

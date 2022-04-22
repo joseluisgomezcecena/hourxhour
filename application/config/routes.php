@@ -108,7 +108,10 @@ $route['output_vs_plan'] = 'output_vs_plan/index';
 $route['output_vs_plan/get_data'] = 'output_vs_plan/get_data';
 //Interruption Cause
 $route['api/interruption_cause/get'] = 'interruption_cause/api_get_plan';
-$route['interruption_cause'] = 'interruption_cause/index';
+
+$route['interruption_cause']['get'] = 'interruption_cause/index';
+$route['interruption_cause']['post'] = 'interruption_cause/save';
+
 $route['interruption_cause/cell'] = 'interruption_cause/select_cell';
 $route['interruption_cause/measuring_point'] = 'interruption_cause/select_measuring';
 //login
