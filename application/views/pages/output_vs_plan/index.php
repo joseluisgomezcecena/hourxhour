@@ -81,13 +81,14 @@
     }
 
     @keyframes marquee {
-  0% {
-    transform: translateY(0)
-  }
-  100% {
-    transform: translateY(-100%)
-  }
-}
+        0% {
+            transform: translateY(0)
+        }
+
+        100% {
+            transform: translateY(-100%)
+        }
+    }
 
     .divider {
         border: 2px dotted #059669;
@@ -99,8 +100,8 @@
 </style>
 
 <body>
-    <main class="workspace">
-        <div id="table" style="margin-top: -6rem;" ng-app="OutputVsPlanApp" ng-controller="OutputVsPlanCtrl">
+    <main class="workspace" ng-app="OutputVsPlanApp" ng-controller="OutputVsPlanCtrl">
+        <div id="table" ng-model="isHidden" style="margin-top: -6rem;">
             <div id="table-container" ng-repeat="plan in plan_productions">
                 <div class="divider"></div>
                 <table class="table w-full mt-3">
@@ -192,37 +193,44 @@
                 </table>
             </div>
         </div>
+        <div ng-hide="isHidden" class="alert alert_primary" style="text-align: center;">
+            <strong class="uppercase"><bdi>
+                    <h1>No plan loaded!</h1>
+                </bdi>
+                <br>
+                <h3>There isn't an active production plan for this machine/point.</h3> <br>
+            </strong>
+            <a type="button" href="<?php echo base_url(); ?>index.php/output_vs_plan/select_site" class="btn btn_secondary uppercase my-5">Go back</a>
+        </div>
     </main>
     <script>
         var app = angular.module('OutputVsPlanApp', []);
-
         app.controller('OutputVsPlanCtrl', function($scope, $http) {
             $scope.plan_productions = [];
+            $scope.isHidden = true;
 
             $scope.init = function() {
                 $scope.loadData();
             }
 
             $scope.loadData = function() {
-
                 $http({
                     method: 'get',
                     url: '<?php echo base_url() . 'output_vs_plan/get_data?site_id=' . $site_id . '&plant_id=' . $plant_id; ?>'
                 }).then(function successCallback(response) {
                     $scope.plan_productions = response.data;
                     console.log($scope.plan_productions);
-                });
+                    if ($scope.plan_productions.length === 0) {
+                        $scope.isHidden = false;
+                    } else {
+                        $scope.isHidden = true;
+                    }
+                }).catch((e) => {
+                    console.log('Error');
+                })
             }
             $scope.init();
         });
-
-        //setInterval(function() {
-        //    $('#table').stop().animate({
-        //        scrollTop: 50
-        //    }, 400, 'swing', function() {
-        //        $(this).scrollTop(10).find('div:last').after($('div:first', this));
-        //    });
-        //}, 2000);
     </script>
 
     <!-- Scripts -->
