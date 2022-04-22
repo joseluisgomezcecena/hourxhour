@@ -87,7 +87,7 @@ class Plan extends CI_Controller
             $this->db->where('plan_id', $plan->plan_id);
             $this->db->update('production_plans', $data);
 
-			$this->sendMail($plan->plan_id);
+			 $this->sendMail($plan->plan_id);
         }
 
 
@@ -244,12 +244,12 @@ class Plan extends CI_Controller
 
 		$recipients = array();
 		//getting data for email.
-		$query = $this->db->query('SELECT * FROM production_plans 
+		$query = $this->db->query("SELECT * FROM production_plans 
     LEFT JOIN assets ON production_plans.asset_id = assets.asset_id 
     LEFT JOIN sites ON assets.site_id = sites.site_id 
     LEFT JOIN plants ON sites.plant_id = plants.plant_id 
     LEFT JOIN mail_list ON mail_list.plant_id = plants.plant_id 
-	WHERE production_plans.plan_id = $id');
+	WHERE production_plans.plan_id = $id");
 
 		$result = $query->result_array();
 
