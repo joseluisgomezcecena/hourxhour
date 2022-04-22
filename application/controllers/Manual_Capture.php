@@ -100,6 +100,16 @@ class Manual_Capture extends CI_Controller
 
         $shift_date = $this->shift->getIdFromCurrentTime($current_datetime);
         $plan = $this->productionplan->getProductionPlan($this->input->get('asset_id'), $shift_date['shift_id'], $shift_date['date']->format(DATE_FORMAT));
+
+        if ($plan == null) {
+            $this->load->helper('messages');
+            $data['plan_id'] = null;
+            $this->load->view('templates/header_logged_out');
+            $this->load->view('pages/plan/tablet/button_tablet', $data);
+            $this->load->view('templates/footer');
+            return;
+        }
+
         $plan_by_hour_id = $this->capture->get_current_hour($plan->plan_id, $current_datetime);
 
         $this->planbyhour->Load($plan_by_hour_id);
