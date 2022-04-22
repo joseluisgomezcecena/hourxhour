@@ -34,10 +34,21 @@
 <br>
 <div class="card w-50 text-center" ng-controller="buttonController" ng-app="buttonApp">
     <div class="container mt-5">
+
+        <?php
+        if ($plan_id == null) {
+            show_alert_noplan(null);
+            return;
+        }
+        ?>
+
         <div class="alert alert_danger my-5" ng-hide="verified">
             <strong class="uppercase"><bdi>There is no item number.<br /></bdi></strong>
             contact your supervisor
         </div>
+
+
+
         <div class="mt-5">
             <table class="table w-full">
                 <tr>
