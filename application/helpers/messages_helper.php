@@ -9,7 +9,9 @@ function show_alert($title, $message, $back_url)
 	echo '	</bdi>';
 	echo '	<br> ' . $message . ' <br>';
 	echo '</strong>';
-	echo '<a type="button" href="' . $back_url . '" class="btn btn_secondary uppercase my-5">Go back</a>';
+    if($back_url != null){
+        echo '<a type="button" href="' . $back_url . '" class="btn btn_secondary uppercase my-5">Go back</a>';
+    }
 	echo '</div>';
 }
 
