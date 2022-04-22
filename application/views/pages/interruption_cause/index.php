@@ -36,18 +36,10 @@
     </ul>
     <!--<?= json_encode($production_plan) ?>-->
 
-    <?php if ($production_plan->plan_id == null) : ?>
-        <!--<h2>There isn't an active production plan for this machine/point.</h2>-->
-
-        <div class="alert alert_primary" style="text-align: center;">
-            <strong class="uppercase"><bdi>
-                    No plan loaded!
-                </bdi>
-                <br> There isn't an active production plan for this machine/point. <br>
-            </strong>
-            <a type="button" href="<?php echo base_url(); ?>index.php/interruption_cause/select_cell" class="btn btn_secondary uppercase my-5">Go back</a>
-        </div>
-
+    <?php if ($production_plan->plan_id == null) :
+        $this->load->helper('messages');
+        show_alert_noplan("<?php echo base_url(); ?>index.php/interruption_cause/select_cell");
+    ?>
     <?php else : ?>
 
         <form action="<?= base_url() ?>interruption_cause" method="post">

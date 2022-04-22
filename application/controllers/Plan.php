@@ -86,8 +86,6 @@ class Plan extends CI_Controller
         } else {
             $this->db->where('plan_id', $plan->plan_id);
             $this->db->update('production_plans', $data);
-
-			 $this->sendMail($plan->plan_id);
         }
 
 
@@ -183,6 +181,9 @@ class Plan extends CI_Controller
                 //$this->db->update('plan_by_hours', $data_item);
             }
         }
+
+        if (!$is_new_record)
+            $this->sendMail($plan->plan_id);
     }
 
 
@@ -238,39 +239,38 @@ class Plan extends CI_Controller
 
 
 
-	public function sendMail($plan_id)
-	{
-		$id = $plan_id;
+    public function sendMail($plan_id)
+    {
+        $id = $plan_id;
 
-		$recipients = array();
-		//getting data for email.
-		$query = $this->db->query("SELECT * FROM production_plans 
+        $recipients = array();
+        //getting data for email.
+        $query = $this->db->query("SELECT * FROM production_plans 
     LEFT JOIN assets ON production_plans.asset_id = assets.asset_id 
     LEFT JOIN sites ON assets.site_id = sites.site_id 
     LEFT JOIN plants ON sites.plant_id = plants.plant_id 
     LEFT JOIN mail_list ON mail_list.plant_id = plants.plant_id 
 	WHERE production_plans.plan_id = $id");
 
-		$result = $query->result_array();
+        $result = $query->result_array();
 
-		foreach ($result as $item)
-		{
-			$recipients[] =  $item['email'];
-		}
+        foreach ($result as $item) {
+            $recipients[] =  $item['email'];
+        }
 
-		echo $emails = implode(',', $recipients);
-
+        echo $emails = implode(',', $recipients);
 
 
 
-		$this->load->library('email');
 
-		$subject = 'Plan has been updated!';
-		$message = '
+        $this->load->library('email');
+
+        $subject = 'Plan has been updated!';
+        $message = '
 			<p>Production plan has been updated.</p>';
 
-		// Get full html:
-		$body = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+        // Get full html:
+        $body = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 			<html xmlns="http://www.w3.org/1999/xhtml">
 			<head>
 				<meta http-equiv="Content-Type" content="text/html; charset=' . strtolower(config_item('charset')) . '" />
@@ -286,31 +286,24 @@ class Plan extends CI_Controller
 			' . $message . '
 			</body>
 			</html>';
-		// Also, for getting full html you may use the following internal method:
-		//$body = $this->email->full_html($subject, $message);
+        // Also, for getting full html you may use the following internal method:
+        //$body = $this->email->full_html($subject, $message);
 
 
 
 
-		$result = $this->email
-			->from('jgomez@martechmedical.com')
-			->reply_to('jgomez@martechmedical.com')    // Optional, an account where a human being reads.
-			//->to('jgomez@martechmedical.com')
-			->to("$emails")
-			->subject($subject)
-			->message($body)
-			->send();
+        $result = $this->email
+            ->from('jgomez@martechmedical.com')
+            ->reply_to('jgomez@martechmedical.com')    // Optional, an account where a human being reads.
+            //->to('jgomez@martechmedical.com')
+            ->to("$emails")
+            ->subject($subject)
+            ->message($body)
+            ->send();
 
-		var_dump($result);
-		echo '<br />';
-		echo $this->email->print_debugger();
-		exit;
-	}
-
-
-
-
-
-
-
+        var_dump($result);
+        echo '<br />';
+        echo $this->email->print_debugger();
+        exit;
+    }
 }

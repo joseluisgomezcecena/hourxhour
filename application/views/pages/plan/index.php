@@ -402,7 +402,11 @@
 
             for (var i = 0; i < $scope.production_plan.plan_by_hours.length; i++) {
 
-                $scope.production_plan.plan_by_hours[i].interruption_id = Number($scope.production_plan.plan_by_hours[i].interruption_id);
+                if ($scope.production_plan.plan_by_hours[i].interruption_id == null)
+                    $scope.production_plan.plan_by_hours[i].interruption_id = null;
+                else
+                    $scope.production_plan.plan_by_hours[i].interruption_id = Number($scope.production_plan.plan_by_hours[i].interruption_id);
+
                 var foundInterruption = $scope.interruptions.filter(function(interr) {
                     return Number(interr.interruption_id) === $scope.production_plan.plan_by_hours[i].interruption_id;
                 })[0];

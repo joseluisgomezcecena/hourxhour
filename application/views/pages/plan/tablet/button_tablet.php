@@ -3,21 +3,26 @@
         border: transparent;
         background-color: transparent;
     }
-    th{
+
+    th {
         color: black;
         font-weight: 100 !important;
     }
+
     .table-disabled {
         background-color: #c2c3c4 !important;
     }
+
     .table-color {
         background-color: #4B5563 !important;
         color: white;
     }
+
     .table-green {
         background-color: #b8efc1 !important;
     }
-    .text-bold{
+
+    .text-bold {
         font-weight: bold !important;
     }
 </style>
@@ -34,16 +39,16 @@
             contact your supervisor
         </div>
         <div class="mt-5">
-        <table class="table w-full">
-                    <tr>
-                        <th class="text-center uppercase table-green text-bold">Plant</th>
-                        <th class="text-center uppercase table-green"><?= $plant_name ?></th>
-                        <th class="text-center uppercase table-green text-bold">Area</th>
-                        <th class="text-center uppercase table-green"><?= $site_name ?></th>
-                        <th class="text-center uppercase table-green text-bold">Output</th>
-                        <th class="text-center uppercase table-green"><?= $asset_name ?></th>
+            <table class="table w-full">
+                <tr>
+                    <th class="text-center uppercase table-green text-bold">Plant</th>
+                    <th class="text-center uppercase table-green"><?= $plant_name ?></th>
+                    <th class="text-center uppercase table-green text-bold">Area</th>
+                    <th class="text-center uppercase table-green"><?= $site_name ?></th>
+                    <th class="text-center uppercase table-green text-bold">Output</th>
+                    <th class="text-center uppercase table-green"><?= $asset_name ?></th>
 
-                    </tr>
+                </tr>
                 </thead>
             </table>
             <table class="table w-full mb-5">
@@ -58,18 +63,18 @@
                 </thead>
                 <tbody>
                     <tr class="text-center">
-                        <td class="table-disabled"><?=$last_time, '-', $last_time_end ?></td>
-                        <td class="table-disabled"><?=$last_hc?></td>
-                        <td class="table-disabled"><?=$last_item_number?></td>
-                        <td class="table-disabled"><?=$last_workorder?></td>
-                        <td class="table-disabled"><?=$last_completed?></td>
+                        <td class="table-disabled"><?= $last_time, '-', $last_time_end ?></td>
+                        <td class="table-disabled"><?= $last_hc ?></td>
+                        <td class="table-disabled"><?= $last_item_number ?></td>
+                        <td class="table-disabled"><?= $last_workorder ?></td>
+                        <td class="table-disabled"><?= $last_completed ?></td>
                     </tr>
                 </tbody>
             </table>
         </div>
         <div ng-show="verified">
             <h6>WO Number:</h6>
-            <p><?=$workorder?></p>
+            <p><?= $workorder ?></p>
             <h5 class="mt-4">Item number:</h5>
             <h1 class="text-primary mb-8"><b><?= $item_number ?></b></h1>
             <div class="alert alert_success my-5" ng-if="!IsDisabledButtonModify">
@@ -83,7 +88,7 @@
                 <button class="btn btn_warning" style="width: 15em; margin:auto; display:block;" ng-click="capture()" ng-disabled="!IsDisabledButtonModify">Capture</button>
             </div>
             <h6 class="mt-5">Current Hour</h6>
-            <p><?=$time, '-', $time_end ?></p>
+            <p><?= $time, '-', $time_end ?></p>
             <div class="flex  justify-end mt-8 mb-8">
                 <div>
                     <label class="switch">
