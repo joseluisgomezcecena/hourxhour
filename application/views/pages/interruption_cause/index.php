@@ -142,7 +142,7 @@
                             else
                                 $minutes = round(floatval($get_plan['not_planned_interruption_value']) * 60.0, 0);
 
-                            echo ' <input type="number" min="1" max="60"  step="1" class="form-control" placeholder="less time" id="not_planned_interruption_value_' . $get_plan['plan_by_hour_id'] . '" name="not_planned_interruption_value_' . $get_plan['plan_by_hour_id'] . '" value="' . $minutes . '"';
+                            echo ' <input type="number" step="1" class="form-control" placeholder="less time" id="not_planned_interruption_value_' . $get_plan['plan_by_hour_id'] . '" name="not_planned_interruption_value_' . $get_plan['plan_by_hour_id'] . '" value="' . $minutes . '"';
                             echo ' onchange="changed_interruption_value(this, ' . $get_plan['plan_by_hour_id'] . ')"';
                             if ($minutes == 0)
                                 echo 'disabled';
@@ -233,22 +233,47 @@
 
             td_interruption_cause = trs[i].children[9];
 
-
             td_less_time = trs[i].children[10];
             var not_planned_input_interruption = td_less_time.getElementsByTagName("input")[0];
+
+            if (td_interruption_cause.getElementsByTagName("select")[0] != undefined) {
+                var select = td_interruption_cause.getElementsByTagName("select")[0];
+
+                if (isNaN(select.value) == false) {
+                    //console.log('number detected ' + select.value);
+                    //Si hay una causa de interrupcion seleccionada
+
+                    if (isNaN(not_planned_input_interruption.value) == false) {
+                        if (!(not_planned_input_interruption.value > 0 && not_planned_input_interruption.value <= 60)) {
+                            swal("Incorrect Value Given (" + not_planned_input_interruption.value + ")", "The interruption minutes must be given between 1 and 60 minutes", "error");
+                            return false;
+                        }
+                    } else {
+                        //Si el valor no es numero
+                        swal("Incorrect Value Given (" + not_planned_input_interruption.value + ")", "The interruption minutes must be given between 1 and 60 minutes", "error");
+                        return false;
+                    }
+                }
+
+            }
+
+
+
 
             if (not_planned_input_interruption != null) {
                 //console.log(not_planned_input_interruption.value);
                 totalMinutes += Number(not_planned_input_interruption.value);
             }
 
+
+
             if (totalMinutes != 0) {
+
                 if (totalMinutes > 60) {
                     console.log('mins ' + totalMinutes);
                     swal("Incorrect Value Given (" + not_planned_input_interruption.value + ")", "The interruption minutes in hour " + trs[i].children[0].textContent + " are bigger than the max allowed for the hour!! The sum of minutes is " + totalMinutes, "error");
                     return false;
                 }
-
             }
 
         }
