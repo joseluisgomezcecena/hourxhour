@@ -31,7 +31,7 @@
                 <h3 class="text-center mt-5 mb-5">Moldeo</h3>
                 <?php
                 if (count($moldeo) === 0) {
-                    echo '<div style="padding-left:0.8rem; padding-right:0.8rem;">';
+                    echo '<div style="padding-left:0.8rem; padding-right:0.8rem; margin-bottom: 2rem;">';
                     $this->load->helper('messages');
                     show_alert_noplan(null);
                     echo '</div>';
@@ -103,7 +103,7 @@
                 <h3 class="text-center mt-5 mb-5">Ensamble</h3>
                 <?php
                 if (count($ensamble) === 0) {
-                    echo '<div style="padding-left:0.8rem; padding-right:0.8rem;">';
+                    echo '<div style="padding-left:0.8rem; padding-right:0.8rem; margin-bottom: 2rem;">';
                     $this->load->helper('messages');
                     show_alert_noplan(null);
                     echo '</div>';
@@ -169,7 +169,7 @@
                 <h3 class="text-center mt-5 mb-5">Planta 3</h3>
                 <?php
                 if (count($planta3) === 0) {
-                    echo '<div style="padding-left:0.8rem; padding-right:0.8rem;">';
+                    echo '<div style="padding-left:0.8rem; padding-right:0.8rem; margin-bottom: 2rem;">';
                     $this->load->helper('messages');
                     show_alert_noplan(null);
                     echo '</div>';

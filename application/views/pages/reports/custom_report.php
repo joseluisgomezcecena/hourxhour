@@ -57,7 +57,7 @@
                             <th style="font-size: 11px !important;" class="text-center uppercase table-row-shift-three">Completed (Shift three)</th>
                             <th style="font-size: 11px !important;" class="text-center uppercase">Total Planned</th>
                             <th style="font-size: 11px !important;" class="text-center uppercase">Total Completed</th>
-							<th style="font-size: 11px !important;" class="text-center uppercase">Total Efficiency</th>
+							<th style="font-size: 11px !important;" class="text-center uppercase">% vs Plan</th>
 
                         </tr>
                     </thead>
