@@ -265,9 +265,9 @@ class Plan extends CI_Controller
 
         $this->load->library('email');
 
-        $subject = 'Plan has been updated!';
-        $message = '
-			<p>Production plan has been updated.</p>';
+        $subject = "Plan has been updated! | {$item['asset_name']}";
+        $message = "
+			<p>Production plan updated in <b>{$item['site_name']}</b> in the following asset {$item['asset_name']}.</p>";
 
         // Get full html:
         $body = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
