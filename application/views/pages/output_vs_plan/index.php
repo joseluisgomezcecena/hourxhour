@@ -205,7 +205,7 @@
     </main>
     <script>
         var app = angular.module('OutputVsPlanApp', []);
-        app.controller('OutputVsPlanCtrl', function($scope, $http) {
+        app.controller('OutputVsPlanCtrl', function($scope, $http, $interval, $timeout) {
             $scope.plan_productions = [];
             $scope.isHidden = true;
 
@@ -213,7 +213,17 @@
                 $scope.loadData();
             }
 
+            //Actualizar cada 5 minutos...
+            var theInterval = $interval(function() {
+                $scope.loadData();
+            }.bind(this), 5 * 60 * 1000);
+
+            $scope.$on('$destroy', function() {
+                $interval.cancel(theInterval)
+            });
+
             $scope.loadData = function() {
+
                 $http({
                     method: 'get',
                     url: '<?php echo base_url() . 'output_vs_plan/get_data?site_id=' . $site_id . '&plant_id=' . $plant_id; ?>'
@@ -229,6 +239,8 @@
                     console.log('Error');
                 })
             }
+
+
             $scope.init();
         });
     </script>
