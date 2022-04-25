@@ -629,10 +629,12 @@
             $http.post(url, data, config).then(function(response) {
                 console.log(response.data);
 
-                //$scope.production_plan = null;
-                //$scope.init($scope.asset_id, $scope.shift_id, $scope.date);
-
                 swal("Good job!", "The plan has been saved.", "success");
+
+                $scope.production_plan = null;
+                $scope.init($scope.asset_id, $scope.shift_id, $scope.date);
+
+
             }, function(response) {
 
                 // this function handles error
