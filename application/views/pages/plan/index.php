@@ -132,7 +132,7 @@
         <li><?= $title ?></li>
     </ul>
 
-    <div style="position: absolute; width: 100%; height: 100%;" ng-hide="production_plan">
+    <div style="position: absolute; width: 100%; height: 100%;" ng-show="display_loading">
         <div style=" display: flex; justify-content:center">
             <div class="lds-spinner">
                 <div></div>
@@ -152,7 +152,7 @@
 
     </div>
 
-    <form method="POST" enctype="multipart/form-data" ng-show="production_plan">
+    <form method="POST" enctype="multipart/form-data" ng-hide="display_loading">
         <div style="display:flex; justify-content: flex-end;">
             <button type="button" ng-click="copy_clipboard()" class="btn btn-icon btn-icon_large btn_info uppercase" data-toggle="tooltip" data-tippy-content="Paste the information of the excel table" data-tippy-placement="right" aria-expanded="false"> <span class="las la-paste"></span>
             </button>
@@ -315,6 +315,8 @@
         //Lista de interrupciones
         $scope.interruptions = null;
 
+        $scope.display_loading = true;
+
         $scope.init = function(asset_id, shift_id, date) {
             $scope.shift_id = shift_id;
             $scope.asset_id = asset_id;
@@ -392,6 +394,8 @@
                 }
 
                 $scope.updateItems();
+
+                $scope.display_loading = false;
 
             });
         }
@@ -555,6 +559,8 @@
          */
         $scope.save = function() {
 
+            $scope.display_loading = true;
+
             var has_errors = false;
 
             for (let i = 0; i < $scope.production_plan.plan_by_hours.length; i++) {
@@ -600,6 +606,7 @@
 
 
             if (has_errors) {
+                $scope.display_loading = false;
                 swal("Something was wrong!", "You have some data incompleted! check item number, workorder, hc and planned from all row ", "error");
                 return;
             }
@@ -627,16 +634,16 @@
                 }
             }
             $http.post(url, data, config).then(function(response) {
-                console.log(response.data);
+                $scope.display_loading = false;
 
-                swal("Good job!", "The plan has been saved.", "success");
-
-                $scope.production_plan = null;
-                $scope.init($scope.asset_id, $scope.shift_id, $scope.date);
-
+                swal("Your plan modifications have been saved. You'll be redirected.")
+                    .then((value) => {
+                        //swal(`The returned value is: ${value}`);
+                        window.location.replace("<?php echo base_url() ?>measuring_point?site_id=" + $scope.production_plan.site_id + "&plant_id=" + $scope.production_plan.plant_id);
+                    });
 
             }, function(response) {
-
+                $scope.display_loading = false;
                 // this function handles error
             });
         }
@@ -670,7 +677,6 @@
                         //console.log('arrived here');
                         break;
                     }
-
 
                     var rows = line.split("\t");
 
