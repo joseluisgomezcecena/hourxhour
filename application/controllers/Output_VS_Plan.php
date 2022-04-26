@@ -125,7 +125,7 @@ class Output_VS_Plan extends CI_Controller
 
             //calculate the shift status
             $last_index = count($plan_by_hours) - 1;
-            $data[$i]['shift_status'] =  intval(($plan_by_hours[$last_index]['completed_sum'] * 100) / $plan_by_hours[$last_index]['planned_sum']);
+            $data[$i]['shift_status'] =  ceil(($plan_by_hours[$last_index]['completed_sum'] * 100) / $plan_by_hours[$last_index]['planned_sum']);
 
 
             for ($h = 0; $h < count($plan_by_hours); $h++) {
