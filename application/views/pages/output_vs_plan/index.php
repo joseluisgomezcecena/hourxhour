@@ -162,7 +162,7 @@
                             <td class="table-success">{{ plan.plan_by_hours[plan.current_hour_index].planned_sum }}</td>
                             <td class="table-success">{{ plan.plan_by_hours[plan.current_hour_index].completed }}</td>
                             <td class="table-success">{{ plan.plan_by_hours[plan.current_hour_index].completed_sum }}</td>
-                            <td class="table-gray">{{ plan.plan_by_hours[plan.current_hour_index ].interruption }} </td>
+                            <td class="table-success">{{ plan.plan_by_hours[plan.current_hour_index ].interruption }} </td>
                         </tr>
 
                         <!-- Next -->

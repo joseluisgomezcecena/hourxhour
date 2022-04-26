@@ -20,12 +20,18 @@
                     <small>Selet a cell</small>
                 </div>
                 <hr>';
-                foreach ($assets as $asset) {
+                foreach($assets as $asset) {   
                     echo ' <table class="table table_list mt-3 w-full">
                     <thead>
                         <tr> ';
                     echo '
-                            <th class="ltr:text-left rtl:text-right uppercase"><a href="' . base_url() . 'output_vs_plan?site_id=' . $asset['site_id'] . '&plant_id=' . $asset['plant_id'] . '" ';
+                            <th class="ltr:text-left rtl:text-right uppercase">';
+                    if (intval($asset['assets_count']) <= 0) {
+                        echo '<a href="#" ';
+                    } else {
+                        echo '<a href="' . base_url() . 'output_vs_plan?site_id=' . $asset['site_id'] . '&plant_id=' . $asset['plant_id'] . '" 
+                        ';
+                    }
                     if (intval($asset['assets_count']) <= 0) echo 'style="cursor: no-drop; color: gray;"';
                     echo '>' . $asset['site_name'];
                     echo '    
