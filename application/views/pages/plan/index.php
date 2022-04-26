@@ -194,9 +194,9 @@
         </table>
         <div style="display: flex; justify-content:flex-end;">
             <div class=" my-3 px-5 text-right mt-3">
-                <input class="form-check-input mt-1" id="flexCheckDefault" ng-model="production_plan.use_multiplier_factor" type="checkbox" value="">
+                <input class="form-check-input mt-1" id="flexCheckDefault" ng-model="production_plan.use_multiplier_factor" type="checkbox">
                 <label class="form-check-label px-3 mt-0" for="flexCheckDefault">Factor multiplicador</label>
-                <input class="form-control" style="width: 12rem;" type="number" min="1" ng-model="production_plan.multiplier_factor" ng-disabled="!production_plan.use_multiplier_factor" value="1" id="">
+                <input class="form-control" style="width: 12rem;" type="number" min="2" ng-model="production_plan.multiplier_factor" ng-disabled="!production_plan.use_multiplier_factor" value="1" id="">
             </div>
         </div>
         <div>
@@ -369,6 +369,12 @@
 
                 //Load production_plan
                 $scope.production_plan = response.data.production_plan;
+
+                //production_plan.use_multiplier_factor
+                if (response.data.production_plan.use_multiplier_factor == 0)
+                    $scope.production_plan.use_multiplier_factor = false;
+                else if (response.data.production_plan.use_multiplier_factor == 1)
+                    $scope.production_plan.use_multiplier_factor = true;
 
                 //$scope.plan_date = new Date(response.data.date);
                 const separated_date = response.data.production_plan.date.split("-");
@@ -637,6 +643,30 @@
                 $scope.display_loading = false;
                 swal("Something was wrong!", "You have no data to save! you need to fill at least one row.", "error");
                 return;
+            }
+
+
+            if ($scope.production_plan.use_multiplier_factor) {
+                var validated = true;
+                if (isNaN($scope.production_plan.multiplier_factor)) {
+                    validated = false;
+                } else {
+
+                    if (!Number.isInteger($scope.production_plan.multiplier_factor)) {
+                        //Si no es entero
+                        validated = false;
+                    } else {
+                        //Si es entero validar que sea mayor que uno
+                        if (Number($scope.production_plan.multiplier_factor) < 2) {
+                            validated = fase;
+                        }
+                    }
+                }
+                if (!validated) {
+                    $scope.display_loading = false;
+                    swal("Something was wrong!", "The multiplier factor must be a number greater than one.", "error");
+                    return;
+                }
             }
 
             if ($scope.production_plan.supervisor == null || $scope.production_plan.supervisor == undefined || $scope.production_plan.supervisor == '') {

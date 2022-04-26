@@ -192,11 +192,12 @@ class Manual_Capture extends CI_Controller
         //retrieve an object of table productions_plans
         $plan = $this->productionplan->getProductionPlanById($this->planbyhour->plan_id);
         $mult_factor = 1;
-        if (isset($plan->use_multitplier_factor) && $plan->use_multitplier_factor == 1) {
+        if (isset($plan->use_multiplier_factor) && $plan->use_multiplier_factor == 1) {
             $mult_factor =  $plan->multiplier_factor;
         }
 
-        //$last_value += $mult_factor; //capture_type
+        //echo 'factor ' . $mult_factor;
+
         $this->planbyhour->IncrementCompleted($mult_factor, $reset,  $capture_type);
         $this->db->select('*');
         $this->db->from('plan_by_hours');
