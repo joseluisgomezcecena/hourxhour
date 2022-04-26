@@ -149,7 +149,7 @@
                             <td class="table-gray">{{ plan.plan_by_hours[plan.current_hour_index - 1].planned_sum }}</td>
                             <td class="table-gray">{{ plan.plan_by_hours[plan.current_hour_index - 1].completed }}</td>
                             <td class="table-gray">{{ plan.plan_by_hours[plan.current_hour_index - 1].completed_sum }}</td>
-                            <td class="table-gray">Pending</td>
+                            <td class="table-gray">{{ plan.plan_by_hours[plan.current_hour_index - 1].interruption }}</td>
                         </tr>
 
                         <!-- Current Row -->
@@ -162,7 +162,7 @@
                             <td class="table-success">{{ plan.plan_by_hours[plan.current_hour_index].planned_sum }}</td>
                             <td class="table-success">{{ plan.plan_by_hours[plan.current_hour_index].completed }}</td>
                             <td class="table-success">{{ plan.plan_by_hours[plan.current_hour_index].completed_sum }}</td>
-                            <td class="table-success">Pending</td>
+                            <td class="table-gray">{{ plan.plan_by_hours[plan.current_hour_index ].interruption }} </td>
                         </tr>
 
                         <!-- Next -->
@@ -175,7 +175,8 @@
                             <td class="table-gray">{{ plan.plan_by_hours[plan.current_hour_index + 1].planned_sum }}</td>
                             <td class="table-gray">{{ plan.plan_by_hours[plan.current_hour_index + 1].completed }}</td>
                             <td class="table-gray">{{ plan.plan_by_hours[plan.current_hour_index + 1].completed_sum }}</td>
-                            <td class="table-gray">Pending</td>
+                            <td class="table-gray">{{ plan.plan_by_hours[plan.current_hour_index + 1 ].interruption }} </td>
+
                         </tr>
 
                         <tr ng-if="(plan.current_hour_index + 2) < plan.plan_by_hours.length">
@@ -187,7 +188,8 @@
                             <td class="table-gray">{{ plan.plan_by_hours[plan.current_hour_index + 2].planned_sum }}</td>
                             <td class="table-gray">{{ plan.plan_by_hours[plan.current_hour_index + 2].completed }}</td>
                             <td class="table-gray">{{ plan.plan_by_hours[plan.current_hour_index + 2].completed_sum }}</td>
-                            <td class="table-gray">Pending</td>
+                            <td class="table-gray">{{ plan.plan_by_hours[plan.current_hour_index + 2].interruption }} </td>
+
                         </tr>
                     </tbody>
                 </table>
@@ -229,6 +231,20 @@
                     url: '<?php echo base_url() . 'output_vs_plan/get_data?site_id=' . $site_id . '&plant_id=' . $plant_id; ?>'
                 }).then(function successCallback(response) {
                     $scope.plan_productions = response.data;
+
+                    $scope.plan_productions.forEach(plan => {
+
+                        plan.plan_by_hours.forEach(plan_by_hour => {
+                            console.log(plan_by_hour);
+                            //planned_head_count, item_number, workorder, planned, interruption
+                            if (plan_by_hour.planned_head_count == null) plan_by_hour.planned_head_count = '-';
+                            if (plan_by_hour.item_number == null) plan_by_hour.item_number = '-';
+                            if (plan_by_hour.workorder == null) plan_by_hour.workorder = '-';
+                            if (plan_by_hour.planned == null) plan_by_hour.planned = '-';
+                            if (plan_by_hour.interruption == '') plan_by_hour.interruption = '-';
+                        });
+                    });
+
                     console.log($scope.plan_productions);
                     if ($scope.plan_productions.length === 0) {
                         $scope.isHidden = false;

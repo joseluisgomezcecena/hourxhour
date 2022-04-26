@@ -112,8 +112,13 @@ class Output_VS_Plan extends CI_Controller
 
             $sql = 'SELECT plan_by_hours.plan_by_hour_id, DATE_FORMAT(plan_by_hours.time, "%h:%i %p") as time, DATE_FORMAT(plan_by_hours.time_end, "%h:%i %p") as time_end, plan_by_hours.planned_head_count, items_pph.item_number, ';
             $sql .=  'plan_by_hours.workorder, plan_by_hours.planned, (@planned_sum:=@planned_sum + IFNULL(plan_by_hours.planned, 0) ) as planned_sum, ';
-            $sql .=  "plan_by_hours.completed, (@completed_sum:=@completed_sum + plan_by_hours.completed) as completed_sum, IF( plan_by_hours.time = '" . $select_time . "', '1', '0') as current FROM plan_by_hours ";
-            $sql .=  'LEFT JOIN items_pph ON plan_by_hours.item_id = items_pph.item_id WHERE plan_by_hours.plan_id = ' . $plan_id;
+            $sql .=  "plan_by_hours.completed, (@completed_sum:=@completed_sum + plan_by_hours.completed) as completed_sum, IF( plan_by_hours.time = '" . $select_time . "', '1', '0') as current, ";
+            $sql .=  "interruptions.interruption_name, not_planned_interruptions.interruption_name as not_planned_interruption_name";
+            $sql .= " FROM plan_by_hours ";
+            $sql .= ' LEFT JOIN items_pph ON plan_by_hours.item_id = items_pph.item_id';
+            $sql .= ' LEFT JOIN interruptions ON plan_by_hours.interruption_id = interruptions.interruption_id';
+            $sql .= ' LEFT JOIN not_planned_interruptions ON plan_by_hours.not_planned_interruption_id = not_planned_interruptions.interruption_id';
+            $sql .= ' WHERE plan_by_hours.plan_id = ' . $plan_id;
             //$sql .=  " AND plan_by_hours.time >= '{$start_time}' AND  plan_by_hours.time < '{$end_time}'";
 
             $plan_by_hours = $this->db->query($sql)->result_array();
@@ -122,12 +127,30 @@ class Output_VS_Plan extends CI_Controller
             $last_index = count($plan_by_hours) - 1;
             $data[$i]['shift_status'] =  intval(($plan_by_hours[$last_index]['completed_sum'] * 100) / $plan_by_hours[$last_index]['planned_sum']);
 
+
+            for ($h = 0; $h < count($plan_by_hours); $h++) {
+                $interruption = '';
+                if ($plan_by_hours[$h]['interruption_name'] != null) {
+                    $interruption .=  $plan_by_hours[$h]['interruption_name'];
+                }
+                if ($plan_by_hours[$h]['not_planned_interruption_name'] != null) {
+
+                    if ($interruption != '')
+                        $interruption .=  ', ';
+
+                    $interruption .=  $plan_by_hours[$h]['not_planned_interruption_name'];
+                }
+                $plan_by_hours[$h]['interruption'] = $interruption;
+            }
+
+
             for ($h = 0; $h < count($plan_by_hours); $h++) {
                 if ($plan_by_hours[$h]['current'] == '1') {
                     $data[$i]['current_hour_index'] = $h;
                     break;
                 }
             }
+
 
             $data[$i]['plan_by_hours'] = $plan_by_hours;
         }
