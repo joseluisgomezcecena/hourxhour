@@ -23,7 +23,7 @@ class ProductionPlan extends CI_Model
     public $plant_id;
     public $plant_name;
 
-    public $supervisor_id;
+    public $supervisor;
 
     public $created_at;
     public $updated_at;
@@ -54,7 +54,7 @@ class ProductionPlan extends CI_Model
         $this->end_hour = $end_hour;
 
 
-        $select = '*, shifts.shift_name as shift_name, assets.site_id as site_id, ';
+        $select = '*, shifts.shift_short_name as shift_name, assets.site_id as site_id, ';
         $select .= 'assets.asset_name as asset_name, assets.asset_id as asset_id, ';
         $select .= 'sites.site_id as site_id, sites.site_name as site_name, ';
         $select .= 'plants.plant_id as plant_id, plants.plant_name as plant_name';
@@ -105,12 +105,17 @@ class ProductionPlan extends CI_Model
 
             $this->date = $date;
             $this->shift_id = $shift_id;
-            $this->supervisor_id = NULL;
+            $this->supervisor = NULL;
             $this->hc = 1;
 
             $this->use_multiplier_factor = false;
             $this->multiplier_factor = NULL;
 
+            //Load shift_name with $shift_id
+            $this->db->select('shift_short_name');
+            $this->db->where('shift_id', $shift_id);
+            $this->db->from('shifts');
+            $this->shift_name = $this->db->get()->result_array()[0]['shift_short_name'];
 
             $this->GenerateHours();
         } else {
@@ -145,7 +150,7 @@ class ProductionPlan extends CI_Model
 
         $this->hc = intval($row['hc']);
 
-        $this->supervisor_id = intval($row['supervisor_id']);
+        $this->supervisor = $row['supervisor'];
         $this->created_at = $row['created_at'];
         $this->updated_at = $row['updated_at'];
 
@@ -160,7 +165,7 @@ class ProductionPlan extends CI_Model
         $row['asset_id'] = intval($this->asset_id);
         $row['date']  = $this->date;
         $row['shift_id'] = intval($this->shift_id);
-        $row['supervisor_id'] = intval($this->supervisor_id);
+        $row['supervisor'] = intval($this->supervisor);
         $row['created_at'] = $this->created_at;
         $row['updated_at'] = $this->updated_at;
         $row['hc'] = intval($this->hc);

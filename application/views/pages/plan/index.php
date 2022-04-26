@@ -175,7 +175,7 @@
                     </th>
                     <th scope="col" class="bg-[#D1FAE5]"><small>SHIFT:</small></th>
                     <th scope="col">
-                        <input type="text" name="shift_id" ng-model="production_plan.shift_id" class="form-control input_invisible size-sm">
+                        <input type="text" name="shift_id" ng-model="production_plan.shift_name" disabled class="form-control input_invisible size-sm">
                     </th>
                     <th scope="col" class="bg-[#D1FAE5]"><small>HC:</small></th>
                     <th scope="col">
@@ -187,7 +187,7 @@
                     </th>
                     <th scope="col" class="bg-[#D1FAE5]"><small>SUPERVISOR:</small></th>
                     <th scope="col">
-                        <input type="text" name="supervisor_id" value="" class="form-control input_invisible size-sm">
+                        <input placeholder="Select" type="text" ng-model="production_plan.supervisor" class="form-control size-sm" list="dl_supervisors" required />
                     </th>
                 </tr>
             </thead>
@@ -274,9 +274,19 @@
                         <option ng-repeat='item in items' value="{{item.item_number}}"></option>
                     </datalist>
 
+                    <datalist id="dl_supervisors">
+                        <option ng-repeat='supervisor in supervisors' value="{{supervisor.user_name}} {{supervisor.user_lastname}}"></option>
+                    </datalist>
+
                 </tbody>
             </table>
             <div class="flex justify-end mt-5">
+
+                <button type="button" class="btn btn_secondary uppercase ltr:mr-2" ng-click="cancel()">
+                    <span class="la la-arrow-left ltr:mr-2 rtl:ml-2"></span>
+                    Cancel
+                </button>
+
                 <button type="button" class="btn btn_success uppercase" ng-click="save()">
                     <span class="la la-save ltr:mr-2 rtl:ml-2"></span>
                     Save Plan
@@ -315,6 +325,8 @@
         //Lista de interrupciones
         $scope.interruptions = null;
 
+        $scope.supervisors = null;
+
         $scope.display_loading = true;
 
         $scope.init = function(asset_id, shift_id, date) {
@@ -325,6 +337,7 @@
             console.log('date de hoy ' + $scope.date);
 
             $scope.getData();
+
         }
 
         $scope.change_date = function() {
@@ -351,6 +364,8 @@
 
                 //Load interruptions
                 $scope.interruptions = response.data.interruptions;
+
+                $scope.supervisors = response.data.supervisors;
 
                 //Load production_plan
                 $scope.production_plan = response.data.production_plan;
@@ -563,6 +578,9 @@
 
             var has_errors = false;
 
+            //esta variable se utiliza para validar que haya algun row para guardar de la totalidad, si no tiene datos para guardar descartar el guardado
+            var has_edited_rows = false;
+
             for (let i = 0; i < $scope.production_plan.plan_by_hours.length; i++) {
 
                 console.log('item ' + i);
@@ -602,12 +620,28 @@
                     }
                 }
 
+                if (has_planned && has_item_id && has_workorder && has_planned_head_count) {
+                    has_edited_rows = true;
+                }
+
             }
 
 
             if (has_errors) {
                 $scope.display_loading = false;
                 swal("Something was wrong!", "You have some data incompleted! check item number, workorder, hc and planned from all row ", "error");
+                return;
+            }
+
+            if (!has_edited_rows) {
+                $scope.display_loading = false;
+                swal("Something was wrong!", "You have no data to save! you need to fill at least one row.", "error");
+                return;
+            }
+
+            if ($scope.production_plan.supervisor == null || $scope.production_plan.supervisor == undefined || $scope.production_plan.supervisor == '') {
+                $scope.display_loading = false;
+                swal("Something was wrong!", "Please fill the supervisor field.", "error");
                 return;
             }
 
@@ -646,6 +680,10 @@
                 $scope.display_loading = false;
                 // this function handles error
             });
+        }
+
+        $scope.cancel = function() {
+            window.location.replace("<?php echo base_url() ?>measuring_point?site_id=" + $scope.production_plan.site_id + "&plant_id=" + $scope.production_plan.plant_id);
         }
 
 

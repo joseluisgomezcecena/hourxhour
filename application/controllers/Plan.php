@@ -49,6 +49,23 @@ class Plan extends CI_Controller
         $this->productionplan->LoadPlan($asset_id, $date, $shift_id, $this->shift->shift_start_time, $this->shift->shift_end_time);
         $data['production_plan'] =  $this->productionplan;
 
+        //Incorporatte supervirsor from database authentication
+        //$dbAuthentication = $this->load->database('authentication', TRUE);
+        $this->db->db_select('authentication');
+        $department_name = 'Production';
+        $level_name = 'Supervisor';
+        $this->db->select('users.user_id, users.user_email, users.user_name, users.user_lastname, users.user_martech_number ,users.user_active, users.user_level_id, levels.level_name, users.user_department_id, departments.department_name');
+        $this->db->from('users');
+        $this->db->join('departments', 'users.user_department_id = departments.department_id', 'inner');
+        $this->db->join('levels', 'users.user_level_id = levels.level_id', 'inner');
+        if ($department_name != null)
+            $this->db->where('departments.department_name', $department_name);
+        if ($level_name != null)
+            $this->db->where('levels.level_name', $level_name);
+        $query = $this->db->get();
+        $data['supervisors'] = $query->result_array();
+
+
         echo json_encode($data);
     }
 
@@ -69,7 +86,7 @@ class Plan extends CI_Controller
         $data['asset_id'] = $plan->asset_id;
         $data['date'] = $plan->date;
         $data['shift_id'] = $plan->shift_id;
-        $data['supervisor_id'] = $plan->supervisor_id;
+        $data['supervisor'] = $plan->supervisor;
 
         $data['use_multiplier_factor'] = intval($plan->use_multiplier_factor);
         $data['multiplier_factor'] = intval($plan->multiplier_factor);
