@@ -101,6 +101,9 @@ class Manual_Capture extends CI_Controller
         $shift_date = $this->shift->getIdFromCurrentTime($current_datetime);
         $plan = $this->productionplan->getProductionPlan($this->input->get('asset_id'), $shift_date['shift_id'], $shift_date['date']->format(DATE_FORMAT));
 
+        //echo json_encode($plan);
+        //if (true) return;
+
         if ($plan == null) {
             $this->load->helper('messages');
             $data['plan_id'] = null;
@@ -127,6 +130,12 @@ class Manual_Capture extends CI_Controller
         $result = $current_datetime;
         $result->setTimestamp($timestamp);
 
+        //$data['use_multiplier_factor'] = $plan->use_multiplier_factor;
+        if ($plan->use_multiplier_factor == 1) {
+            $data['multiplier_factor'] = $plan->multiplier_factor;
+        }
+
+
         //Last Hour End
         $data['plan_id'] = $plan_id;
         $data['site_name'] = $plan->site_name;
@@ -145,28 +154,34 @@ class Manual_Capture extends CI_Controller
         //Last hour info
         $last_hour_id = $this->capture->get_current_hour($plan->plan_id, $result);
 
-        if ($last_hour_id == null) {
-            $data['last_item_number'] = 'N/A';
-            $data['last_workorder'] = 'N/A';
-            $data['last_completed'] = 'N/A';
-            $data['last_hc'] = 'N/A';
-            $data['last_time'] = null;
-            $data['last_time_end'] = 'N/A';
-        } else {
+
+        $data['last_item_number'] = 'N/A';
+        $data['last_workorder'] = 'N/A';
+        $data['last_completed'] = 'N/A';
+        $data['last_hc'] = 'N/A';
+        $data['last_time'] = 'N/A';
+        $data['last_time_end'] = 'N/A';
+
+        if ($last_hour_id != null) {
+
             $this->planbyhour->Load($last_hour_id);
-
-            $data['last_item_number'] = $this->planbyhour->item_number;
-            $data['last_workorder'] = $this->planbyhour->workorder;
-            $data['last_completed'] = $this->planbyhour->completed;
-            $data['last_hc'] = $this->planbyhour->planned_head_count;
-
             $last_time = $this->planbyhour->time;
             $last_time_end = $this->planbyhour->time_end;
             $last_time = date(HOUR_MINUTE_FORMAT, strtotime($last_time));
             $last_time_end = date(HOUR_MINUTE_FORMAT, strtotime($last_time_end));
 
-            $data['last_time'] = $last_time;
-            $data['last_time_end'] = $last_time_end;
+            if ($this->planbyhour->planned == null) {
+                $data['last_time'] =  $last_time;
+                $data['last_time_end'] = $last_time_end;
+            } else {
+
+                $data['last_item_number'] = $this->planbyhour->item_number;
+                $data['last_workorder'] = $this->planbyhour->workorder;
+                $data['last_completed'] = $this->planbyhour->completed;
+                $data['last_hc'] = $this->planbyhour->planned_head_count;
+                $data['last_time'] = $last_time;
+                $data['last_time_end'] = $last_time_end;
+            }
         }
 
 
