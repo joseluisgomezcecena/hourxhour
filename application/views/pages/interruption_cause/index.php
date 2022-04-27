@@ -142,7 +142,7 @@
                             else
                                 $minutes = round(floatval($get_plan['not_planned_interruption_value']) * 60.0, 0);
 
-                            echo ' <input type="number" step="1" class="form-control" placeholder="less time" id="not_planned_interruption_value_' . $get_plan['plan_by_hour_id'] . '" name="not_planned_interruption_value_' . $get_plan['plan_by_hour_id'] . '" value="' . $minutes . '"';
+                            echo ' <input type="number" ng-trim="false" oninput="this.value = !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null" required min="0" step="1" class="form-control" placeholder="less time" id="not_planned_interruption_value_' . $get_plan['plan_by_hour_id'] . '" name="not_planned_interruption_value_' . $get_plan['plan_by_hour_id'] . '" value="' . $minutes . '"';
                             echo ' onchange="changed_interruption_value(this, ' . $get_plan['plan_by_hour_id'] . ')"';
                             if ($minutes == 0)
                                 echo 'disabled';
@@ -187,7 +187,6 @@
             document.getElementById(identifier).value = '';
         }
     }
-
 
     function changed_interruption_value(parent, plan_by_hour_id) {
 
