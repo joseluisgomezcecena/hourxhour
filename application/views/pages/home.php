@@ -98,7 +98,7 @@
         var ampm = x.getHours() >= 12 ? ' PM' : ' AM';
 
         var x1 = x.getMonth() + 1 + "/" + x.getDate() + "/" + x.getFullYear();
-        x1 = x1 + " - " + get_ampm_hour(x.getHours()) + ":" + x.getMinutes() + ":" + x.getSeconds() + ":" + ampm;
+        x1 = x1 + " - " + get_ampm_hour(x.getHours()) + ":" + x.getMinutes() + ":" + x.getSeconds() + ampm;
         document.getElementById('ct5').innerHTML = x1;
         display_c5();
     }
