@@ -12,6 +12,8 @@
     }
 </style>
 
+
+
 <!-- Breadcrumb -->
 <section class="breadcrumb">
     <h1><?= $title ?></h1>
@@ -24,18 +26,22 @@
         <div style="display: flex; justify-content:flex-end;">
             <h3 id='ct5'></h3>
         </div>
-        <!-- Summaries -->
+
         <div class="grid sm:grid-cols-3 gap-5 my-5">
 
-            <div class="card">
-                <h3 class="text-center mt-5 mb-5">Moldeo</h3>
-                <?php
-                if (count($moldeo) === 0) {
+            <?php
+            foreach ($plants as $plant) {
+
+                echo '<div class="card">';
+                echo '<h3 class="text-center mt-5 mb-5">' . $plant['plant_name'] . '</h3>';
+
+                if (count($plant['data']) === 0) {
                     echo '<div style="padding-left:0.8rem; padding-right:0.8rem; margin-bottom: 2rem;">';
                     $this->load->helper('messages');
                     show_alert_noplan(null);
                     echo '</div>';
                 } else {
+
                     echo '
                     <table class="table w-full mt-3 text-center">
                         <thead>
@@ -47,190 +53,42 @@
                         </thead>
                         <tbody>
                     ';
-                    foreach ($moldeo as $m) :
 
-                        if (date("H:i:s") >= "06:00:00" && date("H:i:s") < "16:00:00") {
-                            if ($m['planned_shift_one'] > 0) {
-                                $percentm = ceil(($m['completed_shift_one'] / $m['planned_shift_one']) * 100);
-                            } else {
-                                $percentm = 0;
-                            }
-                        } elseif (date("H:i:s") >= "16:00:00" && date("H:i:s") < "23:59:59") {
-                            if ($m['planned_shift_two'] > 0) {
-                                $percentm = ceil(($m['completed_shift_two'] / $m['planned_shift_two']) * 100);
-                            } else {
-                                $percentm = 0;
-                            }
-                        } elseif (date("H:i:s") >= "00:00:00" && date("H:i:s") < "05:59:59") {
-                            if ($m['planned_shift_three'] > 0) {
-                                $percentm = ceil(($m['completed_shift_three'] / $m['planned_shift_three']) * 100);
-                            } else {
-                                $percentm = 0;
-                            }
-                        }
+                    foreach ($plant['data'] as $item) {
 
-                        if ($percentm >= 99) {
+                        //echo json_encode($item);
+                        $percent = 0;
+
+                        if ($item['completed'] > 0)
+                            $percent = ceil(($item['completed'] / $item['planned']) * 100);
+
+                        if ($percent >= 99) {
                             $color = "table-success";
-                        } elseif ($percentm > 85 && $percentm < 99) {
+                        } elseif ($percent > 85 && $percent < 99) {
                             $color = "table-warning";
                         } else {
                             $color = "table-danger";
                         }
-                ?>
-                        <tr>
-                            <td><?php echo $m['site_name'] ?></td>
-                            <td><?php echo $m['asset_name'] ?></td>
-                            <td class="<?php echo $color ?>">
-                                <b>
-                                    <?php echo $percentm; ?>
-                                    %
-                                </b>
-                            </td>
 
-                        </tr>
-                <?php
-                    endforeach;
+                        echo '<tr>';
+                        echo '<td>' . $item['site_name'] . '</td>';
+                        echo '<td>'  . $item['asset_name'] . '</td>';
+                        echo '<td class="' . $color . '">';
+                        echo '    <b>' . $percent .  '%</b>';
+                        echo '</td>';
+                        echo '</tr>';
+                    }
+
+                    echo '</tbody>
+                           </table> ';
                 }
-                ?>
-                </tbody>
-                </table>
-            </div>
 
+                echo '</div>';
+            }
+            ?>
 
-
-
-            <div class="card">
-                <h3 class="text-center mt-5 mb-5">Ensamble</h3>
-                <?php
-                if (count($ensamble) === 0) {
-                    echo '<div style="padding-left:0.8rem; padding-right:0.8rem; margin-bottom: 2rem;">';
-                    $this->load->helper('messages');
-                    show_alert_noplan(null);
-                    echo '</div>';
-                } else {
-                    echo '
-                    <table class="table w-full mt-3 text-center">
-                        <thead>
-                            <tr>
-                                <th class="text-center uppercase">Area</th>
-                                <th class="text-center uppercase">Output</th>
-                                <th class="text-center uppercase">Shift Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                    ';
-                    foreach ($ensamble as $e) :
-                        if (date("H:i:s") >= "06:00:00" && date("H:i:s") < "16:00:00") {
-                            if ($e['planned_shift_one'] > 0) {
-                                $percente = ceil(($e['completed_shift_one'] / $e['planned_shift_one']) * 100);
-                            } else {
-                                $percente = 0;
-                            }
-                        } elseif (date("H:i:s") >= "16:00:00" && date("H:i:s") < "23:59:59") {
-                            if ($e['planned_shift_two'] > 0) {
-                                $percente = ceil(($e['completed_shift_two'] / $e['planned_shift_two']) * 100);
-                            } else {
-                                $percente = 0;
-                            }
-                        } elseif (date("H:i:s") >= "00:00:00" && date("H:i:s") < "05:59:59") {
-                            if ($e['planned_shift_three'] > 0) {
-                                $percente = ceil(($e['completed_shift_three'] / $e['planned_shift_three']) * 100);
-                            } else {
-                                $percente = 0;
-                            }
-                        }
-                        if ($percente >= 99) {
-                            $color = "table-success";
-                        } elseif ($percente > 85 && $percentm < 99) {
-                            $color = "table-warning";
-                        } else {
-                            $color = "table-danger";
-                        }
-                ?>
-                        <tr>
-                            <td><?php echo $e['site_name'] ?></td>
-                            <td><?php echo $e['asset_name'] ?></td>
-                            <td class="<?php echo $color ?>">
-                                <b>
-                                    <?php echo $percente ?> %
-                                </b>
-                            </td>
-
-                        </tr>
-                <?php
-                    endforeach;
-                }
-                ?>
-                </tbody>
-                </table>
-            </div>
-
-            <div class="card">
-                <h3 class="text-center mt-5 mb-5">Planta 3</h3>
-                <?php
-                if (count($planta3) === 0) {
-                    echo '<div style="padding-left:0.8rem; padding-right:0.8rem; margin-bottom: 2rem;">';
-                    $this->load->helper('messages');
-                    show_alert_noplan(null);
-                    echo '</div>';
-                } else {
-                    echo '
-                    <table class="table w-full mt-3 text-center">
-                        <thead>
-                            <tr>
-                                <th class="text-center uppercase">Area</th>
-                                <th class="text-center uppercase">Output</th>
-                                <th class="text-center uppercase">Shift Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                    ';
-                    foreach ($planta3 as $p) :
-                        if (date("H:i:s") >= "06:00:00" && date("H:i:s") < "16:00:00") {
-                            if ($p['planned_shift_one'] > 0) {
-                                $percentp = ceil(($p['completed_shift_one'] / $p['planned_shift_one']) * 100);
-                            } else {
-                                $percentp = 0;
-                            }
-                        } elseif (date("H:i:s") >= "16:00:00" && date("H:i:s") < "23:59:59") {
-                            if ($p['planned_shift_two'] > 0) {
-                                $percentp = ceil(($p['completed_shift_two'] / $p['planned_shift_two']) * 100);
-                            } else {
-                                $percentp = 0;
-                            }
-                        } elseif (date("H:i:s") >= "00:00:00" && date("H:i:s") < "05:59:59") {
-                            if ($p['planned_shift_three'] > 0) {
-                                $percentp = ceil(($p['completed_shift_three'] / $p['planned_shift_three']) * 100);
-                            } else {
-                                $percentp = 0;
-                            }
-                        }
-                        if ($percentp >= 99) {
-                            $color = "table-success";
-                        } elseif ($percentp > 85 && $percentp < 99) {
-                            $color = "table-warning";
-                        } else {
-                            $color = "table-danger";
-                        }
-                ?>
-                        <tr>
-                            <td><?php echo $p['site_name'] ?></td>
-                            <td><?php echo $p['asset_name'] ?></td>
-                            <td class="<?php echo $color ?> ">
-                                <b>
-                                    <?php echo $percentp ?> %
-                                </b>
-                            </td>
-
-                        </tr>
-                <?php
-                    endforeach;
-                }
-                ?>
-                </tbody>
-                </table>
-            </div>
         </div>
+
     </div>
 </section>
 <script src="<?php echo  base_url() ?>assets/js/chart.min.js"></script>

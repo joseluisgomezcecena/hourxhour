@@ -11,10 +11,47 @@ class Pages extends CI_Controller
         if (!$this->session->userdata(IS_LOGGED_IN))
             redirect(LOGIN_URL);
 
-        $start_date = date(DATE_FORMAT) . ' 0:00:00';
-        $end_date = date(DATE_FORMAT) . ' 23:59:59';
+        /*
+        Author: Emanuel Jauregui
+        this portion of code was modified to retrieve data in the dashboard of the current plan running in the current shift
+        The general idea is to get the shift_id and the date of start of the shift based on current datetime with 
+        $this->shift->getIdFromCurrentTime(new DateTime);
 
-        $query = $this->db->query("SELECT DISTINCT plants.plant_id as sub_plant_id, plants.plant_name, sites.site_id as sub_site_id,sites.site_name, assets.asset_id AS sub_asset_id, assets.asset_name,
+        Con la siguiente condicion se pretende
+        if ($this->shift->shift_start_time > $this->shift->shift_end_time) {
+            Si la fecha actual es igual a la fecha en la que inicia el turno entonces debemos verificar que si la hora de inicio del turno es mayor
+            a la del fin entonces agregamos un dia mas a la fecha, ya que estamos en el final del dia
+            este caso solo se presentara por ejemplo a las 23 horas con 15 minutos hasta las 12, 
+            En el caso que se presente en el turno 3 a las 02:00 horas por ejemplo getIdFromCurrentTime regresara un dia anterior  y 
+            tambien tenemos que incrementar un dia.
+        */
+
+        $this->load->model('shift');
+        $shift_response =  $this->shift->getIdFromCurrentTime(new DateTime);
+        $shift_id = $shift_response['shift_id'];
+        $start_shift_date = $shift_response['date'];
+        $end_shift_date = $shift_response['date'];
+        $this->shift->Load($shift_id);
+
+        //Si el dia actual es el mismo dia en el que comienza el turno
+        if ($this->shift->shift_start_time > $this->shift->shift_end_time) {
+            //Esto si se imprime... la condicion se detecta
+            /*if ('23:00:00' > '06:00:00') {
+                echo 'es mas grande';
+            }*/
+            //Se le necesita agregar un dia al end data
+            $end_shift_date->modify("+1 day");
+        }
+
+        $start_date = $start_shift_date->format(DATE_FORMAT) . ' ' . $this->shift->shift_start_time;
+        $end_date = $end_shift_date->format(DATE_FORMAT) . ' ' . $this->shift->shift_end_time;
+
+        $plants = $this->db->query("SELECT plant_id, plant_name FROM plants")->result_array();
+
+        for ($i = 0; $i < count($plants); $i++) {
+
+            $plant = $plants[$i];
+            $query = $this->db->query("SELECT DISTINCT plants.plant_id as sub_plant_id, plants.plant_name, sites.site_id as sub_site_id,sites.site_name, assets.asset_id AS sub_asset_id, assets.asset_name,
         (
         SELECT SUM(plan_by_hours.planned) FROM plan_hourxhour.plan_by_hours
        INNER JOIN plan_hourxhour.production_plans ON plan_hourxhour.plan_by_hours.plan_id = plan_hourxhour.production_plans.plan_id
@@ -24,10 +61,10 @@ class Pages extends CI_Controller
        WHERE plants.plant_id = sub_plant_id
        AND sites.site_id = sub_site_id
        AND assets.asset_id = sub_asset_id
-       AND production_plans.shift_id = 1
+       AND production_plans.shift_id = $shift_id
        AND plan_by_hours.time BETWEEN '$start_date' AND '$end_date'
        GROUP BY plants.plant_id,  sites.site_id, assets.asset_id
-        ) as planned_shift_one,
+        ) as planned,
         (
         SELECT SUM(plan_by_hours.completed) FROM plan_hourxhour.plan_by_hours
        INNER JOIN plan_hourxhour.production_plans ON plan_hourxhour.plan_by_hours.plan_id = plan_hourxhour.production_plans.plan_id
@@ -37,350 +74,33 @@ class Pages extends CI_Controller
        WHERE plants.plant_id = sub_plant_id
        AND sites.site_id = sub_site_id
        AND assets.asset_id = sub_asset_id
-       AND production_plans.shift_id = 1
+       AND production_plans.shift_id = $shift_id
        AND plan_by_hours.time BETWEEN '$start_date' AND '$end_date'
        GROUP BY plants.plant_id,  sites.site_id, assets.asset_id
-        ) as completed_shift_one,
-         (
-        SELECT SUM(plan_by_hours.planned) FROM plan_hourxhour.plan_by_hours
-       INNER JOIN plan_hourxhour.production_plans ON plan_hourxhour.plan_by_hours.plan_id = plan_hourxhour.production_plans.plan_id
-       INNER JOIN assets ON production_plans.asset_id = assets.asset_id
-       INNER JOIN sites ON assets.site_id = sites.site_id
-       INNER JOIN plants ON sites.plant_id = plants.plant_id
-       WHERE plants.plant_id = sub_plant_id
-       AND sites.site_id = sub_site_id
-       AND assets.asset_id = sub_asset_id
-       AND production_plans.shift_id = 2
-       AND plan_by_hours.time BETWEEN '$start_date' AND '$end_date'
-       GROUP BY plants.plant_id,  sites.site_id, assets.asset_id
-        ) as planned_shift_two,
-        (
-        SELECT SUM(plan_by_hours.completed) FROM plan_hourxhour.plan_by_hours
-       INNER JOIN plan_hourxhour.production_plans ON plan_hourxhour.plan_by_hours.plan_id = plan_hourxhour.production_plans.plan_id
-       INNER JOIN assets ON production_plans.asset_id = assets.asset_id
-       INNER JOIN sites ON assets.site_id = sites.site_id
-       INNER JOIN plants ON sites.plant_id = plants.plant_id
-       WHERE plants.plant_id = sub_plant_id
-       AND sites.site_id = sub_site_id
-       AND assets.asset_id = sub_asset_id
-       AND production_plans.shift_id = 2
-       AND plan_by_hours.time BETWEEN '$start_date' AND '$end_date'
-       GROUP BY plants.plant_id,  sites.site_id, assets.asset_id
-        ) as completed_shift_two,
-         (
-        SELECT SUM(plan_by_hours.planned) FROM plan_hourxhour.plan_by_hours
-       INNER JOIN plan_hourxhour.production_plans ON plan_hourxhour.plan_by_hours.plan_id = plan_hourxhour.production_plans.plan_id
-       INNER JOIN assets ON production_plans.asset_id = assets.asset_id
-       INNER JOIN sites ON assets.site_id = sites.site_id
-       INNER JOIN plants ON sites.plant_id = plants.plant_id
-       WHERE plants.plant_id = sub_plant_id
-       AND sites.site_id = sub_site_id
-       AND assets.asset_id = sub_asset_id
-       AND production_plans.shift_id = 3
-       AND plan_by_hours.time BETWEEN '$start_date'AND '$end_date'
-       GROUP BY plants.plant_id,  sites.site_id, assets.asset_id
-        ) as planned_shift_three,
-        (
-        SELECT SUM(plan_by_hours.completed) FROM plan_hourxhour.plan_by_hours
-       INNER JOIN plan_hourxhour.production_plans ON plan_hourxhour.plan_by_hours.plan_id = plan_hourxhour.production_plans.plan_id
-       INNER JOIN assets ON production_plans.asset_id = assets.asset_id
-       INNER JOIN sites ON assets.site_id = sites.site_id
-       INNER JOIN plants ON sites.plant_id = plants.plant_id
-       WHERE plants.plant_id = sub_plant_id
-       AND sites.site_id = sub_site_id
-       AND assets.asset_id = sub_asset_id
-       AND production_plans.shift_id = 3
-       AND plan_by_hours.time BETWEEN '$start_date' AND '$end_date'
-       GROUP BY plants.plant_id,  sites.site_id, assets.asset_id
-        ) as completed_shift_three
+        ) as completed
        FROM plan_hourxhour.plan_by_hours
        INNER JOIN plan_hourxhour.production_plans ON plan_hourxhour.plan_by_hours.plan_id = plan_hourxhour.production_plans.plan_id
        INNER JOIN assets ON production_plans.asset_id = assets.asset_id
        INNER JOIN sites ON assets.site_id = sites.site_id
        INNER JOIN plants ON sites.plant_id = plants.plant_id
-       WHERE plan_by_hours.time BETWEEN '$start_date' AND '$end_date' AND plants.plant_id = 6;");
+       WHERE plan_by_hours.time BETWEEN '$start_date' AND '$end_date' AND plants.plant_id = " . $plant['plant_id'] . ";");
 
-        $result = $query->result_array();
 
-        for ($i = 0; $i < count($result); $i++) {
-
-            if ($result[$i]['planned_shift_one']  == NULL) {
-                $result[$i]['planned_shift_one']  = 0;
-            }
-            if ($result[$i]['completed_shift_one']  == NULL) {
-                $result[$i]['completed_shift_one']  = 0;
+            $data_info_items = $query->result_array();
+            for ($o = 0; $o < count($data_info_items); $o++) {
+                $data_info_items[$o]['planned'] = ($data_info_items[$o]['planned'] == NULL) ? 0 : $data_info_items[$o]['planned'];
+                $data_info_items[$o]['completed'] = ($data_info_items[$o]['planned'] == NULL) ? 0 : $data_info_items[$o]['completed'];
             }
 
-            if ($result[$i]['planned_shift_two']  == NULL) {
-                $result[$i]['planned_shift_two']  = 0;
-            }
-            if ($result[$i]['completed_shift_two']  == NULL) {
-                $result[$i]['completed_shift_two']  = 0;
-            }
-
-            if ($result[$i]['planned_shift_three']  == NULL) {
-                $result[$i]['planned_shift_three']  = 0;
-            }
-            if ($result[$i]['completed_shift_three']  == NULL) {
-                $result[$i]['completed_shift_three']  = 0;
-            }
-
-            $total_planned = $result[$i]['planned_shift_one'] + $result[$i]['planned_shift_two'] + $result[$i]['planned_shift_three'];
-            $result[$i]['total_planned'] = $total_planned;
-
-            $total_completed = $result[$i]['completed_shift_one'] + $result[$i]['completed_shift_two'] + $result[$i]['completed_shift_three'];
-            $result[$i]['total_completed'] = $total_completed;
+            $plants[$i]['data'] = $data_info_items;
+            //echo json_encode($query->result_array());
         }
 
-        $data['moldeo'] =   $result;
-
-
-
-        $query2 = $this->db->query("SELECT DISTINCT plants.plant_id as sub_plant_id, plants.plant_name, sites.site_id as sub_site_id,sites.site_name, assets.asset_id AS sub_asset_id, assets.asset_name,
-        (
-        SELECT SUM(plan_by_hours.planned) FROM plan_hourxhour.plan_by_hours
-       INNER JOIN plan_hourxhour.production_plans ON plan_hourxhour.plan_by_hours.plan_id = plan_hourxhour.production_plans.plan_id
-       INNER JOIN assets ON production_plans.asset_id = assets.asset_id
-       INNER JOIN sites ON assets.site_id = sites.site_id
-       INNER JOIN plants ON sites.plant_id = plants.plant_id
-       WHERE plants.plant_id = sub_plant_id
-       AND sites.site_id = sub_site_id
-       AND assets.asset_id = sub_asset_id
-       AND production_plans.shift_id = 1
-       AND plan_by_hours.time BETWEEN '$start_date' AND '$end_date'
-       GROUP BY plants.plant_id,  sites.site_id, assets.asset_id
-        ) as planned_shift_one,
-        (
-        SELECT SUM(plan_by_hours.completed) FROM plan_hourxhour.plan_by_hours
-       INNER JOIN plan_hourxhour.production_plans ON plan_hourxhour.plan_by_hours.plan_id = plan_hourxhour.production_plans.plan_id
-       INNER JOIN assets ON production_plans.asset_id = assets.asset_id
-       INNER JOIN sites ON assets.site_id = sites.site_id
-       INNER JOIN plants ON sites.plant_id = plants.plant_id
-       WHERE plants.plant_id = sub_plant_id
-       AND sites.site_id = sub_site_id
-       AND assets.asset_id = sub_asset_id
-       AND production_plans.shift_id = 1
-       AND plan_by_hours.time BETWEEN '$start_date' AND '$end_date'
-       GROUP BY plants.plant_id,  sites.site_id, assets.asset_id
-        ) as completed_shift_one,
-         (
-        SELECT SUM(plan_by_hours.planned) FROM plan_hourxhour.plan_by_hours
-       INNER JOIN plan_hourxhour.production_plans ON plan_hourxhour.plan_by_hours.plan_id = plan_hourxhour.production_plans.plan_id
-       INNER JOIN assets ON production_plans.asset_id = assets.asset_id
-       INNER JOIN sites ON assets.site_id = sites.site_id
-       INNER JOIN plants ON sites.plant_id = plants.plant_id
-       WHERE plants.plant_id = sub_plant_id
-       AND sites.site_id = sub_site_id
-       AND assets.asset_id = sub_asset_id
-       AND production_plans.shift_id = 2
-       AND plan_by_hours.time BETWEEN '$start_date' AND '$end_date'
-       GROUP BY plants.plant_id,  sites.site_id, assets.asset_id
-        ) as planned_shift_two,
-        (
-        SELECT SUM(plan_by_hours.completed) FROM plan_hourxhour.plan_by_hours
-       INNER JOIN plan_hourxhour.production_plans ON plan_hourxhour.plan_by_hours.plan_id = plan_hourxhour.production_plans.plan_id
-       INNER JOIN assets ON production_plans.asset_id = assets.asset_id
-       INNER JOIN sites ON assets.site_id = sites.site_id
-       INNER JOIN plants ON sites.plant_id = plants.plant_id
-       WHERE plants.plant_id = sub_plant_id
-       AND sites.site_id = sub_site_id
-       AND assets.asset_id = sub_asset_id
-       AND production_plans.shift_id = 2
-       AND plan_by_hours.time BETWEEN '$start_date' AND '$end_date'
-       GROUP BY plants.plant_id,  sites.site_id, assets.asset_id
-        ) as completed_shift_two,
-         (
-        SELECT SUM(plan_by_hours.planned) FROM plan_hourxhour.plan_by_hours
-       INNER JOIN plan_hourxhour.production_plans ON plan_hourxhour.plan_by_hours.plan_id = plan_hourxhour.production_plans.plan_id
-       INNER JOIN assets ON production_plans.asset_id = assets.asset_id
-       INNER JOIN sites ON assets.site_id = sites.site_id
-       INNER JOIN plants ON sites.plant_id = plants.plant_id
-       WHERE plants.plant_id = sub_plant_id
-       AND sites.site_id = sub_site_id
-       AND assets.asset_id = sub_asset_id
-       AND production_plans.shift_id = 3
-       AND plan_by_hours.time BETWEEN '$start_date'AND '$end_date'
-       GROUP BY plants.plant_id,  sites.site_id, assets.asset_id
-        ) as planned_shift_three,
-        (
-        SELECT SUM(plan_by_hours.completed) FROM plan_hourxhour.plan_by_hours
-       INNER JOIN plan_hourxhour.production_plans ON plan_hourxhour.plan_by_hours.plan_id = plan_hourxhour.production_plans.plan_id
-       INNER JOIN assets ON production_plans.asset_id = assets.asset_id
-       INNER JOIN sites ON assets.site_id = sites.site_id
-       INNER JOIN plants ON sites.plant_id = plants.plant_id
-       WHERE plants.plant_id = sub_plant_id
-       AND sites.site_id = sub_site_id
-       AND assets.asset_id = sub_asset_id
-       AND production_plans.shift_id = 3
-       AND plan_by_hours.time BETWEEN '$start_date' AND '$end_date'
-       GROUP BY plants.plant_id,  sites.site_id, assets.asset_id
-        ) as completed_shift_three
-       FROM plan_hourxhour.plan_by_hours
-       INNER JOIN plan_hourxhour.production_plans ON plan_hourxhour.plan_by_hours.plan_id = plan_hourxhour.production_plans.plan_id
-       INNER JOIN assets ON production_plans.asset_id = assets.asset_id
-       INNER JOIN sites ON assets.site_id = sites.site_id
-       INNER JOIN plants ON sites.plant_id = plants.plant_id
-       WHERE plan_by_hours.time BETWEEN '$start_date' AND '$end_date' AND plants.plant_id = 7;");
-
-        $result2 = $query2->result_array();
-
-        for ($i = 0; $i < count($result2); $i++) {
-
-            if ($result2[$i]['planned_shift_one']  == NULL) {
-                $result2[$i]['planned_shift_one']  = 0;
-            }
-            if ($result2[$i]['completed_shift_one']  == NULL) {
-                $result2[$i]['completed_shift_one']  = 0;
-            }
-
-            if ($result2[$i]['planned_shift_two']  == NULL) {
-                $result2[$i]['planned_shift_two']  = 0;
-            }
-            if ($result2[$i]['completed_shift_two']  == NULL) {
-                $result2[$i]['completed_shift_two']  = 0;
-            }
-
-            if ($result2[$i]['planned_shift_three']  == NULL) {
-                $result2[$i]['planned_shift_three']  = 0;
-            }
-            if ($result2[$i]['completed_shift_three']  == NULL) {
-                $result2[$i]['completed_shift_three']  = 0;
-            }
-
-            $total_planned2 = $result2[$i]['planned_shift_one'] + $result2[$i]['planned_shift_two'] + $result2[$i]['planned_shift_three'];
-            $result2[$i]['total_planned'] = $total_planned2;
-
-            $total_completed2 = $result2[$i]['completed_shift_one'] + $result2[$i]['completed_shift_two'] + $result2[$i]['completed_shift_three'];
-            $result2[$i]['total_completed'] = $total_completed2;
-        }
-
-        $data['ensamble'] =   $result2;
-
-
-
-
-        $query3 = $this->db->query("SELECT DISTINCT plants.plant_id as sub_plant_id, plants.plant_name, sites.site_id as sub_site_id,sites.site_name, assets.asset_id AS sub_asset_id, assets.asset_name,
-        (
-        SELECT SUM(plan_by_hours.planned) FROM plan_hourxhour.plan_by_hours
-       INNER JOIN plan_hourxhour.production_plans ON plan_hourxhour.plan_by_hours.plan_id = plan_hourxhour.production_plans.plan_id
-       INNER JOIN assets ON production_plans.asset_id = assets.asset_id
-       INNER JOIN sites ON assets.site_id = sites.site_id
-       INNER JOIN plants ON sites.plant_id = plants.plant_id
-       WHERE plants.plant_id = sub_plant_id
-       AND sites.site_id = sub_site_id
-       AND assets.asset_id = sub_asset_id
-       AND production_plans.shift_id = 1
-       AND plan_by_hours.time BETWEEN '$start_date' AND '$end_date'
-       GROUP BY plants.plant_id,  sites.site_id, assets.asset_id
-        ) as planned_shift_one,
-        (
-        SELECT SUM(plan_by_hours.completed) FROM plan_hourxhour.plan_by_hours
-       INNER JOIN plan_hourxhour.production_plans ON plan_hourxhour.plan_by_hours.plan_id = plan_hourxhour.production_plans.plan_id
-       INNER JOIN assets ON production_plans.asset_id = assets.asset_id
-       INNER JOIN sites ON assets.site_id = sites.site_id
-       INNER JOIN plants ON sites.plant_id = plants.plant_id
-       WHERE plants.plant_id = sub_plant_id
-       AND sites.site_id = sub_site_id
-       AND assets.asset_id = sub_asset_id
-       AND production_plans.shift_id = 1
-       AND plan_by_hours.time BETWEEN '$start_date' AND '$end_date'
-       GROUP BY plants.plant_id,  sites.site_id, assets.asset_id
-        ) as completed_shift_one,
-         (
-        SELECT SUM(plan_by_hours.planned) FROM plan_hourxhour.plan_by_hours
-       INNER JOIN plan_hourxhour.production_plans ON plan_hourxhour.plan_by_hours.plan_id = plan_hourxhour.production_plans.plan_id
-       INNER JOIN assets ON production_plans.asset_id = assets.asset_id
-       INNER JOIN sites ON assets.site_id = sites.site_id
-       INNER JOIN plants ON sites.plant_id = plants.plant_id
-       WHERE plants.plant_id = sub_plant_id
-       AND sites.site_id = sub_site_id
-       AND assets.asset_id = sub_asset_id
-       AND production_plans.shift_id = 2
-       AND plan_by_hours.time BETWEEN '$start_date' AND '$end_date'
-       GROUP BY plants.plant_id,  sites.site_id, assets.asset_id
-        ) as planned_shift_two,
-        (
-        SELECT SUM(plan_by_hours.completed) FROM plan_hourxhour.plan_by_hours
-       INNER JOIN plan_hourxhour.production_plans ON plan_hourxhour.plan_by_hours.plan_id = plan_hourxhour.production_plans.plan_id
-       INNER JOIN assets ON production_plans.asset_id = assets.asset_id
-       INNER JOIN sites ON assets.site_id = sites.site_id
-       INNER JOIN plants ON sites.plant_id = plants.plant_id
-       WHERE plants.plant_id = sub_plant_id
-       AND sites.site_id = sub_site_id
-       AND assets.asset_id = sub_asset_id
-       AND production_plans.shift_id = 2
-       AND plan_by_hours.time BETWEEN '$start_date' AND '$end_date'
-       GROUP BY plants.plant_id,  sites.site_id, assets.asset_id
-        ) as completed_shift_two,
-         (
-        SELECT SUM(plan_by_hours.planned) FROM plan_hourxhour.plan_by_hours
-       INNER JOIN plan_hourxhour.production_plans ON plan_hourxhour.plan_by_hours.plan_id = plan_hourxhour.production_plans.plan_id
-       INNER JOIN assets ON production_plans.asset_id = assets.asset_id
-       INNER JOIN sites ON assets.site_id = sites.site_id
-       INNER JOIN plants ON sites.plant_id = plants.plant_id
-       WHERE plants.plant_id = sub_plant_id
-       AND sites.site_id = sub_site_id
-       AND assets.asset_id = sub_asset_id
-       AND production_plans.shift_id = 3
-       AND plan_by_hours.time BETWEEN '$start_date'AND '$end_date'
-       GROUP BY plants.plant_id,  sites.site_id, assets.asset_id
-        ) as planned_shift_three,
-        (
-        SELECT SUM(plan_by_hours.completed) FROM plan_hourxhour.plan_by_hours
-       INNER JOIN plan_hourxhour.production_plans ON plan_hourxhour.plan_by_hours.plan_id = plan_hourxhour.production_plans.plan_id
-       INNER JOIN assets ON production_plans.asset_id = assets.asset_id
-       INNER JOIN sites ON assets.site_id = sites.site_id
-       INNER JOIN plants ON sites.plant_id = plants.plant_id
-       WHERE plants.plant_id = sub_plant_id
-       AND sites.site_id = sub_site_id
-       AND assets.asset_id = sub_asset_id
-       AND production_plans.shift_id = 3
-       AND plan_by_hours.time BETWEEN '$start_date' AND '$end_date'
-       GROUP BY plants.plant_id,  sites.site_id, assets.asset_id
-        ) as completed_shift_three
-       FROM plan_hourxhour.plan_by_hours
-       INNER JOIN plan_hourxhour.production_plans ON plan_hourxhour.plan_by_hours.plan_id = plan_hourxhour.production_plans.plan_id
-       INNER JOIN assets ON production_plans.asset_id = assets.asset_id
-       INNER JOIN sites ON assets.site_id = sites.site_id
-       INNER JOIN plants ON sites.plant_id = plants.plant_id
-       WHERE plan_by_hours.time BETWEEN '$start_date' AND '$end_date' AND plants.plant_id = 8;");
-
-        $result3 = $query3->result_array();
-
-        for ($i = 0; $i < count($result3); $i++) {
-
-            if ($result3[$i]['planned_shift_one']  == NULL) {
-                $result3[$i]['planned_shift_one']  = 0;
-            }
-            if ($result3[$i]['completed_shift_one']  == NULL) {
-                $result3[$i]['completed_shift_one']  = 0;
-            }
-
-            if ($result3[$i]['planned_shift_two']  == NULL) {
-                $result3[$i]['planned_shift_two']  = 0;
-            }
-            if ($result3[$i]['completed_shift_two']  == NULL) {
-                $result3[$i]['completed_shift_two']  = 0;
-            }
-
-            if ($result3[$i]['planned_shift_three']  == NULL) {
-                $result3[$i]['planned_shift_three']  = 0;
-            }
-            if ($result3[$i]['completed_shift_three']  == NULL) {
-                $result3[$i]['completed_shift_three']  = 0;
-            }
-
-            $total_planned3 = $result3[$i]['planned_shift_one'] + $result3[$i]['planned_shift_two'] + $result3[$i]['planned_shift_three'];
-            $result3[$i]['total_planned'] = $total_planned3;
-
-            $total_completed3 = $result3[$i]['completed_shift_one'] + $result3[$i]['completed_shift_two'] + $result3[$i]['completed_shift_three'];
-            $resul3[$i]['total_completed'] = $total_completed3;
-        }
-
-        $data['planta3'] =   $result3;
-
+        //echo json_encode($plants);
 
         $data['title'] = ucfirst($page);
+        $data['plants'] = $plants;
+
         $this->load->view('templates/header');
         $this->load->view('pages/' . $page, $data);
         $this->load->view('templates/footer');
