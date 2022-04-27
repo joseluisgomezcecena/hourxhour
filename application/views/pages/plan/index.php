@@ -699,10 +699,9 @@
             }
             $http.post(url, data, config).then(function(response) {
                 $scope.display_loading = false;
-
+                console.log(response.data);
                 swal("Your plan modifications have been saved. You'll be redirected.")
                     .then((value) => {
-                        //swal(`The returned value is: ${value}`);
                         window.location.replace("<?php echo base_url() ?>measuring_point?site_id=" + $scope.production_plan.site_id + "&plant_id=" + $scope.production_plan.plant_id);
                     });
 

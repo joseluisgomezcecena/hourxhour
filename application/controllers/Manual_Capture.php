@@ -237,14 +237,55 @@ class Manual_Capture extends CI_Controller
 
         //retrieve an object of table productions_plans
         $plan = $this->productionplan->getProductionPlanById($this->planbyhour->plan_id);
-
         $this->planbyhour->IncrementCompleted($value, 1,  $capture_type);
 
         $this->db->select('*');
         $this->db->from('plan_by_hours');
         $this->db->where('plan_by_hour_id', $plan_by_hour_id);
         $result = $this->db->get()->result_array()[0];
+
+
+
+        $subject = "Produced items has been modified in a cell!";
+        $message = "<b>The next capture has been modified:</b>";
+        $message .= '<ul>';
+        $message .= '<li>Plant: ' . $plan->plant_name . '</li>';
+        $message .= '<li>Site: ' . $plan->site_name . '</li>';
+        $message .= '<li>Asset: ' . $plan->asset_name . '</li>';
+        $message .= '<li>Hour: ' . $this->planbyhour->time . '</li>';
+        $message .= '<li>Item Number: ' . $this->planbyhour->item_number . '</li>';
+        $message .= '<li>Work order: ' . $this->planbyhour->workorder . '</li>';
+        $message .= '<li>Planned Production: ' .  $result['planned'] . '</li>';
+        $message .= '<li>Completed Production: ' . $result['completed'] . '</li>';
+        $message .= '</ul>';
+        $this->send_email($this->planbyhour->plan_id, $subject, $message);
+
         echo json_encode($result);
+    }
+
+
+    public function send_email($plan_id, $subject, $message)
+    {
+        $recipients = array();
+        //getting data for email.
+        $query = $this->db->query("SELECT * FROM production_plans 
+    LEFT JOIN assets ON production_plans.asset_id = assets.asset_id 
+    LEFT JOIN sites ON assets.site_id = sites.site_id 
+    LEFT JOIN plants ON sites.plant_id = plants.plant_id 
+    LEFT JOIN mail_list ON mail_list.plant_id = plants.plant_id 
+	WHERE production_plans.plan_id = $plan_id");
+
+        $result = $query->result_array();
+
+        foreach ($result as $item) {
+            $recipients[] =  $item['email'];
+        }
+
+        echo $emails = implode(',', $recipients);
+
+
+        $this->load->helper('sendemail');
+        send($emails, $subject, $message, 'jgomez@martechmedical.com', 'jgomez@martechmedical.com');
     }
 
 
