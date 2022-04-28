@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/style.css">
-
+    <!--<link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/style.css">-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="shortcut icon" href="<?php echo base_url(); ?>assets/images/favicon/favicon.ico">
 
     <!--data tables-->
@@ -19,101 +19,74 @@
     <script src="<?php echo  base_url() ?>assets/js/sweetalert.min.js"></script>
     <title>Hour By Hour | Andon</title>
 </head>
+
 <style>
     body {
-        overflow: hidden;
-    }
-
-    th {
-        color: black;
         font-size: 1.2rem;
+        display: flex;
+        justify-content: center;
+        align-content: center;
     }
 
-    .table-success {
-        background-color: #b8efc1 !important;
+    .andon {   
+        /*position: relative;*/
+        width: 100vw;
+        height: 5rem;
+        overflow-x: hidden;
     }
 
-    .table-green {
-        background-color: #059669;
-    }
-
-    .table-warning {
-        background-color: #ede4b6 !important;
-    }
-
-    .table-danger {
-        background-color: #edb6b6 !important;
-    }
-
-    .table-gray {
-        background-color: #e0e0e0 !important;
-    }
-
-    td {
-        text-align: center;
-        font-size: 1.5rem;
-    }
-
-    #table {
+    .table-andon {
+        display: flex;
         white-space: nowrap;
-        animation: marquee 10s ease-out infinite alternate;
-        transition: all .2s ease-out;
-        display: inline-block;
+        will-change: transform;
+        animation: marquee 15s linear infinite  ;
     }
-
-    .table-container {
-        position: relative;
-        margin-top: 5px;
-        animation: marquee_container 5s linear infinite;
-    }
-
-    @keyframes marquee_container {
-
-        0%,
-        50% {
-            top: 0%;
-        }
-
-        50.01%,
-        100% {
-            top: 100%;
-        }
-    }
-
+/*
     @keyframes marquee {
-        0% {
-            transform: translateY(0)
+        from {
+            transform: translateX(-50%);
         }
 
-        100% {
-            transform: translateY(-100%)
+        to {
+            transform: translateX(100%);
         }
-    }
-
-    .divider {
-        border: 2px dotted #059669;
-        width: 100%;
-        margin-top: 3rem;
-        margin-bottom: 3rem;
-
-    }
+    }*/
+    @keyframes marquee {
+  0% {
+     transform: translateX(100vw);
+     visibility: visible;
+  }
+  99% {
+     transform : translateX(-100vw);
+     visibility: hidden;
+  }
+  100% {
+      transform: translateX(100vw);
+      visibility: hidden;
+  }
+}
 </style>
 
 <body>
-    <main class="workspace" ng-app="OutputVsPlanApp" ng-controller="OutputVsPlanCtrl">
-        <div id="table" ng-model="isHidden" style="margin-top: -6rem;">
+    <main class="container-fluid mt-0 px-0" ng-app="OutputVsPlanApp" ng-controller="OutputVsPlanCtrl">
+        <div id="table" ng-model="isHidden">
+            <table class="table table-responsive px-0 mx-0">
+                <thead>
+                    <tr class="text-white text-center">
+                        <th class="py-3 uppercase bg-success">Plant</th>
+                        <th class="py-3 uppercase table-active">{{ plan_productions[0].plant_name  }}</th>
+                        <th class="py-3 uppercase bg-success">Area</th>
+                        <th class="py-3 uppercase table-active">{{ plan_productions[0].site_name }}</th>
+                    </tr>
+                </thead>
+            </table>
             <div id="table-container" ng-repeat="plan in plan_productions">
-                <div class="divider"></div>
-                <table class="table w-full mt-3">
+                <table class="table table-responsive mt-5 mb-0">
                     <thead>
-                        <tr ng-switch="">
-                            <th class="uppercase table-green">Plant</th>
-                            <th class="uppercase table-success">{{ plan.plant_name }}</th>
-                            <th class="uppercase table-green">Area</th>
-                            <th class="uppercase table-success">{{ plan.site_name }}</th>
-                            <th class="uppercase table-green">Output</th>
+                        <tr>
+                            <th class="uppercase table-active">Output</th>
                             <th class="uppercase table-success">{{ plan.asset_name }}</th>
-                            <th class="uppercase table-green">Shift status</th>
+                            <th class="uppercase table-active">Shift status</th>
 
                             <th class="uppercase table-danger" ng-show="plan.shift_status < 84">{{ plan.shift_status }}%</th>
                             <th class="uppercase table-warning" ng-show="plan.shift_status >= 85 && plan.shift_status < 90">{{ plan.shift_status }}%</th>
@@ -122,18 +95,18 @@
                     </thead>
                 </table>
 
-                <table class="table w-full mt-5">
+                <table class="table table-responsive">
                     <thead>
                         <tr>
-                            <th class="uppercase table-green">HR</th>
-                            <th class="uppercase table-green">HC</th>
-                            <th class="uppercase table-green">Item Number</th>
-                            <th class="uppercase table-green">WO Number</th>
-                            <th class="uppercase table-green">Plan By Hour</th>
-                            <th class="uppercase table-green">CUM Plan</th>
-                            <th class="uppercase table-green">Output QTY</th>
-                            <th class="uppercase table-green">CUM Output</th>
-                            <th class="uppercase table-green">Interruption Cause</th>
+                            <th class="uppercase table-info">HR</th>
+                            <th class="uppercase table-info">HC</th>
+                            <th class="uppercase table-info">Item Number</th>
+                            <th class="uppercase table-info">WO Number</th>
+                            <th class="uppercase table-info">Plan By Hour</th>
+                            <th class="uppercase table-info">CUM Plan</th>
+                            <th class="uppercase table-info">Output QTY</th>
+                            <th class="uppercase table-info">CUM Output</th>
+                            <th class="uppercase table-info">Interruption Cause</th>
 
                         </tr>
                     </thead>
@@ -141,15 +114,15 @@
 
                         <!-- Row anterior -->
                         <tr ng-if="plan.current_hour_index > 0">
-                            <td class="table-gray"><b> {{ plan.plan_by_hours[plan.current_hour_index - 1].time }}-{{ plan.plan_by_hours[plan.current_hour_index - 1].time_end }} </b></td>
-                            <td class="table-gray">{{ plan.plan_by_hours[plan.current_hour_index - 1].planned_head_count }}</td>
-                            <td class="table-gray">{{ plan.plan_by_hours[plan.current_hour_index - 1].item_number }}</td>
-                            <td class="table-gray">{{ plan.plan_by_hours[plan.current_hour_index - 1].workorder }}</td>
-                            <td class="table-gray">{{ plan.plan_by_hours[plan.current_hour_index - 1].planned }}</td>
-                            <td class="table-gray">{{ plan.plan_by_hours[plan.current_hour_index - 1].planned_sum }}</td>
-                            <td class="table-gray">{{ plan.plan_by_hours[plan.current_hour_index - 1].completed }}</td>
-                            <td class="table-gray">{{ plan.plan_by_hours[plan.current_hour_index - 1].completed_sum }}</td>
-                            <td class="table-gray">{{ plan.plan_by_hours[plan.current_hour_index - 1].interruption }}</td>
+                            <td class="table-info"><b> {{ plan.plan_by_hours[plan.current_hour_index - 1].time }}-{{ plan.plan_by_hours[plan.current_hour_index - 1].time_end }} </b></td>
+                            <td class="table-info">{{ plan.plan_by_hours[plan.current_hour_index - 1].planned_head_count }}</td>
+                            <td class="table-info">{{ plan.plan_by_hours[plan.current_hour_index - 1].item_number }}</td>
+                            <td class="table-info">{{ plan.plan_by_hours[plan.current_hour_index - 1].workorder }}</td>
+                            <td class="table-info">{{ plan.plan_by_hours[plan.current_hour_index - 1].planned }}</td>
+                            <td class="table-info">{{ plan.plan_by_hours[plan.current_hour_index - 1].planned_sum }}</td>
+                            <td class="table-info">{{ plan.plan_by_hours[plan.current_hour_index - 1].completed }}</td>
+                            <td class="table-info">{{ plan.plan_by_hours[plan.current_hour_index - 1].completed_sum }}</td>
+                            <td class="table-info">{{ plan.plan_by_hours[plan.current_hour_index - 1].interruption }}</td>
                         </tr>
 
                         <!-- Current Row -->
@@ -167,32 +140,51 @@
 
                         <!-- Next -->
                         <tr ng-if="(plan.current_hour_index + 1) < plan.plan_by_hours.length">
-                            <td class="table-gray"><b> {{ plan.plan_by_hours[plan.current_hour_index + 1].time }}-{{ plan.plan_by_hours[plan.current_hour_index + 1].time_end }} </b></td>
-                            <td class="table-gray">{{ plan.plan_by_hours[plan.current_hour_index + 1].planned_head_count }}</td>
-                            <td class="table-gray">{{ plan.plan_by_hours[plan.current_hour_index + 1].item_number }}</td>
-                            <td class="table-gray">{{ plan.plan_by_hours[plan.current_hour_index + 1].workorder }}</td>
-                            <td class="table-gray">{{ plan.plan_by_hours[plan.current_hour_index + 1].planned }}</td>
-                            <td class="table-gray">{{ plan.plan_by_hours[plan.current_hour_index + 1].planned_sum }}</td>
-                            <td class="table-gray">{{ plan.plan_by_hours[plan.current_hour_index + 1].completed }}</td>
-                            <td class="table-gray">{{ plan.plan_by_hours[plan.current_hour_index + 1].completed_sum }}</td>
-                            <td class="table-gray">{{ plan.plan_by_hours[plan.current_hour_index + 1 ].interruption }} </td>
+                            <td class="table-info"><b> {{ plan.plan_by_hours[plan.current_hour_index + 1].time }}-{{ plan.plan_by_hours[plan.current_hour_index + 1].time_end }} </b></td>
+                            <td class="table-info">{{ plan.plan_by_hours[plan.current_hour_index + 1].planned_head_count }}</td>
+                            <td class="table-info">{{ plan.plan_by_hours[plan.current_hour_index + 1].item_number }}</td>
+                            <td class="table-info">{{ plan.plan_by_hours[plan.current_hour_index + 1].workorder }}</td>
+                            <td class="table-info">{{ plan.plan_by_hours[plan.current_hour_index + 1].planned }}</td>
+                            <td class="table-info">{{ plan.plan_by_hours[plan.current_hour_index + 1].planned_sum }}</td>
+                            <td class="table-info">{{ plan.plan_by_hours[plan.current_hour_index + 1].completed }}</td>
+                            <td class="table-info">{{ plan.plan_by_hours[plan.current_hour_index + 1].completed_sum }}</td>
+                            <td class="table-info">{{ plan.plan_by_hours[plan.current_hour_index + 1 ].interruption }} </td>
 
                         </tr>
 
                         <tr ng-if="(plan.current_hour_index + 2) < plan.plan_by_hours.length">
-                            <td class="table-gray"><b> {{ plan.plan_by_hours[plan.current_hour_index + 2].time }}-{{ plan.plan_by_hours[plan.current_hour_index + 2].time_end }} </b></td>
-                            <td class="table-gray">{{ plan.plan_by_hours[plan.current_hour_index + 2].planned_head_count }}</td>
-                            <td class="table-gray">{{ plan.plan_by_hours[plan.current_hour_index + 2].item_number }}</td>
-                            <td class="table-gray">{{ plan.plan_by_hours[plan.current_hour_index + 2].workorder }}</td>
-                            <td class="table-gray">{{ plan.plan_by_hours[plan.current_hour_index + 2].planned }}</td>
-                            <td class="table-gray">{{ plan.plan_by_hours[plan.current_hour_index + 2].planned_sum }}</td>
-                            <td class="table-gray">{{ plan.plan_by_hours[plan.current_hour_index + 2].completed }}</td>
-                            <td class="table-gray">{{ plan.plan_by_hours[plan.current_hour_index + 2].completed_sum }}</td>
-                            <td class="table-gray">{{ plan.plan_by_hours[plan.current_hour_index + 2].interruption }} </td>
+                            <td class="table-info"><b> {{ plan.plan_by_hours[plan.current_hour_index + 2].time }}-{{ plan.plan_by_hours[plan.current_hour_index + 2].time_end }} </b></td>
+                            <td class="table-info">{{ plan.plan_by_hours[plan.current_hour_index + 2].planned_head_count }}</td>
+                            <td class="table-info">{{ plan.plan_by_hours[plan.current_hour_index + 2].item_number }}</td>
+                            <td class="table-info">{{ plan.plan_by_hours[plan.current_hour_index + 2].workorder }}</td>
+                            <td class="table-info">{{ plan.plan_by_hours[plan.current_hour_index + 2].planned }}</td>
+                            <td class="table-info">{{ plan.plan_by_hours[plan.current_hour_index + 2].planned_sum }}</td>
+                            <td class="table-info">{{ plan.plan_by_hours[plan.current_hour_index + 2].completed }}</td>
+                            <td class="table-info">{{ plan.plan_by_hours[plan.current_hour_index + 2].completed_sum }}</td>
+                            <td class="table-info">{{ plan.plan_by_hours[plan.current_hour_index + 2].interruption }} </td>
 
                         </tr>
                     </tbody>
                 </table>
+            </div>
+            <!--ANDON-->
+            <div class="container-fluid andon">
+                <div class="table-andon">
+                    <table class="table table-responsive text-center table-bordered border-dark">
+                        <thead>
+                            <tr>
+
+                                <th class="uppercase bg-warning">HR</th>
+                                <th class="uppercase bg-danger">HR</th>
+                                <th class="uppercase bg-warning">HR</th>
+                                <th class="uppercase bg-warning">HR</th>
+                                <th class="uppercase bg-warning">HR</th>
+                                <th class="uppercase bg-warning">HR</th>
+
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
             </div>
         </div>
         <div ng-hide="isHidden" class="alert alert_primary" style="text-align: center;">
@@ -202,7 +194,7 @@
                 <br>
                 <h3>There isn't an active production plan for this machine/point.</h3> <br>
             </strong>
-            <a type="button" href="<?php echo base_url(); ?>index.php/output_vs_plan/select_site" class="btn btn_secondary uppercase my-5">Go back</a>
+            <a type="button" href="<?php echo base_url(); ?>index.php/output_vs_plan/select_site" class="btn btn_active uppercase my-5">Go back</a>
         </div>
     </main>
     <script>
@@ -264,7 +256,8 @@
     <!-- Scripts -->
     <script src="<?php echo  base_url() ?>assets/js/vendor.js"></script>
     <script src="<?php echo  base_url() ?>assets/js/script.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
 </body>
 
 </html>
