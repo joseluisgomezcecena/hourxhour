@@ -66,7 +66,7 @@
                 <thead>
                     <tr>
                         <th class="text-center uppercase table-color text-bold">Last Hour</th>
-                        <th class="text-center uppercase table-color text-bold">HR</th>
+                        <th class="text-center uppercase table-color text-bold">HC</th>
                         <th class="text-center uppercase table-color text-bold">Item number</th>
                         <th class="text-center uppercase table-color text-bold">WO number</th>
                         <th class="text-center uppercase table-color text-bold">Output QTY</th>
@@ -95,11 +95,22 @@
             <h6>WO Number:</h6>
             <p><?= $workorder ?></p>
             <h5 class="mt-4">Item number:</h5>
-            <h1 class="text-primary mb-8"><b><?= $item_number ?></b></h1>
+            <h1 class="text-primary <?php if (!isset($multiplier_factor)) {
+                                        echo 'mb-8';
+                                    } ?> "><b><?= $item_number ?></b></h1>
+
+            <?php
+            if (isset($multiplier_factor)) {
+                echo ' <h5 class="mb-8" style="color:red;">Multiplier factor is Activated with ' . $multiplier_factor . '</h5>';
+            }
+            ?>
+
+
             <div class="alert alert_success my-5" ng-if="!IsDisabledButtonModify">
                 <strong class="uppercase"><bdi>Add new capture in the green field!<br /></bdi></strong>
                 Don't forget to save the new capture added.
             </div>
+
             <div class="mt-5 mb-5">
                 <input ng-model="completed" type="text" ng-style="!IsDisabledButtonModify && {'background-color':'#b8d5cd'}" class="form-control h3" ng-disabled="IsDisabledButtonModify" style="width: 4.5rem; text-align: right !important;"> / <span class="h3" style="margin-left: 1rem !important;"><?= $planned ?></span>
             </div>
@@ -123,7 +134,34 @@
 </div>
 <script>
     var fetch = angular.module('buttonApp', []);
-    fetch.controller('buttonController', ['$scope', '$http', '$httpParamSerializerJQLike', function($scope, $http, $httpParamSerializerJQLike) {
+    fetch.controller('buttonController', ['$scope', '$http', '$httpParamSerializerJQLike', '$interval', '$timeout', function($scope, $http, $httpParamSerializerJQLike, $interval, $timeout) {
+
+        //actualizar cada hora...
+        $scope.divisor_hour = 1000 * 60 * 60;
+        $scope.time_in_hours = parseInt(Date.now() / $scope.divisor_hour);
+
+        $scope.updateTime = function() {
+            //console.log('update each second');
+            var current = parseInt(Date.now() / $scope.divisor_hour);
+
+            if (current != $scope.time_in_hours) {
+                location.reload();
+                $scope.time_in_hours = current;
+            }
+            //minutes
+        };
+
+        //Actualizar cada 5 minutos...
+        var theInterval = $interval(function() {
+            $scope.updateTime();
+        }.bind(this), 1000);
+
+        $scope.$on('$destroy', function() {
+            $interval.cancel(theInterval)
+        });
+
+
+
 
         $scope.IsDisabledButtonModify = true;
         $scope.verified = true;

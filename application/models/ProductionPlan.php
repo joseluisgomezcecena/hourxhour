@@ -265,8 +265,16 @@ class ProductionPlan extends CI_Model
 
     public function getProductionPlanById($plan_id)
     {
+        $this->db->select('production_plans.*, assets.asset_name, sites.site_name, plants.plant_name');
+        $this->db->from('production_plans');
+
+        $this->db->join('assets', 'production_plans.asset_id = assets.asset_id', 'inner');
+        $this->db->join('sites', 'assets.site_id = sites.site_id', 'inner');
+        $this->db->join('plants', 'sites.plant_id = plants.plant_id', 'inner');
+
         $this->db->where('plan_id', $plan_id);
-        $query = $this->db->get('production_plans');
+
+        $query = $this->db->get();
         $result = $query->result();
 
         if (count($result) > 0) {

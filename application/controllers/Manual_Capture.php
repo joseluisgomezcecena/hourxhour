@@ -101,6 +101,9 @@ class Manual_Capture extends CI_Controller
         $shift_date = $this->shift->getIdFromCurrentTime($current_datetime);
         $plan = $this->productionplan->getProductionPlan($this->input->get('asset_id'), $shift_date['shift_id'], $shift_date['date']->format(DATE_FORMAT));
 
+        //echo json_encode($plan);
+        //if (true) return;
+
         if ($plan == null) {
             $this->load->helper('messages');
             $data['plan_id'] = null;
@@ -127,6 +130,12 @@ class Manual_Capture extends CI_Controller
         $result = $current_datetime;
         $result->setTimestamp($timestamp);
 
+        //$data['use_multiplier_factor'] = $plan->use_multiplier_factor;
+        if ($plan->use_multiplier_factor == 1) {
+            $data['multiplier_factor'] = $plan->multiplier_factor;
+        }
+
+
         //Last Hour End
         $data['plan_id'] = $plan_id;
         $data['site_name'] = $plan->site_name;
@@ -145,28 +154,34 @@ class Manual_Capture extends CI_Controller
         //Last hour info
         $last_hour_id = $this->capture->get_current_hour($plan->plan_id, $result);
 
-        if ($last_hour_id == null) {
-            $data['last_item_number'] = 'N/A';
-            $data['last_workorder'] = 'N/A';
-            $data['last_completed'] = 'N/A';
-            $data['last_hc'] = 'N/A';
-            $data['last_time'] = null;
-            $data['last_time_end'] = 'N/A';
-        } else {
+
+        $data['last_item_number'] = 'N/A';
+        $data['last_workorder'] = 'N/A';
+        $data['last_completed'] = 'N/A';
+        $data['last_hc'] = 'N/A';
+        $data['last_time'] = 'N/A';
+        $data['last_time_end'] = 'N/A';
+
+        if ($last_hour_id != null) {
+
             $this->planbyhour->Load($last_hour_id);
-
-            $data['last_item_number'] = $this->planbyhour->item_number;
-            $data['last_workorder'] = $this->planbyhour->workorder;
-            $data['last_completed'] = $this->planbyhour->completed;
-            $data['last_hc'] = $this->planbyhour->planned_head_count;
-
             $last_time = $this->planbyhour->time;
             $last_time_end = $this->planbyhour->time_end;
             $last_time = date(HOUR_MINUTE_FORMAT, strtotime($last_time));
             $last_time_end = date(HOUR_MINUTE_FORMAT, strtotime($last_time_end));
 
-            $data['last_time'] = $last_time;
-            $data['last_time_end'] = $last_time_end;
+            if ($this->planbyhour->planned == null) {
+                $data['last_time'] =  $last_time;
+                $data['last_time_end'] = $last_time_end;
+            } else {
+
+                $data['last_item_number'] = $this->planbyhour->item_number;
+                $data['last_workorder'] = $this->planbyhour->workorder;
+                $data['last_completed'] = $this->planbyhour->completed;
+                $data['last_hc'] = $this->planbyhour->planned_head_count;
+                $data['last_time'] = $last_time;
+                $data['last_time_end'] = $last_time_end;
+            }
         }
 
 
@@ -222,14 +237,55 @@ class Manual_Capture extends CI_Controller
 
         //retrieve an object of table productions_plans
         $plan = $this->productionplan->getProductionPlanById($this->planbyhour->plan_id);
-
         $this->planbyhour->IncrementCompleted($value, 1,  $capture_type);
 
         $this->db->select('*');
         $this->db->from('plan_by_hours');
         $this->db->where('plan_by_hour_id', $plan_by_hour_id);
         $result = $this->db->get()->result_array()[0];
+
+
+
+        $subject = "Produced items has been modified in a cell!";
+        $message = "<b>The next capture has been modified:</b>";
+        $message .= '<ul>';
+        $message .= '<li>Plant: ' . $plan->plant_name . '</li>';
+        $message .= '<li>Site: ' . $plan->site_name . '</li>';
+        $message .= '<li>Asset: ' . $plan->asset_name . '</li>';
+        $message .= '<li>Hour: ' . $this->planbyhour->time . '</li>';
+        $message .= '<li>Item Number: ' . $this->planbyhour->item_number . '</li>';
+        $message .= '<li>Work order: ' . $this->planbyhour->workorder . '</li>';
+        $message .= '<li>Planned Production: ' .  $result['planned'] . '</li>';
+        $message .= '<li>Completed Production: ' . $result['completed'] . '</li>';
+        $message .= '</ul>';
+        $this->send_email($this->planbyhour->plan_id, $subject, $message);
+
         echo json_encode($result);
+    }
+
+
+    public function send_email($plan_id, $subject, $message)
+    {
+        $recipients = array();
+        //getting data for email.
+        $query = $this->db->query("SELECT * FROM production_plans 
+    LEFT JOIN assets ON production_plans.asset_id = assets.asset_id 
+    LEFT JOIN sites ON assets.site_id = sites.site_id 
+    LEFT JOIN plants ON sites.plant_id = plants.plant_id 
+    LEFT JOIN mail_list ON mail_list.plant_id = plants.plant_id 
+	WHERE production_plans.plan_id = $plan_id");
+
+        $result = $query->result_array();
+
+        foreach ($result as $item) {
+            $recipients[] =  $item['email'];
+        }
+
+        echo $emails = implode(',', $recipients);
+
+
+        $this->load->helper('sendemail');
+        send($emails, $subject, $message, 'jgomez@martechmedical.com', 'jgomez@martechmedical.com');
     }
 
 
