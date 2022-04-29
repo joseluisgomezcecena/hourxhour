@@ -198,7 +198,7 @@
                 <br>
                 <h3>There isn't an active production plan for this machine/point.</h3> <br>
             </strong>
-            <a type="button" href="<?php echo base_url(); ?>index.php/output_vs_plan/select_site" class="btn btn_active uppercase my-5">Go back</a>
+            <a type="button" href="<?php echo base_url(); ?>index.php/output_vs_plan/select_monitor" class="btn btn_active uppercase my-5">Go back</a>
         </div>
     </main>
     <script>
@@ -222,9 +222,17 @@
 
             $scope.loadData = function() {
 
+                var api_url = "<?php
+                                if (isset($monitor_id)) {
+                                    echo base_url() . 'output_vs_plan/get_data?monitor_id=' . $monitor_id;
+                                } else {
+                                    echo base_url() . 'output_vs_plan/get_data?site_id=' . $site_id . '&plant_id=' . $plant_id;
+                                }
+                                ?>";
+
                 $http({
                     method: 'get',
-                    url: '<?php echo base_url() . 'output_vs_plan/get_data?site_id=' . $site_id . '&plant_id=' . $plant_id; ?>'
+                    url: api_url
                 }).then(function successCallback(response) {
                     $scope.plan_productions = response.data;
 

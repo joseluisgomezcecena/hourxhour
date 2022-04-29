@@ -22,15 +22,74 @@ class Output_VS_Plan extends CI_Controller
         $this->load->view('templates/footer');
     }
 
+
+    public function select_monitor()
+    {
+        $data['title'] = "Select a Monitor";
+        $site_id = $this->input->get('site_id');
+        //$plant_id = $this->input->get('plant_id');
+        //$data['site_id'] = $site_id;
+        $this->load->view('templates/header_logged_out');
+        $this->load->view('pages/output_vs_plan/select_monitor', $data);
+        $this->load->view('templates/footer');
+    }
+
+
+    public function get_data_plants_sites()
+    {
+        $this->db->select('*');
+        $this->db->from('plants');
+        $plants = $this->db->get()->result_array();
+
+        $this->db->select('*');
+        $this->db->from('sites');
+        $sites = $this->db->get()->result_array();
+
+        $data['plants'] = $plants;
+        $data['sites'] = $sites;
+        echo json_encode($data);
+    }
+
+    public function get_data_monitor()
+    {
+        $site_id = $this->input->get('site_id');
+
+        $data = array();
+
+        $this->db->select('*');
+        $this->db->from('monitors');
+        $this->db->where('site_id', $site_id);
+
+        $monitors = $this->db->get()->result_array();
+
+        for ($m = 0; $m < count($monitors); $m++) {
+
+            $this->db->select('monitors_assets.*, assets.asset_name');
+            $this->db->from('monitors_assets');
+            $this->db->join('assets', 'monitors_assets.asset_id = assets.asset_id', 'left');
+            $this->db->where('monitors_assets.monitor_id', $monitors[$m]['monitor_id']);
+
+            $assets = $this->db->get()->result_array();
+            $monitors[$m]['assets'] = $assets;
+        }
+
+        $data['monitors'] = $monitors;
+        echo json_encode($data);
+    }
+
+
+
+
     public function index()
     {
         $plant_id = $this->input->get('plant_id');
         $site_id = $this->input->get('site_id');
+        $monitor_id = $this->input->get('monitor_id');
 
         $data['title'] = "Output vs plan";
         $data['plant_id'] = $plant_id;
         $data['site_id'] = $site_id;
-
+        $data['monitor_id'] = $monitor_id;
 
         $this->load->view('pages/output_vs_plan/index', $data);
     }
@@ -44,6 +103,8 @@ class Output_VS_Plan extends CI_Controller
         //plant_id, site_id
         $plant_id = $this->input->get('plant_id');
         $site_id = $this->input->get('site_id');
+        $monitor_id = $this->input->get('monitor_id');
+
         $shift_id = $shift_date['shift_id'];
         $date = $shift_date['date']->format(DATE_FORMAT);
 
@@ -61,15 +122,31 @@ class Output_VS_Plan extends CI_Controller
          */
         //PASO NO. 1 OBTENER UN ARREGLO CON TODOS LOS PLANES DE PRODUCCION FILTRADOS POR PLANTA, SITIO, TURNO Y FECHA TAL COMO ESTA LA QUERY DE ARRIBA
 
-        $this->db->select('production_plans.plan_id, plants.plant_name, sites.site_name, assets.asset_name');
-        $this->db->from('production_plans');
-        $this->db->join('assets', 'production_plans.asset_id = assets.asset_id', 'inner');
-        $this->db->join('sites', 'assets.site_id = sites.site_id', 'inner');
-        $this->db->join('plants', 'sites.plant_id = plants.plant_id', 'inner');
-        $this->db->where('plants.plant_id', $plant_id);
-        $this->db->where('sites.site_id', $site_id);
-        $this->db->where('production_plans.date', $date);
-        $this->db->where('production_plans.shift_id', $shift_id);
+        if ($monitor_id == null) {
+            $this->db->select('production_plans.plan_id, plants.plant_name, sites.site_name, assets.asset_name');
+            $this->db->from('production_plans');
+            $this->db->join('assets', 'production_plans.asset_id = assets.asset_id', 'inner');
+            $this->db->join('sites', 'assets.site_id = sites.site_id', 'inner');
+            $this->db->join('plants', 'sites.plant_id = plants.plant_id', 'inner');
+            $this->db->where('plants.plant_id', $plant_id);
+            $this->db->where('sites.site_id', $site_id);
+            $this->db->where('production_plans.date', $date);
+            $this->db->where('production_plans.shift_id', $shift_id);
+        } else {
+            //Si esta por monitor....desplegar lo que esta configurado en el monitor
+            $this->db->select('production_plans.plan_id, plants.plant_name, sites.site_name, assets.asset_name');
+            $this->db->from('production_plans');
+            //INNER JOIN monitors_assets ON production_plans.asset_id = monitors_assets.asset_id
+            $this->db->join('monitors_assets', 'production_plans.asset_id = monitors_assets.asset_id', 'inner');
+            $this->db->join('assets', 'production_plans.asset_id = assets.asset_id', 'inner');
+            $this->db->join('sites', 'assets.site_id = sites.site_id', 'inner');
+            $this->db->join('plants', 'sites.plant_id = plants.plant_id', 'inner');
+            $this->db->where('monitors_assets.monitor_id', $monitor_id);
+            $this->db->where('production_plans.date', $date);
+            $this->db->where('production_plans.shift_id', $shift_id);
+        }
+
+
 
         $data = $this->db->get()->result_array();
 

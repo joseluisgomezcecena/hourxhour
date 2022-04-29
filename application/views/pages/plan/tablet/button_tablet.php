@@ -112,7 +112,11 @@
             </div>
 
             <div class="mt-5 mb-5">
-                <input ng-model="completed" type="text" ng-style="!IsDisabledButtonModify && {'background-color':'#b8d5cd'}" class="form-control h3" ng-disabled="IsDisabledButtonModify" style="width: 4.5rem; text-align: right !important;"> / <span class="h3" style="margin-left: 1rem !important;"><?= $planned ?></span>
+
+
+                <input ng-model="completed" type="text" ng-style="!IsDisabledButtonModify && {'background-color':'#b8d5cd'}" class="form-control h3" ng-disabled="IsDisabledButtonModify" style="width: 5rem; text-align: center !important;"> /
+                <span class="h3" style="width: 5rem; margin-left: 1rem !important;"><?= $planned ?></span>
+
             </div>
             <div>
                 <button class="btn btn_warning" style="width: 15em; margin:auto; display:block;" ng-click="capture()" ng-disabled="!IsDisabledButtonModify">Capture</button>
