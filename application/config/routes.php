@@ -140,3 +140,11 @@ $route['api/plants/all'] = 'plants/api_all';
 $route['api/sites/all/(:num)'] = 'sites/api_all_by_plant/$1';
 //error
 $route['manual_capture/error'] = '/manual_capture/tablet';
+
+
+//Monitor api
+$route['monitors']['get'] = 'monitor/get_data';
+$route['monitors/monitor/insert']['post'] = 'monitor/insert_monitor';
+$route['monitors/monitor/delete']['post'] = 'monitor/delete_monitor';
+$route['monitors/asset/insert']['post'] = 'monitor/insert_asset';
+$route['monitors/asset/delete']['post'] = 'monitor/delete_asset';

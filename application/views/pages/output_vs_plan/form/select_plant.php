@@ -20,8 +20,7 @@
                 if (intval($asset['assets_count']) <= 0) {
                     echo '<a href="#" ';
                 } else {
-                    echo '<a href="' . base_url() . 'output_vs_plan/add_monitor" ';
-                    //echo '<a href="' . base_url() . 'output_vs_plan/add_monitor?site_id=' . $asset['site_id'] . '&plant_id=' . $asset['plant_id'] . '" ';
+                    echo '<a href="' . base_url() . 'output_vs_plan/add_monitor?site_id=' . $asset['site_id'] . '&plant_id=' . $asset['plant_id'] . '" ';
                 }
                 if (intval($asset['assets_count']) <= 0) echo 'style="cursor: no-drop; color: gray;"';
                 echo '>' . $asset['site_name'];

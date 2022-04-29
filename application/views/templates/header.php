@@ -228,10 +228,6 @@
                         Custom Report
                     </a>
                 </div>
-                <a href="<?php echo base_url(); ?>index.php/output_vs_plan/select_monitor">
-                    <span class="icon las la-tv"></span>
-                    Output vs Plan
-                </a>
                 <a href="<?php echo base_url(); ?>interruption_cause/select_cell">
                     <span class="icon las la-stop-circle"></span>
                     Interruption cause
@@ -244,7 +240,7 @@
         </div>
         <div class="menu-detail" data-menu="screens">
             <div class="menu-detail-wrapper">
-            <a href="<?php echo base_url(); ?>index.php/output_vs_plan/select_monitor">
+                <a href="<?php echo base_url(); ?>index.php/output_vs_plan/select_monitor">
                     <span class="icon las la-tv"></span>
                     Output vs Plan
                 </a>
