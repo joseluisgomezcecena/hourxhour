@@ -30,6 +30,7 @@ class Monitor extends CI_Controller
         $this->db->select('*');
         $this->db->from('assets');
         $this->db->where('site_id', $site_id);
+        //$this->db->where('asset_is_pom', 1);
         $assets = $this->db->get()->result_array();
         $data['assets'] = $assets;
 
@@ -74,13 +75,28 @@ class Monitor extends CI_Controller
     {
         $monitor_id = $this->input->post('monitor_id');
         $asset_id = $this->input->post('asset_id');
+        $asset_name = $this->input->post('asset_name');
+
+
+        $this->db->where('monitor_id', $monitor_id);
+        $this->db->where('asset_id', $asset_id);
+        $query = $this->db->get('monitors_assets');
+        if ($query->num_rows() > 0) {
+            $result['response'] = 'fail';
+            echo json_encode($result);
+            return;
+        }
+
 
         $data = array(
             'monitor_id' => $monitor_id,
             'asset_id' => $asset_id,
         );
         $this->db->insert('monitors_assets', $data);
+
         $data['monitor_asset_id'] = $this->db->insert_id();
+        $data['asset_name'] = $asset_name;
+
         $result['response'] = 'ok';
         $result['data'] = $data;
         echo json_encode($result);
@@ -90,9 +106,13 @@ class Monitor extends CI_Controller
     public function delete_asset()
     {
         $monitor_asset_id = $this->input->post('monitor_asset_id');
+
+
         $this->db->where('monitor_asset_id', $monitor_asset_id);
-        $this->db->delete('monitor_assets');
+        $this->db->delete('monitors_assets');
         $result['response'] = 'ok';
+        $result['monitor_asset_id'] = $monitor_asset_id;
+
         echo json_encode($result);
     }
 }
