@@ -145,6 +145,10 @@
                 <span class="icon las la-hourglass-half"></span>
                 <span class="title">Hour by Hour</span>
             </a>
+            <a href="#no-link" class="link" data-target="[data-menu=screens]" data-toggle="tooltip-menu" data-tippy-content="screens">
+                <span class="icon las la-tv"></span>
+                <span class="title">screens</span>
+            </a>
         </div>
         <!-- UI -->
         <!--<div class="menu-detail" data-menu="ui">
@@ -235,6 +239,18 @@
                 <a href="<?php echo base_url(); ?>assets/docs/Template_Upload_Plan.xlsx" download>
                     <span class="icon lar la-file-excel"></span>
                     Template to load plan
+                </a>
+            </div>
+        </div>
+        <div class="menu-detail" data-menu="screens">
+            <div class="menu-detail-wrapper">
+            <a href="<?php echo base_url(); ?>index.php/output_vs_plan/select_monitor">
+                    <span class="icon las la-tv"></span>
+                    Output vs Plan
+                </a>
+                <a href="<?php echo base_url(); ?>output_vs_plan/select_site_monitor">
+                    <span class="icon lar la-plus-square"></span>
+                    Add Screens
                 </a>
             </div>
         </div>

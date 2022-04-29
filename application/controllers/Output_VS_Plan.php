@@ -94,6 +94,38 @@ class Output_VS_Plan extends CI_Controller
         $this->load->view('pages/output_vs_plan/index', $data);
     }
 
+    public function add_monitor()
+    {
+        $plant_id = $this->input->get('plant_id');
+        $site_id = $this->input->get('site_id');
+
+        $data['title'] = "Select Cell";
+        $data['plant_id'] = $plant_id;
+        $data['site_id'] = $site_id;
+
+        $this->load->view('templates/header');
+        $this->load->view('pages/output_vs_plan/form/index', $data);
+        $this->load->view('templates/footer');
+    }
+
+    public function select_site_monitor()
+    {
+        $data['title'] = "Select a Site";
+        $this->load->model('plant');
+        $plants = $this->plant->getAllActive();
+
+        for ($i = 0; $i < count($plants); $i++) {
+            $sql = "SELECT *, (SELECT COUNT(*)  from assets where assets.site_id  = sites.site_id AND assets.asset_active = 1 AND assets.asset_is_pom = 1) as assets_count FROM sites WHERE plant_id = {$plants[$i]['plant_id']}";
+            $query = $this->db->query($sql);
+            $plants[$i]['sites'] =  $query->result_array();
+        }
+
+        $data['plants'] = $plants;
+        $this->load->view('templates/header');
+        $this->load->view('pages/output_vs_plan/form/select_plant', $data);
+        $this->load->view('templates/footer');
+    }
+
 
     public function get_data()
     {

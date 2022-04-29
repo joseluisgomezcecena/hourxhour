@@ -35,16 +35,6 @@
         animation: marquee 15s linear infinite;
     }
 
-    /*
-    @keyframes marquee {
-        from {
-            transform: translateX(-50%);
-        }
-
-        to {
-            transform: translateX(100%);
-        }
-    }*/
     @keyframes marquee {
         0% {
             transform: translateX(100vw);
@@ -148,16 +138,16 @@
 
                         </tr>
 
-                        <!--<tr ng-if="(plan.current_hour_index + 2) < plan.plan_by_hours.length">
+                        <tr ng-if="(plan.current_hour_index + 2) < plan.plan_by_hours.length">
                             <td class=""><b> {{ plan.plan_by_hours[plan.current_hour_index + 2].time }}-{{ plan.plan_by_hours[plan.current_hour_index + 2].time_end }} </b></td>
                             <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 2].planned_head_count }}</td>
                             <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 2].item_number }}</td>
                             <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 2].workorder }}</td>
                             <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 2].planned }}</td>
                             <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 2].planned_sum }}</td>
-                            <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 2].completed }}</td>-->
-                        <!--<td class="">{{ plan.plan_by_hours[plan.current_hour_index + 2].completed_sum }}</td>-->
-                        <!--<td class="">{{ plan.plan_by_hours[plan.current_hour_index + 2].interruption }} </td>-->
+                            <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 2].completed }}</td>
+                            <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 2].completed_sum }}</td>
+                            <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 2].interruption }} </td>
 
                         </tr>
                     </tbody>
