@@ -53,7 +53,7 @@
 
      <div class="grid lg:grid-cols-4 gap-5 p-5">
 
-         <div class="card p-5" ng-repeat="monitor in monitors" ng-click="selectMonitor(monitor.monitor_id)">
+         <div class="card p-5" ng-repeat="monitor in monitors" ng-click="selectMonitor(monitor)">
 
              <div class="items-center px-5 py-2">
                  <h5 class="mb-0 uppercase"> {{ monitor.monitor_name }} </h5>
@@ -61,6 +61,8 @@
              </div>
 
              <hr>
+
+             <p ng-show="monitor.assets.length == 0" style="color:red"> No assets </p>
 
              <table class="table table_list mt-3 w-full">
                  <thead>
@@ -126,10 +128,13 @@
              });
          }
 
-         $scope.selectMonitor = function(monitor_id) {
+         $scope.selectMonitor = function(monitor) {
              //console.log('select monitor' + monitor_id);
              //output_vs_plan
-             window.location.href = "<?php echo base_url(); ?>output_vs_plan?monitor_id=" + monitor_id;
+             //console.log('assets' + monitor.assets.length);
+
+             if (monitor.assets.length != 0)
+                 window.location.href = "<?php echo base_url(); ?>output_vs_plan?monitor_id=" + monitor.monitor_id;
          }
 
 
