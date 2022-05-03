@@ -49,6 +49,8 @@ class Monitor extends CI_Controller
         );
         $this->db->insert('monitors', $data);
         $data['monitor_id'] = $this->db->insert_id();
+        $data['assets'] = array();
+
         $result['response'] = 'ok';
         $result['data'] = $data;
         echo json_encode($result);

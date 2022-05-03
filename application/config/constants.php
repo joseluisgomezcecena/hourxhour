@@ -109,4 +109,6 @@ defined('MARTECH_NUMBER')      or define('MARTECH_NUMBER', 'hour_x_hour_martech_
 defined('LEVEL_NAME')      or define('LEVEL_NAME', 'hour_x_hour_level_name');
 defined('LEVEL_VALUE')      or define('LEVEL_VALUE', 'hour_x_hour_level_value');
 
-defined('LOGIN_URL')      or define('LOGIN_URL', 'http://localhost/authentication/index.php/login?from=http://localhost/hourxhour/');
+//Aqui se debe de cambiar el nombre del servidor
+defined('SERVER_PATH_URL')      or define('SERVER_PATH_URL', 'http://localhost/');
+defined('LOGIN_URL')      or define('LOGIN_URL',  SERVER_PATH_URL . 'authentication/index.php/login?from=' . SERVER_PATH_URL . 'hourxhour/');
