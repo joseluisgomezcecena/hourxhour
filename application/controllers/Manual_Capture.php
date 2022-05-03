@@ -18,22 +18,14 @@ class Manual_Capture extends CI_Controller
         $this->load->model('productionplan');
 
         $data['title'] = "Manual Capture";
-        $plant_id = $this->input->get('plant_id');
-        $data['plant_id'] = $plant_id;
-
-        $site_id =  $this->input->get('site_id');
-        if ($site_id == -1) $site_id = NULL;
-
-        $data['site_id'] = $site_id;
-
-        $data['plants'] = $this->db->get('plants')->result_array();
-
+        //$data['shifts'] = $this->shift->all();
 
         $shifts = $this->shift->get_shifts_with_date();
         for ($i = 0; $i < count($shifts); $i++) {
             //En los shifts traigo el shift_id y el date, solo me falta el asset_id para saber de que plan se trata
-            $assets = $this->machine_model->get_pom_active($plant_id, $site_id);
+            $assets = $this->machine_model->get_pom_active();
             $assets_with_plan = array();
+            //$shifts[$i]['assets'] = $this->machine_model->get_pom_active();
 
             $shift_id = $shifts[$i]['shift_id'];
             $date = $shifts[$i]['date'];
@@ -48,6 +40,7 @@ class Manual_Capture extends CI_Controller
                 if ($this->productionplan->plan_id != NULL) {
                     //Si no hay production plan
                     //$assets[$a]['production_plan'] = $this->productionplan;
+
                     $assets[$a]['production_plan'] =  clone $this->productionplan;
                     array_push($assets_with_plan, $assets[$a]);
                 }
@@ -134,7 +127,6 @@ class Manual_Capture extends CI_Controller
         if ($plan->use_multiplier_factor == 1) {
             $data['multiplier_factor'] = $plan->multiplier_factor;
         }
-
 
         //Last Hour End
         $data['plan_id'] = $plan_id;
