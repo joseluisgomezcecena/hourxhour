@@ -259,7 +259,7 @@ class Output_VS_Plan extends CI_Controller
             $current_time->modify('+4 hours');
             $end_time = $current_time->format(DATETIME_FORMAT_ZERO_MINUTES_AND_SECONDS);
 
-            $sql = 'SELECT plan_by_hours.plan_by_hour_id, DATE_FORMAT(plan_by_hours.time, "%h:%i %p") as time, DATE_FORMAT(plan_by_hours.time_end, "%h:%i %p") as time_end, plan_by_hours.planned_head_count, items_pph.item_number, ';
+            $sql = 'SELECT plan_by_hours.plan_by_hour_id, TIME_FORMAT(plan_by_hours.time, "%H") as time, DATE_FORMAT(plan_by_hours.time_end, "%H") as time_end, plan_by_hours.planned_head_count, items_pph.item_number, ';
             $sql .=  'plan_by_hours.workorder, plan_by_hours.planned, (@planned_sum:=@planned_sum + IFNULL(plan_by_hours.planned, 0) ) as planned_sum, ';
             $sql .=  "plan_by_hours.completed, (@completed_sum:=@completed_sum + plan_by_hours.completed) as completed_sum, IF( plan_by_hours.time = '" . $select_time . "', '1', '0') as current, ";
             $sql .=  "interruptions.interruption_name, not_planned_interruptions.interruption_name as not_planned_interruption_name";
