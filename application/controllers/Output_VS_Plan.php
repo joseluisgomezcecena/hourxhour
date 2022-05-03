@@ -2,9 +2,15 @@
 class Output_VS_Plan extends CI_Controller
 {
 
+    /*
+    *  Function: select_site
+    * 
+    * Regrese la pagina de select_plan_button en la cual se presentan cuadros de plantas y sitios
+    * La idea de esta pantalla es redireccionar hacia la pantalla en produccion, donde se muestren todos los assets de un sitio
+    * 
+    */
     public function select_site()
     {
-
         $data['title'] = "Select a Site";
 
         $this->load->model('plant');
@@ -23,6 +29,12 @@ class Output_VS_Plan extends CI_Controller
     }
 
 
+    /*
+     * Function: select_monitor
+     * En este caso la pagina selecciona un monitor disponible para el sitio
+     * un sitio puede tener uno o muchos monitores generalmente 2 o 3. Un monitor representa
+     * una television donde se desplegara en la linea de produccion, un monitor despliega generalmente 2 puntos de medicion.
+     * */
     public function select_monitor()
     {
         $data['title'] = "Select a Monitor";
@@ -34,7 +46,12 @@ class Output_VS_Plan extends CI_Controller
         $this->load->view('templates/footer');
     }
 
-
+    /*
+    * Function: get_data_plants_sites
+    *      
+    *  regresa un string tipo json de las plantas y los sites
+    *  disponibles en su totalidad.
+    */
     public function get_data_plants_sites()
     {
         $this->db->select('*');
@@ -50,6 +67,13 @@ class Output_VS_Plan extends CI_Controller
         echo json_encode($data);
     }
 
+
+    /*
+    * Function: get_data_monitor
+    *      
+    *  regresa un json con la informacion de cada monitor que esta configurado en un site
+    *  regresa los assets, explicitamente el nombre del asset,  de cada monitor.
+    */
     public function get_data_monitor()
     {
         $site_id = $this->input->get('site_id');
@@ -79,7 +103,13 @@ class Output_VS_Plan extends CI_Controller
 
 
 
-
+    /*
+    * Function  index
+    * 
+    * Regresa la pagina principal output vs plan, es la pagina
+    * donde se despliega el plan hora por hora, tomando en cuenta
+    * la hora actual (turno),  
+    */
     public function index()
     {
         $plant_id = $this->input->get('plant_id');
@@ -94,6 +124,14 @@ class Output_VS_Plan extends CI_Controller
         $this->load->view('pages/output_vs_plan/index', $data);
     }
 
+
+    /* 
+    * Function add_monitor
+    *
+    * Este controlador nos ayuda a configurar los monitores, en esta pantalla
+    * se pueden agregar monitores a una planta sitio, permite agregar configurar assets para cada monitor
+    * la funcionalidad esta totalmente en angular.js
+    */
     public function add_monitor()
     {
         $plant_id = $this->input->get('plant_id');
@@ -107,6 +145,15 @@ class Output_VS_Plan extends CI_Controller
         $this->load->view('pages/output_vs_plan/form/index', $data);
         $this->load->view('templates/footer');
     }
+
+
+    /* 
+     *   Fecha de Documentación: 05/03/2022
+     *   Documentado por: Emanuel Jauregui
+     *
+     *   Descripción: Bajo esta ruta se proveen los datos de las plantas activas, de cada planta se obtienen los datos de los sitios de esa planta y 
+     *   el número de assets disponibles de cada site. Solo se mandan llamar los assets activos y que son puntos de medición.
+    */
 
     public function select_site_monitor()
     {
@@ -127,6 +174,22 @@ class Output_VS_Plan extends CI_Controller
     }
 
 
+    /** 
+     *    Fecha de Documentación: 05/03/2022
+     *    Documentado por: Emanuel Jauregui
+     *
+     *    Controlador: Output_VS_Plan
+     *    Método: get_data
+     *    Parametros: plant_id, site_id o monitor_id
+     *
+     *    Ruta: 'output_vs_plan/get_data'
+     *
+     *       Descripción: El propósito de esta api es obtener los datos para desplegar en produccion la pantalla del plan activo
+     *
+     *       Si se pasa el parametro de monitor_id se regresan todos los planes de produccion actuales
+     *      basados en las pantallas configuradas previamente. Si no se pasa el monitor_id se utilizara
+     *     los parametros de plant_id y site_id.
+     */
     public function get_data()
     {
         $this->load->model('shift');
@@ -140,20 +203,7 @@ class Output_VS_Plan extends CI_Controller
         $shift_id = $shift_date['shift_id'];
         $date = $shift_date['date']->format(DATE_FORMAT);
 
-        /*
-            SELECT 
-            production_plans.plan_id, 
-            plants.plant_name, 
-            sites.site_name, 
-            assets.asset_name
-            FROM production_plans
-            INNER JOIN assets ON production_plans.asset_id = assets.asset_id
-            INNER JOIN sites ON assets.site_id = sites.site_id
-            INNER JOIN plants ON sites.plant_id = plants.plant_id
-            WHERE plants.plant_id = 6 AND sites.site_id = 8 AND production_plans.date = '2022-04-18' AND production_plans.shift_id = 1
-         */
         //PASO NO. 1 OBTENER UN ARREGLO CON TODOS LOS PLANES DE PRODUCCION FILTRADOS POR PLANTA, SITIO, TURNO Y FECHA TAL COMO ESTA LA QUERY DE ARRIBA
-
         if ($monitor_id == null) {
             $this->db->select('production_plans.plan_id, plants.plant_name, sites.site_name, assets.asset_name');
             $this->db->from('production_plans');
@@ -182,29 +232,19 @@ class Output_VS_Plan extends CI_Controller
 
         $data = $this->db->get()->result_array();
 
+
+        //Se necesita iterar por todos los planes y obtener todos los datos de cada plan por hora.
         for ($i = 0; $i < count($data); $i++) {
 
             /*
-                set @planned_sum = 0;
-                set @completed_sum = 0;
-                SELECT 
-                plan_by_hours.plan_by_hour_id,
-                plan_by_hours.time,
-                plan_by_hours.time_end,
-                plan_by_hours.planned_head_count,
-                items_pph.item_number,
-                plan_by_hours.workorder,
-                plan_by_hours.planned,
-                (@planned_sum:=@planned_sum + IFNULL(plan_by_hours.planned, 0) ) as planned_sum,
-                plan_by_hours.completed,
+                set @planned_sum = 0; set @completed_sum = 0;
+                SELECT plan_by_hours.plan_by_hour_id, plan_by_hours.time, plan_by_hours.time_end, plan_by_hours.planned_head_count, items_pph.item_number, plan_by_hours.workorder, plan_by_hours.planned,
+                (@planned_sum:=@planned_sum + IFNULL(plan_by_hours.planned, 0) ) as planned_sum, plan_by_hours.completed,
                 (@completed_sum:=@completed_sum + plan_by_hours.completed) as completed_sum
                 FROM plan_by_hours
                 LEFT JOIN items_pph ON plan_by_hours.item_id = items_pph.item_id
                 WHERE plan_by_hours.plan_id = 87
             */
-
-            //$plan_by_hour_id = $this->capture->get_current_hour($plan->plan_id, new DateTime());
-
 
             $plan_id = $data[$i]['plan_id'];
 
@@ -228,7 +268,7 @@ class Output_VS_Plan extends CI_Controller
             $sql .= ' LEFT JOIN interruptions ON plan_by_hours.interruption_id = interruptions.interruption_id';
             $sql .= ' LEFT JOIN not_planned_interruptions ON plan_by_hours.not_planned_interruption_id = not_planned_interruptions.interruption_id';
             $sql .= ' WHERE plan_by_hours.plan_id = ' . $plan_id;
-            //$sql .=  " AND plan_by_hours.time >= '{$start_time}' AND  plan_by_hours.time < '{$end_time}'";
+
 
             $plan_by_hours = $this->db->query($sql)->result_array();
 
