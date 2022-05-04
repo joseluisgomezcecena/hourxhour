@@ -1,18 +1,28 @@
 <?php
 
+/*
+* Author: Emanuel Jauregui 
+* Martech Number: 46716
+* 
+* Production Plan is a model for a production plan in hour by hour
+* To summarize we can say that a production plan has a plan_id, asset_id, date. shift_id, supervisor and all this info is saved in productions_plans
+* each production plan has a hour item thant is saved in plan_by_hours table 
+*/
 class ProductionPlan extends CI_Model
 {
 
     protected $table = 'production_plans';
     protected $table_hours = 'plan_by_hours';
 
+    /* 
+    * the next public variables represents the properties of the production plan, all items will be saved in database...and are properties that belong to class
+    */
     public $plan_id;
 
     public $asset_id;
     public $asset_name;
 
     public $date;
-    public $date_end;
 
     public $shift_id;
     public $shift_name;
@@ -34,10 +44,17 @@ class ProductionPlan extends CI_Model
     public $multiplier_factor;
 
 
+    /*
+    * the next array is used to control the hours of the plan, each hour is sabed in plan_by_hours table
+    */
     public $plan_by_hours = array();
 
 
-
+    /*
+    * $start_hour and $end_hour are variables that represent the time when tha plan initiate and end hour is the time when the plan finalizes   
+    * theses two variables are used only when the the hours are generated, I mean when the production plan and plan by hours are not saved in database storage
+    * the starting values are not really important because the LoadPlan function is the generator of the values.
+    */
     protected $start_hour = '23:00:00';
     protected $end_hour = '04:00:00';
 
@@ -48,21 +65,23 @@ class ProductionPlan extends CI_Model
         unset($this->plan_by_hours);
         $this->plan_by_hours = array();
 
-        //echo "load plan" . $asset_id . ", " . $date . ", " . $shift_id . ", " . $start_hour . ", " . $end_hour ;
 
         $this->start_hour = $start_hour;
         $this->end_hour = $end_hour;
 
+
+        /*
+         * This query is created to retrieve a production plan
+         * it selects a single item of a production plan based on the asset_id, date, and shift_id
+         * also retrieves the asset, site and plant info, the info array is assigned to the $data variable 
+         * */
 
         $select = '*, shifts.shift_short_name as shift_name, assets.site_id as site_id, ';
         $select .= 'assets.asset_name as asset_name, assets.asset_id as asset_id, ';
         $select .= 'sites.site_id as site_id, sites.site_name as site_name, ';
         $select .= 'plants.plant_id as plant_id, plants.plant_name as plant_name';
 
-        //check if exists
         $this->db->select($select);
-        //
-
         $this->db->where('production_plans.asset_id', $asset_id);
         $this->db->where('production_plans.date', $date);
         $this->db->where('production_plans.shift_id', $shift_id);
@@ -79,8 +98,14 @@ class ProductionPlan extends CI_Model
 
         $this->asset_id = $asset_id;
 
+
+        /*
+        * This condition allow us to make a condition, if data is not found then we just 
+        * fill the production plan with default values to be prepared for a later moment to save all the info with save click button
+        *  With the calling of $this->GenerateHours(), we generate the hours that will be saved in plan_by_hours table
+        * we are preparing to generate insert in mysql database
+        */
         if (count($data) == 0) {
-            //echo "debug 01" . $this->db->last_query();;
 
             $select = 'assets.asset_name as asset_name, ';
             $select .= 'sites.site_id as site_id, sites.site_name as site_name, ';
@@ -119,7 +144,10 @@ class ProductionPlan extends CI_Model
 
             $this->GenerateHours();
         } else {
-
+            /*
+            * If a plan is alread saved we just load the properties and the array of hours 
+            * We are preparing to generate updates in mysql database
+            */
             $row = $data[0];
             $this->LoadProperties($row);
             //$this->plan_id = $row['plan_id'];
@@ -127,7 +155,11 @@ class ProductionPlan extends CI_Model
         }
     }
 
-
+    /*
+    *  LoadProperis as the name suggests
+    * is a function that fill the properties variables of the class with
+    * a production plan from database
+    */
     public function LoadProperties($row)
     {
         $this->plan_id = intval($row['plan_id']);
@@ -158,6 +190,13 @@ class ProductionPlan extends CI_Model
         $this->multiplier_factor = intval($row['multiplier_factor']);
     }
 
+
+
+    /*
+    * is the reverse function of LoadProperties
+    * ReadProperties just generate an array based on the class properties 
+    * for practicity is not used because all the save functions are located in the Plan controlled with the api_save_plan() function
+    */
     public function ReadProperties()
     {
         $row = array();
@@ -169,24 +208,31 @@ class ProductionPlan extends CI_Model
         $row['created_at'] = $this->created_at;
         $row['updated_at'] = $this->updated_at;
         $row['hc'] = intval($this->hc);
-
-
         $row['use_multiplier_factor'] = intval($this->use_multiplier_factor);
         $row['multiplier_factor'] = intval($this->multiplier_factor);
-
         return $row;
     }
 
+
+
+
+
     const time_interval_in_minutes = 60;
 
+    /*
+    * GenerateHours is a function that creates all the plan_by_hours items of a production plan. 
+    * const time_interval_in_minutes = 60; gives us the minutes of separation for each item
+    * for example if we set interval to 30 minutes, then we generate a plan_by_hour for 7:00, 7:30, 8:00, 8:30... and so on.
+    * the counting of the time start at start_time of the plan based in the info of the current shift
+    *
+    * it gives milliseconds from datetime (Shortest version of string variant (32-bit compatibile):)
+    * $milliseconds = date_create()->format('Uv');
+    * P1D is one day of interval
+    */
 
     public function GenerateHours()
     {
-
-
         $interval_in_milliseconds = self::time_interval_in_minutes  * 60 * 1000;
-
-        //echo $interval_in_milliseconds;
 
         $start_date = date_create($this->date);
         $parsed_start = date_parse($this->start_hour);
@@ -204,9 +250,7 @@ class ProductionPlan extends CI_Model
             $end_millis = $end_date->format('Uv');
         }
 
-        //echo "start " . $start_date->format(DATETIME_FORMAT) . " ";
-        //echo "end " . $end_date->format(DATETIME_FORMAT) . " ";
-        //$plan_by_hours
+
         for ($m = $start_millis; $m < $end_millis; $m += $interval_in_milliseconds) {
             $date = new DateTime();
             $date->setTimeStamp($m / 1000);
@@ -214,33 +258,33 @@ class ProductionPlan extends CI_Model
             $date_end = new DateTime();
             $date_end->setTimeStamp(($m + $interval_in_milliseconds) / 1000);
 
-            //$plan_by_hour['plan_id'] = $this->plan_id;
 
             $plan_by_hour['time'] = $date->format(DATETIME_FORMAT);
             $plan_by_hour['time_end'] = $date_end->format(DATETIME_FORMAT);
 
             $plan_by_hour['created_at'] = $this->created_at;
             $plan_by_hour['updated_at'] = $this->created_at;
-            //$this->db->insert($this->table_hours, $plan_by_hour);
 
             array_push($this->plan_by_hours, $plan_by_hour);
         }
     }
 
 
+    /*
+    * When a plan is saved in database then we can load the plan_by_hours items, this can be done with LoadHours
+    * is is just a query for retrieve the items of the production plan including items_pph and interruptions
+    */
     public function LoadHours()
     {
-        //$this->db->where('plan_id', $this->plan_id);
-        //$this->db->order_by('time', 'ASC');
-        //$this->table_hours
-
         $query = $this->db->query('SELECT plan_by_hours.*, items_pph.item_number, interruptions.interruption_name from plan_by_hours LEFT JOIN items_pph ON plan_by_hours.item_id = items_pph.item_id LEFT JOIN interruptions ON plan_by_hours.interruption_id = interruptions.interruption_id WHERE plan_id = ' . $this->plan_id . " ORDER BY time ASC");
         $this->plan_by_hours = $query->result_array();
-
-        //echo json_encode($this->plan_by_hours);
     }
 
 
+    /* 
+    *  getProductionPlan retrieves prodution plan based on asset_id, shift_id, and date,
+    * these three elements are unique in productions_plans table and it makes easy to get current running plan based on current time.
+    */
     public function getProductionPlan($asset_id, $shift_id, $date)
     {
         $this->db->select('production_plans.*, assets.asset_name, sites.site_name, plants.plant_name');
@@ -263,6 +307,12 @@ class ProductionPlan extends CI_Model
         }
     }
 
+
+    /*
+    * getProductionPlanById  brings the plan info based on the id 
+    * is used when we need to make an update based on the id, when the production plan is already saved on database.
+    * used only in manual capture
+    */
     public function getProductionPlanById($plan_id)
     {
         $this->db->select('production_plans.*, assets.asset_name, sites.site_name, plants.plant_name');

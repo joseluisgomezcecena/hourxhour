@@ -1,16 +1,31 @@
 <?php
+/*
+* Author: Emanuel Jauregui 
+* Martech Number: 46716
+* 
+* Plan is a controler of the production plan.
+* it communicates to handle pages and models for production plan
+*/
 
 class Plan extends CI_Controller
 {
 
-
+    /*
+    * shift model is used proccess so it will be loaded all the time in constructor
+    */
     public function __construct()
     {
         parent::__construct();
-
         $this->load->model('shift');
     }
 
+
+    /*
+    * index funtion is the 'planners' route
+    * it goes to the editable production plan
+    * when we call to getIdFromCurrentTime we get an array with shift_id and with date
+    * the date is the date when shift starts based on the current day
+    */
 
     public function index()
     {
@@ -33,6 +48,11 @@ class Plan extends CI_Controller
     }
 
 
+    /*
+    * api_get_data retrieves the info of the production plan including plan_by_hours info.
+    * in orden to achieve this task, we load the ProductionPlan Model to get the info by using $this->productionplan->LoadPlan(
+    * once again we did this we need to get all the supervisors from another database, this is done by calling   $this->db->db_select('authentication');
+    */
     public function api_get_data()
     {
         $query = $this->db->query('SELECT item_id, item_number, max( CAST(item_pph AS DECIMAL(10,2)) ) as item_pph, item_run_labor, item_pph FROM plan_hourxhour.items_pph GROUP BY item_number ORDER BY item_number');
@@ -49,8 +69,7 @@ class Plan extends CI_Controller
         $this->productionplan->LoadPlan($asset_id, $date, $shift_id, $this->shift->shift_start_time, $this->shift->shift_end_time);
         $data['production_plan'] =  $this->productionplan;
 
-        //Incorporatte supervirsor from database authentication
-        //$dbAuthentication = $this->load->database('authentication', TRUE);
+
         $this->db->db_select('authentication');
         $department_name = 'Production';
         $level_name = 'Supervisor';
@@ -70,6 +89,13 @@ class Plan extends CI_Controller
     }
 
 
+    /*
+     *  Function api_save_plan
+     *  This is the core of the plan, this method insert or update the production plan and the items of each hour
+     * it is important to mention that we are sending from the frontend a json text with the production plan and the plan by hours
+     * that is the reason why we are calling the json_decode($this->input->raw_input_stream); function
+     *  we retrieve all the data in a json single unit and not by a lot of parameters.
+    */
     public function api_save_plan()
     {
         //this has the array to start saving
@@ -78,6 +104,9 @@ class Plan extends CI_Controller
 
         $is_new_record = true;
 
+        /*
+        * if the plan is found in database then is not a new record...
+        */
         if (isset($plan->plan_id))
             $is_new_record = false;
 
@@ -91,12 +120,16 @@ class Plan extends CI_Controller
         $data['use_multiplier_factor'] = intval($plan->use_multiplier_factor);
         $data['multiplier_factor'] = intval($plan->multiplier_factor);
 
-        //if($is_new_record) {
-        //    $data['created_at'] = $now->format(DATETIME_FORMAT);
-        // }
-        //$data['updated_at'] = $now->format(DATETIME_FORMAT);
+        if ($is_new_record) {
+            $data['created_at'] = $now->format(DATETIME_FORMAT);
+        }
+        $data['updated_at'] = $now->format(DATETIME_FORMAT);
 
 
+        /*
+        * if this is a new recoerd the insert in the database and we retrieve the generated id
+        * otherwise the production plan is saved 
+        */
         if ($is_new_record) {
             $this->db->insert('production_plans', $data);
             $plan->plan_id = $this->db->insert_id(); //get the last inserted id
@@ -105,8 +138,11 @@ class Plan extends CI_Controller
             $this->db->update('production_plans', $data);
         }
 
-
-
+        /*
+         * At this point we are going to save each hour 
+         * in the json text we found $plan->plan_by_hours, it is an array with all the data of hours
+         * 
+         */
         for ($i = 0; $i < count($plan->plan_by_hours); $i++) {
             unset($data_item);
             $data_item = array();
@@ -114,11 +150,9 @@ class Plan extends CI_Controller
             //$plan->plan_by_hours as $item
             $item = $plan->plan_by_hours[$i];
 
-
             if ($is_new_record) {
                 $data_item['updated_at'] = $now->format(DATETIME_FORMAT);
                 $data_item['created_at'] = $now->format(DATETIME_FORMAT);
-
 
                 $sql = "INSERT INTO plan_by_hours (`plan_id`, `time`, `time_end`, `planned`, `planned_head_count`, `workorder`, `item_id`, `interruption_id`, `interruption_value`, `std_time`, `updated_at`, `created_at`)";
                 $sql .= " VALUES (";
@@ -144,12 +178,7 @@ class Plan extends CI_Controller
                 }
             } else {
                 $data_item['updated_at'] = $now->format(DATETIME_FORMAT);
-                /* 
-                UPDATE table_name
-                SET column1 = value1, column2 = value2, ...
-                WHERE condition;
-                */
-                //plan_id`, `time`, `time_end`, `planned`, `planned_head_count`, `workorder`, `item_id`, `interruption_id`, `less_time`, `std_time`, `updated_at`, `created_at
+
                 $sql = "UPDATE plan_by_hours SET ";
 
                 $sql .= "plan_id = ";
@@ -173,15 +202,6 @@ class Plan extends CI_Controller
                 $sql .= "interruption_value = ";
                 $sql .= (isset($item->interruption_value) ? $item->interruption_value : 'NULL') . ", ";
 
-                //$sql .= "not_planned_interruption_id = ";
-                //$sql .= (isset($item->not_planned_interruption_id) ? $item->not_planned_interruption_id : 'NULL') . ", ";
-
-                //$sql .= "not_planned_interruption_value = ";
-                //$sql .= (isset($item->not_planned_interruption_value) ? $item->not_planned_interruption_value : 'NULL') . ", ";
-
-                //$sql .= "less_time = ";
-                //$sql .= (isset($item->less_time) ? $item->less_time : 'NULL') . ", ";
-
                 $sql .= "std_time = ";
                 $sql .= (isset($item->std_time) ? $item->std_time : 'NULL') . ", ";
 
@@ -193,9 +213,6 @@ class Plan extends CI_Controller
                 if (!$this->db->simple_query($sql)) {
                     echo 'ocurrion un error en ' . $sql;
                 }
-                //$data_item[$i]['updated_at'] = $now->format(DATETIME_FORMAT);
-                //$this->db->where('plan_by_hora_id', $data_item['plan_by_hora_id']  );
-                //$this->db->update('plan_by_hours', $data_item);
             }
         }
 
@@ -204,12 +221,9 @@ class Plan extends CI_Controller
     }
 
 
-    public function test()
-    {
-        //$shift = new Shift;
-
-    }
-
+    /*
+    * this controller allows to display a screen for display sites and number of asset of each one.
+    */
     public function select_cell()
     {
         if (!$this->session->userdata(IS_LOGGED_IN))
@@ -238,24 +252,11 @@ class Plan extends CI_Controller
     }
 
 
-    public function select_measuring_point()
-    {
-        if (!$this->session->userdata(IS_LOGGED_IN))
-            redirect(LOGIN_URL);
-
-        $data['title'] = "Select a Cell";
-        $this->load->view('templates/header');
-        $this->load->view('pages/plan/measuring_point', $data);
-        $this->load->view('templates/footer');
-    }
-
-
-
-
-
-
-
-
+    /*
+    * function sendMail was created to send a email when an update was done.
+    * it was created a helper sendmail to allow send email, passing parametesr 
+    * emails, subject, message and others you can check the info in the folder of the helpers
+    */
     public function sendMail($plan_id)
     {
 

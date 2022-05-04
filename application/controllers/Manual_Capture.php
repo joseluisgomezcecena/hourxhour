@@ -49,10 +49,15 @@ class Manual_Capture extends CI_Controller
             //if($i == 0)
             $shifts[$i]['assets'] = $assets_with_plan;
         }
-        //pass the site_id
+
+
+
+        //pass the site_id and the plant_id
+        $data['plant_id'] = $this->input->get('plant_id');
+        $data['site_id'] = NULL;
+
         $data['shifts'] = $shifts;
 
-        //echo json_encode($data);   
         $this->load->view('templates/header');
         $this->load->view('pages/plan/manual_capture', $data);
         $this->load->view('templates/footer');
