@@ -18,12 +18,17 @@ class Manual_Capture extends CI_Controller
         $this->load->model('productionplan');
 
         $data['title'] = "Manual Capture";
-        //$data['shifts'] = $this->shift->all();
+        //pass the site_id and the plant_id from params
+        $plant_id = $this->input->get('plant_id');
+        $site_id = $this->input->get('site_id');
+        if ($site_id == -1) $site_id = null;
 
         $shifts = $this->shift->get_shifts_with_date();
         for ($i = 0; $i < count($shifts); $i++) {
             //En los shifts traigo el shift_id y el date, solo me falta el asset_id para saber de que plan se trata
-            $assets = $this->machine_model->get_pom_active();
+
+            //$plant_id = NULL, $site_id = NULL
+            $assets = $this->machine_model->get_pom_active($plant_id, $site_id);
             $assets_with_plan = array();
             //$shifts[$i]['assets'] = $this->machine_model->get_pom_active();
 
@@ -52,10 +57,8 @@ class Manual_Capture extends CI_Controller
 
 
 
-        //pass the site_id and the plant_id
-        $data['plant_id'] = $this->input->get('plant_id');
-        $data['site_id'] = NULL;
-
+        $data['plant_id'] = $plant_id;
+        $data['site_id'] = $site_id;
         $data['shifts'] = $shifts;
 
         $this->load->view('templates/header');
