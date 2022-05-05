@@ -137,10 +137,6 @@
                 <span class="icon las la-tachometer-alt"></span>
                 <span class="title">Dashboard</span>
             </a>
-            <!--<a href="#no-link" class="link" data-target="[data-menu=ui]" data-toggle="tooltip-menu" data-tippy-content="UI">
-                <span class="icon las la-traffic-light"></span>
-                <span class="title">Andon</span>
-            </a>-->
             <a href="#no-link" class="link" data-target="[data-menu=pages]" data-toggle="tooltip-menu" data-tippy-content="Pages">
                 <span class="icon las la-hourglass-half"></span>
                 <span class="title">Hour by Hour</span>
@@ -149,14 +145,14 @@
                 <span class="icon las la-tv"></span>
                 <span class="title">screens</span>
             </a>
+            <a href="#no-link" class="link" data-target="[data-menu=ui]" data-toggle="tooltip-menu" data-tippy-content="UI">
+                <span class="icon las la-cog"></span>
+                <span class="title">Settings</span>
+            </a>
         </div>
-        <!-- UI -->
-        <!--<div class="menu-detail" data-menu="ui">
+        <!-- ANDON -->
+        <div class="menu-detail" data-menu="ui">
             <div class="menu-detail-wrapper">
-                <a href="<?php echo base_url(); ?>index.php/andon_dashboard">
-                    <span class="icon las la-tachometer-alt"></span>
-                    Dashboard
-                </a>
                 <a href="<?php echo base_url(); ?>index.php/plants">
                     <span class="las la-warehouse"></span>
                     Plants
@@ -170,7 +166,7 @@
                     Assets
                 </a>
             </div>
-        </div>-->
+        </div>
 
         <!-- Pages -->
         <div class="menu-detail" data-menu="pages">
