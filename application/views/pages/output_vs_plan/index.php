@@ -28,6 +28,7 @@
         width: 100vw;
         height: 5rem;
         padding: 1rem;
+        box-sizing: border-box;
     }
 
     .table-andon {
@@ -35,6 +36,11 @@
         white-space: nowrap;
         will-change: transform;
         animation: marquee 30s linear infinite;
+    }
+
+
+    .th-andon {
+        border: 0.1rem solid gray;
     }
 
     @keyframes marquee {
@@ -152,21 +158,9 @@
                     <table class="table table-responsive text-center">
                         <thead>
                             <tr>
-                                <th class="uppercase bg-warning">
-                                    <span><b>TIP 32 -</b></span>
-                                    SET UP
-                                </th>
-                                <th class="uppercase bg-danger">
-                                    <span><b>BOY25 -</b></span>
-                                    SET UP
-                                </th>
-                                <th class="uppercase bg-danger">
-                                    <span><b>TIP 32 -</b></span>
-                                    SET UP
-                                </th>
-                                <th class="uppercase bg-warning">
-                                    <span><b>TIP 32 -</b></span>
-                                    FALTA DE CLARIDAD EN SOP
+                                <th ng-repeat="issue in issues" class="px-5 th-andon uppercase {{ issue.status }}">
+                                    <span><b>{{issue.maquina_centro_trabajo}} -</b></span>
+                                    {{issue.tipo_error}}
                                 </th>
                             </tr>
                         </thead>
@@ -397,7 +391,10 @@
     <script>
         var app = angular.module('OutputVsPlanApp', []);
         app.controller('OutputVsPlanCtrl', function($scope, $http, $interval, $timeout) {
+
             $scope.plan_productions = [];
+            $scope.issues = [];
+
             $scope.isHidden = true;
 
             $scope.init = function() {
@@ -417,7 +414,7 @@
 
                 var api_url = "<?php
                                 if (isset($monitor_id)) {
-                                    echo base_url() . 'output_vs_plan/get_data?monitor_id=' . $monitor_id;
+                                    echo base_url() . 'output_vs_plan/get_data?monitor_id=' . $monitor_id . '&site_id=' . $site_id;
                                 } else {
                                     echo base_url() . 'output_vs_plan/get_data?site_id=' . $site_id . '&plant_id=' . $plant_id;
                                 }
@@ -427,7 +424,7 @@
                     method: 'get',
                     url: api_url
                 }).then(function successCallback(response) {
-                    $scope.plan_productions = response.data;
+                    $scope.plan_productions = response.data.production_plans;
 
                     $scope.plan_productions.forEach(plan => {
 
@@ -442,6 +439,10 @@
                         });
                     });
 
+                    console.log(response.data);
+                    $scope.issues = response.data.andon;
+                    //$scope.loadAndon();
+
                     console.log($scope.plan_productions);
                     if ($scope.plan_productions.length === 0) {
                         $scope.isHidden = false;
@@ -452,6 +453,22 @@
                     console.log('Error');
                 })
             }
+
+            $scope.loadAndon = function() {
+                var api_url = "<?php echo base_url() . 'output_vs_plan/get_andon_data'; ?>";
+
+                console.log(api_url);
+
+                $http({
+                    method: 'get',
+                    url: api_url
+                }).then(function successCallback(response) {
+                    $scope.issues = response.data;
+                    console.log($scope.issues);
+                }).catch((e) => {
+                    console.log('Error' + e);
+                })
+            };
 
 
             $scope.init();

@@ -134,7 +134,7 @@
              //console.log('assets' + monitor.assets.length);
 
              if (monitor.assets.length != 0)
-                 window.location.href = "<?php echo base_url(); ?>output_vs_plan?monitor_id=" + monitor.monitor_id;
+                 window.location.href = "<?php echo base_url(); ?>output_vs_plan?monitor_id=" + monitor.monitor_id + "&site_id=" + +$scope.selected_site.site_id;
          }
 
 

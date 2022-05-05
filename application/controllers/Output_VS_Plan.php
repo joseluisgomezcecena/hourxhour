@@ -230,11 +230,11 @@ class Output_VS_Plan extends CI_Controller
 
 
 
-        $data = $this->db->get()->result_array();
+        $data['production_plans'] = $this->db->get()->result_array();
 
 
         //Se necesita iterar por todos los planes y obtener todos los datos de cada plan por hora.
-        for ($i = 0; $i < count($data); $i++) {
+        for ($i = 0; $i < count($data['production_plans']); $i++) {
 
             /*
                 set @planned_sum = 0; set @completed_sum = 0;
@@ -246,7 +246,7 @@ class Output_VS_Plan extends CI_Controller
                 WHERE plan_by_hours.plan_id = 87
             */
 
-            $plan_id = $data[$i]['plan_id'];
+            $plan_id = $data['production_plans'][$i]['plan_id'];
 
             $this->db->query('set @planned_sum = 0;');
             $this->db->query('set @completed_sum = 0;');
@@ -274,7 +274,7 @@ class Output_VS_Plan extends CI_Controller
 
             //calculate the shift status
             $last_index = count($plan_by_hours) - 1;
-            $data[$i]['shift_status'] =  ceil(($plan_by_hours[$last_index]['completed_sum'] * 100) / $plan_by_hours[$last_index]['planned_sum']);
+            $data['production_plans'][$i]['shift_status'] =  ceil(($plan_by_hours[$last_index]['completed_sum'] * 100) / $plan_by_hours[$last_index]['planned_sum']);
 
 
             for ($h = 0; $h < count($plan_by_hours); $h++) {
@@ -295,14 +295,56 @@ class Output_VS_Plan extends CI_Controller
 
             for ($h = 0; $h < count($plan_by_hours); $h++) {
                 if ($plan_by_hours[$h]['current'] == '1') {
-                    $data[$i]['current_hour_index'] = $h;
+                    $data['production_plans'][$i]['current_hour_index'] = $h;
                     break;
                 }
             }
 
 
-            $data[$i]['plan_by_hours'] = $plan_by_hours;
+            $data['production_plans'][$i]['plan_by_hours'] = $plan_by_hours;
         }
+
+        $this->db->select('DISTINCT(asset_name)');
+        $this->db->from('assets');
+        $this->db->where('site_id', $site_id);
+        $asset_array = $this->db->get()->result_array();
+
+        //$data['assets'] =  json_encode($asset_array);
+        if (count($asset_array) > 0) {
+
+            //$str_assets = implode(', ',  $asset_array);
+            //$assets = "'" . $str_assets . "'";
+            $assets = "";
+            for ($i = 0; $i < count($asset_array); $i++) {
+                $item = $asset_array[$i];
+                $assets .= "'" . $item['asset_name'] . "'";
+                if ($i != count($asset_array) - 1) {
+                    $assets .= ', ';
+                }
+            }
+
+            $this->db->db_select('smartstu_martech_dev');
+            $sql = "SELECT martech_fallas.*, IF(martech_fallas.atendido_flag = 'no' AND martech_fallas.offline = 'si', 'bg-danger',  IF(martech_fallas.atendido_flag = 'si' AND martech_fallas.offline = 'si', 'bg-warning',  IF(martech_fallas.atendido_flag = 'si' AND martech_fallas.offline = 'no', 'bg-success',  'other' )  ) ) AS status";
+            $sql .= " FROM martech_fallas";
+            $sql .= " WHERE fin = '0000-00-00 00:00:00'";
+            $sql .= " AND maquina_centro_trabajo IN (" .  $assets . ")";
+            $query = $this->db->query($sql);
+            $data['andon'] = $query->result_array();
+        }
+
+
+        echo json_encode($data);
+    }
+
+
+    public function get_andon_data()
+    {
+        $this->db->db_select('smartstu_martech_dev');
+        $this->db->select("martech_fallas.*, IF(martech_fallas.atendido_flag = 'no' AND martech_fallas.offline = 'si', 'bg-danger',  IF(martech_fallas.atendido_flag = 'si' AND martech_fallas.offline = 'si', 'bg-warning',  IF(martech_fallas.atendido_flag = 'si' AND martech_fallas.offline = 'no', 'bg-success',  'other' )  ) ) AS status");
+        $this->db->from('martech_fallas');
+        $this->db->where('fin', '0000-00-00 00:00:00');
+
+        $data = $this->db->get()->result_array();
 
         echo json_encode($data);
     }

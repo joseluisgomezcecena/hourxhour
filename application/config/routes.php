@@ -112,6 +112,7 @@ $route['output_vs_plan/get_data_monitor'] = 'output_vs_plan/get_data_monitor';
 $route['output_vs_plan'] = 'output_vs_plan/index';
 $route['output_vs_plan/add_monitor'] = 'output_vs_plan/add_monitor';
 $route['output_vs_plan/get_data'] = 'output_vs_plan/get_data';
+$route['output_vs_plan/get_andon_data'] = 'output_vs_plan/get_andon_data';
 $route['output_vs_plan/select_site_monitor'] = 'output_vs_plan/select_site_monitor';
 //Interruption Cause
 $route['api/interruption_cause/get'] = 'interruption_cause/api_get_plan';
