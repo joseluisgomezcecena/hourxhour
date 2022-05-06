@@ -2,7 +2,7 @@
 <section class="breadcrumb">
     <h1><?= $title ?></h1>
     <ul>
-    <li><a href= "<?php echo base_url(); ?>index.php" >Home</a></li>
+        <li><a href="<?php echo base_url(); ?>index.php">Home</a></li>
         <li class="divider la la-arrow-right"></li>
         <li><?= $title ?></li>
     </ul>
@@ -31,24 +31,28 @@
 
 
                     <tbody>
-						<?php
-						foreach ($plants as $plant):
-						?>
+                        <?php
+                        foreach ($plants as $plant) :
+                        ?>
 
-							<tr>
-								<td class="text-center"><?php echo $plant['plant_id'] ?></td>
-								<td class="text-center"><?php echo $plant['plant_name'] ?></td>
-								<td class="text-center"><?php if($plant['plant_use_password'] == 1) {echo "Password Protected";}else{echo "Not Protected";} ?></td>
-								<td class="text-center">
-									<div class="btn-group">
-										<a href="plants/edit/<?php echo $plant['plant_id'] ?>" class="btn btn_warning uppercase"><span class="icon las la-edit la-2x"></span></a>
-										<a href="" class="btn btn_danger uppercase"><span class="icon las la-trash la-2x"></span></a>
-									</div>
-								</td>
+                            <tr>
+                                <td class="text-center"><?php echo $plant['plant_id'] ?></td>
+                                <td class="text-center"><?php echo $plant['plant_name'] ?></td>
+                                <td class="text-center"><?php if ($plant['plant_use_password'] == 1) {
+                                                            echo "Password Protected";
+                                                        } else {
+                                                            echo "Not Protected";
+                                                        } ?></td>
+                                <td class="text-center">
+                                    <div class="btn-group">
+                                        <a href="plants/edit/<?php echo $plant['plant_id'] ?>" class="btn btn_warning uppercase"><span class="icon las la-edit la-2x"></span></a>
+                                        <a href="plants/confirm_delete/<?php echo $plant['plant_id'] ?>" class="btn btn_danger uppercase"><span class="icon las la-trash la-2x"></span></a>
+                                    </div>
+                                </td>
 
-							</tr>
+                            </tr>
 
-						<?php endforeach; ?>
+                        <?php endforeach; ?>
                     </tbody>
                 </table>
             </div>

@@ -1,8 +1,10 @@
 <?php
 
-class Machines extends CI_Controller{
+class Machines extends CI_Controller
+{
 
-	public function index(){
+	public function index()
+	{
 
 
 		$data['title'] = "Machines";
@@ -16,12 +18,7 @@ class Machines extends CI_Controller{
 		$this->load->view('templates/header');
 		$this->load->view('machines/index', $data);
 		$this->load->view('templates/footer');
-
-
-
 	}
-
-
 
 
 	public function create()
@@ -35,16 +32,12 @@ class Machines extends CI_Controller{
 		$this->form_validation->set_rules('machine_name', 'Machine Name', 'required');
 
 
-		if( isset($_POST['save_machine']))
-		{
-
-			if($this->form_validation->run()===TRUE)
-			{
+		if (isset($_POST['save_machine'])) {
+			if ($this->form_validation->run() === TRUE) {
 				$this->Machine_model->create_machine();
 				//debug
 				//print_r($this->db->last_query());
 			}
-
 		}
 
 
@@ -60,8 +53,7 @@ class Machines extends CI_Controller{
 
 		$data['title'] = "Machine Details";
 
-		if(empty($data['machines']))
-		{
+		if (empty($data['machines'])) {
 			show_404();
 		}
 
@@ -79,8 +71,7 @@ class Machines extends CI_Controller{
 		$data['plants'] = $this->Machine_model->get_plants();
 		$data['machine'] = $this->Machine_model->display_single($id);
 
-		if(empty($data['machine']))
-		{
+		if (empty($data['machine'])) {
 			show_404();
 		}
 
@@ -101,10 +92,17 @@ class Machines extends CI_Controller{
 
 	public function delete($id)
 	{
-		$this->Machine_model->delete_machine($id);
+		if ($this->Machine_model->delete_machine($id)) {
+			redirect('machines');
+		} else {
+			$data['title'] = "Asset could not be deleted";
+			$data['message'] = "You have assets that belongs to a production plan, for this reason you cannot delete the asset.";
+			$data['url'] =  base_url() . "machines";
+			$this->load->view('pages/errors/includes/header');
+			$this->load->view('pages/errors/index', $data);
+			$this->load->view('pages/errors/includes/footer');
+		}
 	}
-
-
 
 
 	/*
@@ -183,7 +181,8 @@ class Machines extends CI_Controller{
 
 
 	//Ajax dropdowns
-	public function get_sites(){
+	public function get_sites()
+	{
 		// POST data
 		$postData = $this->input->post();
 
@@ -194,5 +193,4 @@ class Machines extends CI_Controller{
 		$data = $this->Machine_model->get_sites($postData);
 		echo json_encode($data);
 	}
-
 }

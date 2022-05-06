@@ -30,10 +30,10 @@ class Machine_model extends CI_Model
 	public function display_machines()
 	{
 		//$query = $this->db->get("assets");
-		$this->db->select ( '*' );
-		$this->db->from ( 'assets' );
-		$this->db->join ( 'sites', 'sites.site_id = assets.site_id' , 'left' );
-		$this->db->join ( 'plants', 'plants.plant_id = sites.plant_id' , 'left' );
+		$this->db->select('*');
+		$this->db->from('assets');
+		$this->db->join('sites', 'sites.site_id = assets.site_id', 'left');
+		$this->db->join('plants', 'plants.plant_id = sites.plant_id', 'left');
 		$query = $this->db->get();
 		return $query->result_array();
 	}
@@ -46,17 +46,17 @@ class Machine_model extends CI_Model
 	*/
 	public function get_pom_active($plant_id = NULL, $site_id = NULL)
 	{
-		$this->db->select ( 'assets.*, sites.site_name, sites.plant_id' );
-		$this->db->from ( 'assets' );
-		$this->db->where ( 'asset_active', 1 );
-		$this->db->where ( 'asset_is_pom', 1 );
+		$this->db->select('assets.*, sites.site_name, sites.plant_id');
+		$this->db->from('assets');
+		$this->db->where('asset_active', 1);
+		$this->db->where('asset_is_pom', 1);
 		$this->db->join('sites', 'assets.site_id = sites.site_id', 'left');
 
-		if($plant_id != NULL)
-			$this->db->where ( 'plant_id',  $plant_id);
+		if ($plant_id != NULL)
+			$this->db->where('plant_id',  $plant_id);
 
-		if($site_id != NULL)
-			$this->db->where ( 'assets.site_id',  $site_id);
+		if ($site_id != NULL)
+			$this->db->where('assets.site_id',  $site_id);
 
 		$query = $this->db->get();
 		return $query->result_array();
@@ -65,11 +65,11 @@ class Machine_model extends CI_Model
 	public function display_single($id)
 	{
 		//$query = $this->db->get_where("assets", array('asset_id' => $id));
-		$this->db->select ( '*' );
-		$this->db->from ( 'assets' );
-		$this->db->join ( 'sites', 'sites.site_id = assets.site_id' , 'left' );
-		$this->db->join ( 'plants', 'plants.plant_id = sites.plant_id' , 'left' );
-		$this->db->where("asset_id" , $id );
+		$this->db->select('*');
+		$this->db->from('assets');
+		$this->db->join('sites', 'sites.site_id = assets.site_id', 'left');
+		$this->db->join('plants', 'plants.plant_id = sites.plant_id', 'left');
+		$this->db->where("asset_id", $id);
 		$query = $this->db->get();
 		return $query->row_array();
 	}
@@ -80,13 +80,10 @@ class Machine_model extends CI_Model
 
 	public function create_machine()
 	{
-		if($this->input->post('machine_station') == '1')
-		{
+		if ($this->input->post('machine_station') == '1') {
 			$machine = 1;
 			$station = 0;
-		}
-		else
-		{
+		} else {
 			$machine = 0;
 			$station = 1;
 		}
@@ -94,18 +91,17 @@ class Machine_model extends CI_Model
 		$pom = $this->input->post('pom') == '1' ? 1 : 0;
 
 		$data = array(
-			'site_id'=> $this->input->post('site_id'),
-			'asset_name'=> $this->input->post('machine_name'),
-			'asset_control_number'=> $this->input->post('machine_control_number'),
-			'asset_work_center'=> $this->input->post('work_center'),
-			'asset_active'=> 1,
-			'asset_is_machine'=>$machine,
-			'asset_is_station'=>$station,
-			'asset_is_pom'=> $pom
+			'site_id' => $this->input->post('site_id'),
+			'asset_name' => $this->input->post('machine_name'),
+			'asset_control_number' => $this->input->post('machine_control_number'),
+			'asset_work_center' => $this->input->post('work_center'),
+			'asset_active' => 1,
+			'asset_is_machine' => $machine,
+			'asset_is_station' => $station,
+			'asset_is_pom' => $pom
 		);
 
 		return $this->db->insert('assets', $data);
-
 	}
 
 
@@ -114,13 +110,10 @@ class Machine_model extends CI_Model
 
 	public function update_machine()
 	{
-		if($this->input->post('machine_station') == '1')
-		{
+		if ($this->input->post('machine_station') == '1') {
 			$machine = 1;
 			$station = 0;
-		}
-		else
-		{
+		} else {
 			$machine = 0;
 			$station = 1;
 		}
@@ -128,14 +121,14 @@ class Machine_model extends CI_Model
 		$pom = $this->input->post('pom') == '1' ? 1 : 0;
 
 		$data = array(
-			'site_id'=> $this->input->post('site_id'),
-			'asset_name'=> $this->input->post('machine_name'),
-			'asset_control_number'=> $this->input->post('machine_control_number'),
-			'asset_work_center'=> $this->input->post('work_center'),
-			'asset_active'=> 1,
-			'asset_is_machine'=>$machine,
-			'asset_is_station'=>$station,
-			'asset_is_pom'=> $pom
+			'site_id' => $this->input->post('site_id'),
+			'asset_name' => $this->input->post('machine_name'),
+			'asset_control_number' => $this->input->post('machine_control_number'),
+			'asset_work_center' => $this->input->post('work_center'),
+			'asset_active' => 1,
+			'asset_is_machine' => $machine,
+			'asset_is_station' => $station,
+			'asset_is_pom' => $pom
 		);
 
 		$this->db->where('asset_id', $this->input->post('id'));
@@ -148,9 +141,16 @@ class Machine_model extends CI_Model
 
 	public function delete_machine($id)
 	{
+
+		$this->db->where('asset_id', $id);
+		$query = $this->db->get('production_plans');
+
+		if ($query->num_rows() > 0) {
+			return false;
+		}
+
 		$this->db->where('asset_id', $id);
 		$this->db->delete('assets');
 		return true;
 	}
-
 }

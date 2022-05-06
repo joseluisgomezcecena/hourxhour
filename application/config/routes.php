@@ -83,10 +83,15 @@ $route['assets'] = '/assets';
 $route['plants'] = '/plants/index';
 $route['plants/create'] = '/plants/create';
 $route['plants/edit/(:any)'] = '/plants/edit/$1';
+$route['plants/confirm_delete/(:any)'] = '/plants/confirm_delete/$1';
+$route['plants/delete']['post'] = 'plants/delete';
 //sites
 $route['sites'] = '/sites/index';
 $route['sites/create'] = '/sites/create';
 $route['sites/edit/(:any)'] = '/sites/edit/$1';
+$route['sites/confirm_delete/(:any)'] = 'sites/confirm_delete/$1';
+$route['sites/delete']['post'] = 'sites/delete';
+
 //machines
 $route['machines'] = '/machines';
 //andon
