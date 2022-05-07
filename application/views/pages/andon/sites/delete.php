@@ -15,7 +15,7 @@
 
 		<?php echo form_open('sites/delete') ?>
 
-		<input type="hidden" name="id" value="<?php echo $site['site_id'] ?>" />
+		<input type="hidden" name="id" value="<?php if ($site != null) echo $site['site_id'] ?>" />
 		<div class="grid lg:grid-cols-4 gap-5">
 			<div class="lg:col-span-2 xl:col-span-2">
 				<label class="label block mb-2" for="plant_id">Select Plant:</label>
@@ -32,7 +32,7 @@
 			</div>
 			<div class="lg:col-span-2 xl:col-span-2">
 				<label class="label block mb-2" for="site_id">Area name:</label>
-				<input class="form-control" id="site_id" name="site_name" value="<?php echo $site['site_name']; ?>" disabled>
+				<input class="form-control" id="site_id" name="site_name" value="<?php if ($site != null) echo $site['site_name']; ?>" disabled>
 			</div>
 		</div>
 		<div class="flex justify-end mt-5">
@@ -44,3 +44,18 @@
 
 	</div>
 </div>
+
+<script>
+	function display_message(title, message) {
+		swal(title, message, "<?= $message_type ?>")
+			.then((value) => {
+				window.location.href = '<?= base_url() ?>sites';
+			});
+	}
+
+	<?php
+	if (isset($message_title) && isset($message_description)) {
+		echo 'display_message("' . $message_title . '", "' . $message_description . '");';
+	}
+	?>
+</script>

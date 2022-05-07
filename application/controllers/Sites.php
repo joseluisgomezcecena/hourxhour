@@ -23,17 +23,31 @@ class Sites extends CI_Controller
 		if (!$this->session->userdata(IS_LOGGED_IN))
 			redirect(LOGIN_URL);
 
-		$data['title'] = "Sites";
+		$site_name = $this->input->post('site_name');
 
+		$data['title'] = "Sites";
 		$data['plants'] = $this->Plant->getAllActive();
 
 		$this->form_validation->set_rules('site_name', 'Site Name', 'required');
 		$this->form_validation->set_rules('plant_id', 'Plant', 'required');
 
-
 		if (isset($_POST['save_site'])) {
 			if ($this->form_validation->run() === TRUE) {
-				$this->Site->create();
+
+				//first check if if site has already the same site_name
+				$this->db->where('site_name', $site_name);
+				$query = $this->db->get('sites');
+				if ($query->num_rows() > 0) {
+					$data['message_title'] = 'Hour by Hour Info';
+					$data['message_description'] = 'The site ' . $site_name . ' already exists. The name of the site cannot be repeated.';
+					$data['message_type'] = 'error';
+				} else {
+					//this can be created...
+					$this->Site->create();
+					$data['message_title'] = 'Hour by Hour Info';
+					$data['message_description'] = 'The site ' . $site_name . ' has been added to the System.';
+					$data['message_type'] = 'success';
+				}
 			}
 		}
 
@@ -57,6 +71,45 @@ class Sites extends CI_Controller
 		if (empty($data['site'])) {
 			show_404();
 		}
+
+		$this->load->view('templates/header');
+		$this->load->view('pages/andon/sites/edit', $data);
+		$this->load->view('templates/footer');
+	}
+
+
+	public function update()
+	{
+		$site_name = $this->input->post('site_name');
+		$id = $this->input->post('id');
+		$this->form_validation->set_rules('site_name', 'Site Name', 'required');
+		$this->form_validation->set_rules('plant_id', 'Plant', 'required');
+
+		if ($this->form_validation->run() === TRUE) {
+
+			//first check if if site has already the same site_name
+			$this->db->where('site_name', $site_name);
+			$query = $this->db->get('sites');
+			if ($query->num_rows() > 0) {
+				$data['message_title'] = 'Hour by Hour Info';
+				$data['message_description'] = 'The site ' . $site_name . ' already exists. The name of the site cannot be repeated.';
+				$data['message_type'] = 'error';
+			} else {
+				//this can be modified...
+				$this->Site->update();
+				$data['message_title'] = 'Hour by Hour Info';
+				$data['message_description'] = 'The site ' . $site_name . ' has been updated.';
+				$data['message_type'] = 'success';
+			}
+		} else {
+			$data['message_title'] = 'Hour by Hour Info';
+			$data['message_description'] = 'it was not provided site name or plant';
+			$data['message_type'] = 'error';
+		}
+
+		$data['title'] = "Update Site";
+		$data['site'] = $this->Site->getSingle($id);
+		$data['plants'] = $this->Plant->getAllActive();
 
 		$this->load->view('templates/header');
 		$this->load->view('pages/andon/sites/edit', $data);
@@ -89,28 +142,30 @@ class Sites extends CI_Controller
 		$query = $this->db->get('assets');
 
 		if ($query->num_rows() > 0) {
-			$data['title'] = "Site could not be deleted";
-			$data['message'] = "You have assets in this site  and cannot be deleted.";
-			$data['url'] =  base_url() . "sites";
-			$this->load->view('pages/errors/includes/header');
-			$this->load->view('pages/errors/index', $data);
-			$this->load->view('pages/errors/includes/footer');
-			return;
+			$data['message_title'] = 'Hour by Hour Info';
+			$data['message_description'] = 'The site cannot be delete because there are assets in this site.';
+			$data['message_type'] = 'error';
+		} else {
+
+			$this->db->where('site_id', $site_id);
+			$this->db->delete('sites');
+
+			$data['message_title'] = 'Hour by Hour Info';
+			$data['message_description'] = 'The site was deleted correctly.';
+			$data['message_type'] = 'success';
 		}
 
-		$this->db->where('site_id', $site_id);
-		$this->db->delete('sites');
-
-		redirect('sites');
+		$data['title'] = "Update Site";
+		$data['site'] = $this->Site->getSingle($site_id);
+		$data['plants'] = $this->Plant->getAllActive();
+		$this->load->view('templates/header');
+		$this->load->view('pages/andon/sites/delete', $data);
+		$this->load->view('templates/footer');
 	}
 
 
 
-	public function update()
-	{
-		$this->Site->update();
-		redirect('sites');
-	}
+
 
 
 
