@@ -134,3 +134,18 @@
 		});
 	});
 </script>
+
+<script>
+	function display_message(title, message) {
+		swal(title, message, "<?= $message_type ?>")
+			.then((value) => {
+				window.location.href = '<?= base_url() ?>machines';
+			});
+	}
+
+	<?php
+	if (isset($message_title) && isset($message_description)) {
+		echo 'display_message("' . $message_title . '", "' . $message_description . '");';
+	}
+	?>
+</script>

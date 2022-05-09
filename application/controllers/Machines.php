@@ -35,9 +35,14 @@ class Machines extends CI_Controller
 		if (isset($_POST['save_machine'])) {
 			if ($this->form_validation->run() === TRUE) {
 				$this->Machine_model->create_machine();
-				//debug
-				//print_r($this->db->last_query());
-			}
+                $data['message_title'] = 'Well done!';
+                $data['message_description'] = 'Your Machine has been added.';
+                $data['message_type'] = 'success';
+			}else{
+                $data['message_title'] = 'Ups! Something went wrong!';
+                $data['message_description'] = 'Please try again';
+                $data['message_type'] = 'error';
+            }
 		}
 
 
@@ -87,8 +92,6 @@ class Machines extends CI_Controller
 		$this->Machine_model->update_machine();
 		redirect('machines');
 	}
-
-
 
 	public function delete($id)
 	{
