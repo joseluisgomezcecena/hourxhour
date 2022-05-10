@@ -269,15 +269,25 @@ class Output_VS_Plan extends CI_Controller
             $sql .= ' LEFT JOIN not_planned_interruptions ON plan_by_hours.not_planned_interruption_id = not_planned_interruptions.interruption_id';
             $sql .= ' WHERE plan_by_hours.plan_id = ' . $plan_id;
 
-
             $plan_by_hours = $this->db->query($sql)->result_array();
 
-            //calculate the shift status
-            $last_index = count($plan_by_hours) - 1;
-            $data['production_plans'][$i]['shift_status'] =  ceil(($plan_by_hours[$last_index]['completed_sum'] * 100) / $plan_by_hours[$last_index]['planned_sum']);
+            /*calculate the shift status
+            * We need to calculate the shift status based on the previous hour not the current hours...
+            * we are gonna use int a lopp the next code 
+            * if ($plan_by_hours[$h]['current'] == 1) {
+            *        $current_index = $h;
+            *    }
+            * in this case we
+            */
 
+            $index_for_shift_status = 0;
 
             for ($h = 0; $h < count($plan_by_hours); $h++) {
+
+                if ($plan_by_hours[$h]['current'] == 1) {
+                    $index_for_shift_status = $h - 1;
+                }
+
                 $interruption = '';
                 if ($plan_by_hours[$h]['interruption_name'] != null) {
                     $interruption .=  $plan_by_hours[$h]['interruption_name'];
@@ -292,6 +302,11 @@ class Output_VS_Plan extends CI_Controller
                 $plan_by_hours[$h]['interruption'] = $interruption;
             }
 
+            //If it is the first row
+            if ($index_for_shift_status == -1)
+                $data['production_plans'][$i]['shift_status'] = 0;
+            else
+                $data['production_plans'][$i]['shift_status'] =  ceil(($plan_by_hours[$index_for_shift_status]['completed_sum'] * 100) / $plan_by_hours[$index_for_shift_status]['planned_sum']);
 
             for ($h = 0; $h < count($plan_by_hours); $h++) {
                 if ($plan_by_hours[$h]['current'] == '1') {
@@ -299,7 +314,6 @@ class Output_VS_Plan extends CI_Controller
                     break;
                 }
             }
-
 
             $data['production_plans'][$i]['plan_by_hours'] = $plan_by_hours;
         }
