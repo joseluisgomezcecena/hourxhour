@@ -55,8 +55,6 @@ class Manual_Capture extends CI_Controller
             $shifts[$i]['assets'] = $assets_with_plan;
         }
 
-
-
         $data['plant_id'] = $plant_id;
         $data['site_id'] = $site_id;
         $data['shifts'] = $shifts;
