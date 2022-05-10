@@ -273,4 +273,36 @@ class Reports extends CI_Controller
         $this->load->view('pages/reports/custom_report', $data);
         $this->load->view('templates/footer');
     }
+    public function import_reports()
+    {
+        if (isset($_POST["Import"])) {
+
+            $filename = $_FILES["file"]["tmp_name"];
+
+
+            if ($_FILES["file"]["size"] > 0) {
+                //$file = fopen($filename, "r");
+                //while (($getData = fgetcsv($file, 10000, ",")) !== FALSE) {
+                //    $sql = "INSERT into hours_tempus (id, employee_number, employee_name, hours, position, supervisor, posted) 
+                //       values ('" . $getData[0] . "','" . $getData[1] . "','" . $getData[2] . "','" . $getData[3] . "','" . $getData[4] . "', ,'" . $getData[5] . "',,'" . $getData[6] . "')";
+                //    $result = mysqli_query($con, $sql);
+                //    if (!isset($result)) {
+                //        $data['message_title'] = 'Invalid File!';
+                //        $data['message_description'] = 'Please Upload CSV File.';
+                //        $data['message_type'] = 'error';
+                //    } else {
+                //        $data['message_title'] = 'Well done!';
+                //        $data['message_description'] = 'File has been successfully Imported.';
+                //        $data['message_type'] = 'success';
+                //    }
+                //}
+                //fclose($file);
+            }
+        }
+        //$data['result'] = $result;
+        $data['title'] = 'Import Tempus Report';
+        $this->load->view('templates/header');
+        $this->load->view('pages/reports/import_reports/import_hrs_tempus', $data);
+        $this->load->view('templates/footer');
+    }
 }

@@ -1,13 +1,13 @@
 <!-- Footer -->
 <footer class="mt-auto">
-	<div class="footer">
-		<span class='uppercase'>&copy; 2022 Martech Medical Products</span>
-		<nav>
-			<a href="mailto:Yeti Themes<info@yetithemes.net>?subject=Support">Support</a>
-			<span class="divider">|</span>
-			<a href="http://yeti.yetithemes.net/docs" target="_blank">Docs</a>
-		</nav>
-	</div>
+    <div class="footer">
+        <span class='uppercase'>&copy; 2022 Martech Medical Products</span>
+        <nav>
+            <a href="mailto:Yeti Themes<info@yetithemes.net>?subject=Support">Support</a>
+            <span class="divider">|</span>
+            <a href="http://yeti.yetithemes.net/docs" target="_blank">Docs</a>
+        </nav>
+    </div>
 </footer>
 
 </main>
@@ -26,14 +26,22 @@
 <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.print.min.js"></script>
 
 <script>
-	$(document).ready(function() {
-		$('#asset-table').DataTable( {
-			dom: 'Bfrtip',
-			buttons: [
-				'copy', 'csv', 'excel', 'pdf', 'print'
-			]
-		} );
-	} );
+    $(document).ready(function() {
+        $('#asset-table').DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ]
+        });
+    });
+
+    var submit_csv = document.getElementById("submit_csv");
+
+    if (submit_csv) {
+        submit_csv.addEventListener("submit", () => {
+            swal("Well done!", "File uploaded", "success");
+        })
+    }
 </script>
 
 

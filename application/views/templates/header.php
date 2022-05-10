@@ -224,6 +224,15 @@
                         Custom Report
                     </a>
                 </div>
+                <a href="#no-link" class="active" data-toggle="collapse" data-target="#import_reports">
+                    <span class="collapse-indicator la la-arrow-circle-down"></span>
+                    Import Reports
+                </a>
+                <div id="import_reports" class="collapse">
+                    <a href="<?php echo base_url(); ?>import_report/tempus">
+                        Tempus Report
+                    </a>
+                </div>
                 <a href="<?php echo base_url(); ?>interruption_cause/select_cell">
                     <span class="icon las la-stop-circle"></span>
                     Interruption cause

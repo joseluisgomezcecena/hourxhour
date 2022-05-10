@@ -98,6 +98,8 @@ $route['sites/delete']['post'] = 'sites/delete';
 $route['machines'] = '/machines';
 //andon
 $route['andon_dashboard'] = 'andon/index';
+//import_reports
+$route['import_report/tempus'] = 'reports/import_reports';
 //reports
 $route['daily_report'] = 'reports/daily_report';
 $route['custom_report'] = 'reports/custom_report';
