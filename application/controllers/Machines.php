@@ -23,7 +23,7 @@ class Machines extends CI_Controller
 
 	public function create()
 	{
-		$data['title'] = "Add Machine or Asset";
+		$data['title'] = "Add output / measuring point";
 		$data['plants'] = $this->Machine_model->get_plants();
 
 		$this->form_validation->set_rules('plant_id', 'Plant', 'required');

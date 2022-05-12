@@ -50,7 +50,7 @@
 				</div>
 
 
-				<div class="mb-5">
+				<div class="mb-5 my-5">
 					<label class="label block mb-2" for="content">Observations</label>
 					<textarea id="content" class="form-control" name="observations" rows="16"></textarea>
 				</div>
@@ -63,7 +63,7 @@
 
 		<!-- Publish -->
 		<div class="card p-5 flex flex-col gap-y-5">
-			<h3>Save Machine</h3>
+			<h3>Save output</h3>
 			<form class="flex flex-col gap-y-5">
 				<div class="flex items-center">
 					<div class="w-1/4">
@@ -82,7 +82,7 @@
 
 				<div class="flex items-center">
 					<div class="w-1/4">
-						<label class="label block">Point of measure</label>
+						<label class="label block">Measure point</label>
 					</div>
 					<div class="w-3/4 ml-2">
 						<label class="label switch">
@@ -94,7 +94,7 @@
 				</div>
 			</form>
 			<div class="flex flex-wrap gap-2 mt-5">
-				<button type="submit" name="save_machine" class="btn btn_primary uppercase">Save Machine</button>
+				<button type="submit" name="save_machine" class="btn btn_primary uppercase">Save output</button>
 			</div>
 		</div>
 	</div>
