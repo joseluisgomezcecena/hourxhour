@@ -34,14 +34,6 @@
             ]
         });
     });
-
-    var submit_csv = document.getElementById("submit_csv");
-
-    if (submit_csv) {
-        submit_csv.addEventListener("submit", () => {
-            swal("Well done!", "File uploaded", "success");
-        })
-    }
 </script>
 
 

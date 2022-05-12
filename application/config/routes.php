@@ -99,7 +99,8 @@ $route['machines'] = '/machines';
 //andon
 $route['andon_dashboard'] = 'andon/index';
 //import_reports
-$route['import_report/tempus'] = 'reports/import_reports';
+$route['import_report/tempus'] = 'reports/import_tempus_reports';
+$route['import_report/tempus/save']['post'] = 'reports/import_tempus_reports_post';
 //reports
 $route['daily_report'] = 'reports/daily_report';
 $route['custom_report'] = 'reports/custom_report';

@@ -273,36 +273,81 @@ class Reports extends CI_Controller
         $this->load->view('pages/reports/custom_report', $data);
         $this->load->view('templates/footer');
     }
-    public function import_reports()
+    public function import_tempus_reports()
     {
-        if (isset($_POST["Import"])) {
-
-            $filename = $_FILES["file"]["tmp_name"];
-
-
-            if ($_FILES["file"]["size"] > 0) {
-                //$file = fopen($filename, "r");
-                //while (($getData = fgetcsv($file, 10000, ",")) !== FALSE) {
-                //    $sql = "INSERT into hours_tempus (id, employee_number, employee_name, hours, position, supervisor, posted) 
-                //       values ('" . $getData[0] . "','" . $getData[1] . "','" . $getData[2] . "','" . $getData[3] . "','" . $getData[4] . "', ,'" . $getData[5] . "',,'" . $getData[6] . "')";
-                //    $result = mysqli_query($con, $sql);
-                //    if (!isset($result)) {
-                //        $data['message_title'] = 'Invalid File!';
-                //        $data['message_description'] = 'Please Upload CSV File.';
-                //        $data['message_type'] = 'error';
-                //    } else {
-                //        $data['message_title'] = 'Well done!';
-                //        $data['message_description'] = 'File has been successfully Imported.';
-                //        $data['message_type'] = 'success';
-                //    }
-                //}
-                //fclose($file);
-            }
-        }
-        //$data['result'] = $result;
         $data['title'] = 'Import Tempus Report';
         $this->load->view('templates/header');
         $this->load->view('pages/reports/import_reports/import_hrs_tempus', $data);
         $this->load->view('templates/footer');
+    }
+    public function import_tempus_reports_post()
+    {
+        $date = date('Y/m/d', strtotime($_POST['date']));
+        $columna = 2;
+        $columna_supervisor = 0;
+
+        switch(date('w', strtotime($_POST['date']))) 
+        {
+            case 1: // Martes -> Nos dara reporte de Lunes
+                $columna = 2;
+                echo '1';
+                break;
+            case 2: // Miercoles -> Nos dara reporte de Martes
+                $columna = 4;
+                echo '2';
+                break;
+            case 3: // Jueves -> Nos dara reporte de Miercoles
+                $columna = 6;
+                echo '3';
+                break;
+            case 4: // Viernes -> Nos dara reporte de Jueves
+                $columna = 8;
+                echo '4';
+                break;
+            case 5: // Sabado -> Nos dara reporte de Viernes
+                $columna = 10;
+                echo '5';
+                break;
+            case 6: // Domingo -> Nos dara reporte de Sabado
+                $columna = 12;
+                echo '6';
+                break;
+            case 7: // Lunes -> Nos dara reporte de Domingo
+                $columna = 14;
+                echo '7';
+                break;
+            default:
+                $columna = 2;
+                echo '8';
+                break;
+        } 
+        $count = 1;
+        $file = $_FILES["file"]["tmp_name"];
+        if($file != "")
+        {
+            $file_open = fopen($file, "r");
+
+            $current_row = 0;
+
+            //Not located
+            $column_item = 0;
+            $column_description   = 0;
+            $column_planner       = 0;
+            $column_whs           = 0;
+            $column_posted        = 0;
+            $column_txn           = 0;
+            $column_order         = 0;
+            $column_quantity      = 0;
+            $column_class         = 0;
+
+            while (($csv = fgetcsv($file_open, 5000, ",")) !== false) {
+                echo 'entre';
+            }
+        }
+    }
+
+    public function getCleanString($csv, $column_index)
+    {
+        return trim($this->db->escape_str($csv[$column_index]));
     }
 }
