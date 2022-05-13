@@ -233,6 +233,12 @@
                         Tempus Report
                     </a>
                 </div>
+
+                <div id="import_reports" class="collapse">
+                    <a href="<?php echo base_url(); ?>import_report/std_hours">
+                        Standard Hours
+                    </a>
+                </div>
                 <a href="<?php echo base_url(); ?>interruption_cause/select_cell">
                     <span class="icon las la-stop-circle"></span>
                     Interruption cause
