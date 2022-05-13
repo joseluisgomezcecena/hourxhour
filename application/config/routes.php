@@ -99,8 +99,16 @@ $route['machines'] = '/machines';
 //andon
 $route['andon_dashboard'] = 'andon/index';
 //import_reports
+<<<<<<< Updated upstream
 $route['import_report/tempus'] = 'reports/import_tempus_reports';
 $route['import_report/tempus/save']['post'] = 'reports/import_tempus_reports_post';
+=======
+$route['import_report/tempus'] = 'reports/import_reports';
+
+$route['import_report/std_hours'] = 'reports/std_hours';
+$route['import_report/import_std_hours']['post'] = 'reports/import_std_hours';
+
+>>>>>>> Stashed changes
 //reports
 $route['daily_report'] = 'reports/daily_report';
 $route['custom_report'] = 'reports/custom_report';

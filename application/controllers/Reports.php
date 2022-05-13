@@ -350,4 +350,178 @@ class Reports extends CI_Controller
     {
         return trim($this->db->escape_str($csv[$column_index]));
     }
+
+    public function std_hours()
+    {
+        $data['title'] = 'Import Standard Hours Report';
+        $this->load->view('templates/header');
+        $this->load->view('pages/reports/import_reports/import_hrs_std', $data);
+        $this->load->view('templates/footer');
+    }
+
+    //Code for save csv...
+    public function import_std_hours()
+    {
+        //echo json_encode($_FILES['file']);
+        //echo json_encode($this->db->conn_id);
+
+        //if (true) return;
+
+        if (count($_FILES['file']['name']) > 0) {
+
+            for ($file_index = 0; $file_index < count($_FILES['file']['name']); $file_index++) {
+
+                $file = $_FILES["file"]["tmp_name"][$file_index];
+                $file_open = fopen($file, "r");
+
+                $current_row = 0;
+
+
+                //Not located
+                $column_item = 0;
+                $column_description   = 0;
+                $column_planner       = 0;
+                $column_whs           = 0;
+                $column_posted           = 0;
+                $column_txn           = 0;
+                $column_order         = 0;
+                $column_quantity      = 0;
+                $column_posted_time         = 0;
+
+
+                while (($csv = fgetcsv($file_open, 5000, ",")) !== false) {
+
+                    //Si es la primer Row entonces vamos a detectar en que columna esta cada una de acuerdo al texto del header
+                    //De la columna....
+
+                    if ($current_row == 0) {
+
+                        //in the first row get the columns index...
+                        for ($c = 0; $c < count($csv); $c++) {
+
+                            $str = trim($this->db->escape_str($csv[$c]));
+                            //Remove the bom....if any
+                            if (substr($str, 0, 3) == "\xef\xbb\xbf") {
+                                $str = substr($str, 3);
+                            }
+
+                            switch ($str) {
+                                case "Item": {
+                                        $column_item = $c;
+                                    }
+                                    break;
+                                case "Description": {
+                                        $column_description = $c;
+                                    }
+                                    break;
+                                case "Planner": {
+                                        $column_planner = $c;
+                                    }
+                                    break;
+                                case "Whs": {
+                                        $column_whs = $c;
+                                    }
+                                    break;
+                                case "Posted": {
+                                        $column_posted = $c;
+                                    }
+                                    break;
+                                case "Txn": {
+                                        $column_txn = $c;
+                                    }
+                                    break;
+                                case "Order": {
+                                        $column_order = $c;
+                                    }
+                                    break;
+                                case "Quantity": {
+                                        $column_quantity = $c;
+                                    }
+                                    break;
+                                case "Posted time": {
+                                        $column_posted_time = $c;
+                                    }
+                                    break;
+
+                                default: {
+                                        echo 'default: ' . $str;
+                                    }
+                                    break;
+                            }
+                        }
+                    } else {
+                        //This is a entire item...
+                        $item          = $this->getCleanString($csv, $column_item);
+                        $description   = $this->getCleanString($csv, $column_description);
+                        $planner       = $this->getCleanString($csv, $column_planner);
+                        $whs           = $this->getCleanString($csv, $column_whs);
+                        $txn           = $this->getCleanString($csv, $column_txn);
+                        $order         = $this->getCleanString($csv, $column_order);
+                        $quantity      = $this->getCleanString($csv, $column_quantity);
+                        $class         = $this->getCleanString($csv, $column_posted_time);
+                        $posted         = $this->getCleanString($csv, $column_posted);
+
+
+                        if ($item != "" && str_replace("_", "", $item) != "") {
+                            //We read all the data with this condition,...item must have value and also it will not be taked in count the ___________line or void line.
+                            $posted = date("Y/m/d", strtotime($posted));
+
+                            //En este punto debemos consultar items_php
+                            $this->db->select('item_run_labor, item_setup_hours');
+                            $this->db->from('items_pph');
+                            $this->db->where('item_number', $item);
+
+                            $labor_array = $this->db->get()->result_array();
+
+                            $run_labor = 0;
+                            $yield = 1;
+                            $setup = 0;
+
+                            if (count($labor_array) > 0) {
+
+                                foreach ($labor_array as $row_labor) {
+                                    $run_labor += $row_labor['item_run_labor'];
+                                    //$yield *= $row_labor['cur_yield'] != 0 ? $row_labor['cur_yield'] : 1;
+                                    $setup += $row_labor['item_setup_hours'];
+                                }
+                            }
+
+                            //Se va a insertar o actualizar el item...
+                            $this->db->select('*');
+                            $this->db->from('hours_std_xa');
+                            $this->db->where('order_number', $order);
+                            $this->db->where('posted', $posted);
+
+                            $data = array();
+
+                            if ($this->db->get()->num_rows == 0) {
+                                //$query = "INSERT INTO `horas_std_xa`(`item`,`description`, `planner`, `whs`, `posted`, `txn`, `order_number`, `quantity`, `class`, rates, yield, setup, std_hours) 
+                                //VALUES('$item','$description','$planner','$whs','$posted','$txn','$order','$quantity','$class', '$run_labor','$yield','$setup',' $std_hours');"; 
+                            } else {
+                                //$query = "UPDATE horas_std_xa SET `quantity` = `quantity` + $quantity, rates = '$run_labor', yield = '$yield', setup = '$setup', std_hours = '$std_hours', `posted` = '$posted'
+                                //WHERE item = '$item' AND order_number = '$order' AND posted = '$posted'";
+                            }
+                        }
+                    }
+
+
+
+                    $current_row++;
+                }
+            }
+        }
+
+        /*
+        $data['title'] = 'Import Standard Hours Report';
+        $this->load->view('templates/header');
+        $this->load->view('pages/reports/import_reports/import_hrs_std', $data);
+        $this->load->view('templates/footer');
+        */
+    }
+
+
+    public function getCleanString($csv, $column_index)
+    {
+        return trim($this->db->escape_str($csv[$column_index]));
+    }
 }
