@@ -36,7 +36,7 @@
 						</select>
 					</div>
 					<div class="lg:col-span-1 xl:col-span-2">
-						<label class="label block mb-2" for="work_center">Work Center:</label>
+						<label class="label block mb-2" for="work_center">Machine Work Center:</label>
 						<input class="form-control"  id="work_center"  name="work_center" required>
 					</div>
 					<div class="lg:col-span-1 xl:col-span-2">
@@ -44,7 +44,7 @@
 						<input class="form-control"  id="machine_name"  name="machine_name" required>
 					</div>
 					<div class="lg:col-span-2 xl:col-span-2">
-						<label class="label block mb-2" for="machine_control_number">Control Number:</label>
+						<label class="label block mb-2" for="machine_control_number">Machine Control Number:</label>
 						<input class="form-control"  id="machine_control_number"  name="machine_control_number" >
 					</div>
 				</div>
@@ -63,7 +63,7 @@
 
 		<!-- Publish -->
 		<div class="card p-5 flex flex-col gap-y-5">
-			<h3>Save output</h3>
+			<h3>Andon Category</h3>
 			<form class="flex flex-col gap-y-5">
 				<div class="flex items-center">
 					<div class="w-1/4">
@@ -82,19 +82,19 @@
 
 				<div class="flex items-center">
 					<div class="w-1/4">
-						<label class="label block">Measure point</label>
+						<label class="label block">Activate Measure point</label>
 					</div>
 					<div class="w-3/4 ml-2">
 						<label class="label switch">
 							<input name="pom" type="checkbox" value="1">
 							<span></span>
-							<span>Yes</span>
+							<span>Activate</span>
 						</label>
 					</div>
 				</div>
 			</form>
 			<div class="flex flex-wrap gap-2 mt-5">
-				<button type="submit" name="save_machine" class="btn btn_primary uppercase">Save output</button>
+				<button type="submit" name="save_machine" class="btn btn_primary uppercase">Save Measuring point</button>
 			</div>
 		</div>
 	</div>

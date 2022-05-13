@@ -163,7 +163,7 @@
                 </a>
                 <a href="<?php echo base_url(); ?>index.php/machines">
                     <span class="las la-cogs"></span>
-                    Assets
+                    Measuring point
                 </a>
             </div>
         </div>

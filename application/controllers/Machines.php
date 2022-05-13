@@ -7,7 +7,7 @@ class Machines extends CI_Controller
 	{
 
 
-		$data['title'] = "Machines";
+		$data['title'] = "Measuring point";
 		//$data['plants'] = $this->Machine_model->get_plants();
 
 		$data['machines'] = $this->Machine_model->display_machines();
@@ -72,7 +72,7 @@ class Machines extends CI_Controller
 
 	public function edit($id)
 	{
-		$data['title'] = "Update Asset";
+		$data['title'] = "Update measuring point";
 		$data['plants'] = $this->Machine_model->get_plants();
 		$data['machine'] = $this->Machine_model->display_single($id);
 
