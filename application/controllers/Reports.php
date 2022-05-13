@@ -243,7 +243,7 @@ class Reports extends CI_Controller
             if ($result[$i]['planned_shift_one']  == NULL) {
                 $result[$i]['planned_shift_one']  = 0;
             }
-            if ($result[$i]['completed_shift_one']  == NULL) {
+            if ($result[$i]['completed_shift_one']  == NULL) {  
                 $result[$i]['completed_shift_one']  = 0;
             }
 
@@ -286,8 +286,7 @@ class Reports extends CI_Controller
         $columna = 2;
         $columna_supervisor = 0;
 
-        switch(date('w', strtotime($_POST['date']))) 
-        {
+        switch (date('w', strtotime($_POST['date']))) {
             case 1: // Martes -> Nos dara reporte de Lunes
                 $columna = 2;
                 echo '1';
@@ -320,28 +319,49 @@ class Reports extends CI_Controller
                 $columna = 2;
                 echo '8';
                 break;
-        } 
+        }
         $count = 1;
         $file = $_FILES["file"]["tmp_name"];
-        if($file != "")
-        {
+        if ($file != "") {
+            $delete = "DELETE FROM hours_tempus";
+            $run_delete = mysqli_query($connection, $delete);
+
             $file_open = fopen($file, "r");
 
             $current_row = 0;
 
-            //Not located
-            $column_item = 0;
-            $column_description   = 0;
-            $column_planner       = 0;
-            $column_whs           = 0;
-            $column_posted        = 0;
-            $column_txn           = 0;
-            $column_order         = 0;
-            $column_quantity      = 0;
-            $column_class         = 0;
-
             while (($csv = fgetcsv($file_open, 5000, ",")) !== false) {
-                echo 'entre';
+                if ($count == 1) {
+                    $count++;
+                    $x = 0;
+                    while ($columna_supervisor == 0) {
+                        echo 'Hola 1';
+                        if ($csv[$x] == 'Super')
+                            $columna_supervisor = $x;
+                        echo 'Hola 2';
+                        $x++;
+                        if (!isset($csv[$x])) break;
+                    }
+
+                    if ($columna_supervisor == 0)
+                        break;
+
+                    continue;
+                }
+                $employee_number = mysqli_real_escape_string($connection, $csv[0]);
+                $employee_name   = mysqli_real_escape_string($connection, $csv[1]);
+                $hours           = mysqli_real_escape_string($connection, $csv[$columna]);
+                $supervisor      = mysqli_real_escape_string($connection, $csv[$columna_supervisor]);
+
+                if ($employee_number != "") {
+                    echo 'EMPLOYE NUMBER \n';
+                    echo $employee_name, '\n';
+                    echo $employee_number, '\n';
+                    echo $supervisor, '\n';
+                    echo $hours, '\n';
+                
+                    echo 'entre';
+                }
             }
         }
     }
