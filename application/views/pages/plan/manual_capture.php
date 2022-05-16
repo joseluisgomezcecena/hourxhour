@@ -137,7 +137,6 @@
                             echo '</table>';
                             echo '<hr style="border-top: 1px solid #bbb;">';
                         }
-
                         echo '</div>';
                     ?>
                 </div>
