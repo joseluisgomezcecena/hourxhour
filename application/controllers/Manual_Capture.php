@@ -68,10 +68,6 @@ class Manual_Capture extends CI_Controller
     public function save_manual_capture()
     {
         $this->load->model('planbyhour');
-        //$this->load->model('productionplan');
-
-        // echo json_encode($this->input->post());
-        //$input_data = $this->input->post();
         $first_part = 'plan_by_hour_id_';
 
         foreach ($this->input->post() as $key => $value) {
