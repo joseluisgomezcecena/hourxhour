@@ -57,16 +57,15 @@
 							echo '<div id="tab-' . $shift['shift_id'] . '" class="collapse' . (($index == 0) ? ' open' : ' ') . '">';
 
 
-							if (count($shift['assets']) == 0) {
-								echo <<<_EOF
-						<div class="alert alert_primary">
+							if (count($shift['assets']) == 0) : ?>
+
+						         <div class="alert alert_primary">
 							<strong class="uppercase"><bdi>Info!</bdi></strong>
 							This turn does not have plan production for any machine or workstation
 							
 						</div>
-						_EOF;
-							}
-
+						<? endif; ?>
+<?php
 							//One table by asset
 							foreach ($shift['assets'] as $asset) {
 								echo '<table class="table w-full mt-3">';
