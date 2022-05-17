@@ -21,7 +21,7 @@ class Login extends CI_Controller
 
 			$data['title'] = "Information";
 			$data['message'] = "You have no level permission for access.";
-			$data['url'] = "http://localhost/hourxhour/";
+			$data['url'] = SERVER_PATH_URL . "hourxhour/";
 
 			$this->load->view('pages/errors/includes/header');
 			$this->load->view('pages/errors/index', $data);
