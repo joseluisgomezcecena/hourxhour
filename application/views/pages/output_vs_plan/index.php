@@ -21,7 +21,6 @@
         align-content: center;
         text-align: center !important;
         overflow-x: hidden;
-        background-color:red;
     }
 
     .andon {
