@@ -15,18 +15,19 @@
 
 <style>
     body {
-        font-size: 1.2rem;
+        font-size: 1rem;
         display: flex;
         justify-content: center;
         align-content: center;
         text-align: center !important;
         overflow-x: hidden;
+        background-color:red;
     }
 
     .andon {
         position: relative;
         width: 100vw;
-        height: 5rem;
+        height: 2rem;
         /*padding: 1rem;*/
         box-sizing: border-box;
     }
