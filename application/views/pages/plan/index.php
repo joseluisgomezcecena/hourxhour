@@ -154,8 +154,13 @@
 
     <form method="POST" enctype="multipart/form-data" ng-hide="display_loading">
         <div style="display:flex; justify-content: flex-end;">
-            <button type="button" ng-click="copy_clipboard()" class="btn btn-icon btn-icon_large btn_info uppercase" data-toggle="tooltip" data-tippy-content="Paste the information of the excel table" data-tippy-placement="right" aria-expanded="false"> <span class="las la-paste"></span>
-            </button>
+
+            <!-- Removed ng-click="copy_clipboard()" -->
+            <a data-toggle="tooltip" data-tippy-content="Paste the information of the excel table" data-tippy-placement="right">
+                <button type="button" class="btn btn-icon btn-icon_large btn_info uppercase" data-toggle="modal" data-target="#inputExcelDataModal" aria-expanded="false">
+                    <span class="las la-paste"></span>
+                </button>
+            </a>
         </div>
         <table class="table table_bordered w-full mt-3">
             <thead class="text-xs">
@@ -297,6 +302,34 @@
 
 
     </form>
+
+
+    <!--
+        In this section I will put 
+     -->
+    <div id="inputExcelDataModal" class="modal modal_aside" data-animations="fadeInRight, fadeOutRight">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title">Paste Excel Data in Box (Ctrl + V)</h2>
+                    <button type="button" class="close la la-times" data-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form class="mt-5">
+                        <textarea class="form-control" rows="20" ng-model="excel_data">
+                    </textarea>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <div class="flex ltr:ml-auto rtl:mr-auto">
+                        <button type="button" class="btn btn_secondary uppercase" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn_primary ltr:ml-2 rtl:mr-2 uppercase" data-dismiss="modal" ng-click="paste_from_input()">Copy Data </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </section>
 
 <script>
@@ -716,10 +749,63 @@
         }
 
 
+        $scope.excel_data = null;
+
+        $scope.paste_from_input = function() {
+            console.log($scope.excel_data);
+            if ($scope.excel_data == null) return;
+
+            const column_hc = 1;
+            const column_item_number = 2;
+            const column_workorder = 3;
+            const plan_by_hour = 4;
+            const planned_interuption = 5;
+            var lines = $scope.excel_data.trim().split("\n");
+
+            //deleted box...
+            $scope.excel_data = null;
+
+            let table_row = 0;
+            for (let i = 1; i < lines.length; i++) {
+                //console.log('goes beyond all lines');
+
+                var line = lines[i];
+                if (line == '') {
+                    //console.log('arrived here');
+                    break;
+                }
+
+                var rows = line.split("\t");
+
+                //console.log(rows);
+                $scope.production_plan.plan_by_hours[table_row].planned_head_count = Number(rows[column_hc]);
+
+                $scope.production_plan.plan_by_hours[table_row].item_number = rows[column_item_number];
+                $scope.partnumber_changed($scope.production_plan.plan_by_hours[table_row]);
+
+                $scope.production_plan.plan_by_hours[table_row].workorder = rows[column_workorder];
+                $scope.production_plan.plan_by_hours[table_row].planned = Number(rows[plan_by_hour]);
+
+                console.log('buscar ' + rows[planned_interuption]);
+                $scope.production_plan.plan_by_hours[table_row].selected_interruption = $scope.getInterruptionFromName(rows[planned_interuption]);
+
+                if ($scope.production_plan.plan_by_hours[table_row].selected_interruption != null) {
+                    console.log('found interruption changed');
+                    $scope.production_plan.plan_by_hours[table_row].interruption_id = $scope.production_plan.plan_by_hours[table_row].selected_interruption.interruption_id;
+                    $scope.interruption_changed($scope.production_plan.plan_by_hours[table_row]);
+                }
+
+                $scope.calculate_formula();
+
+                table_row++;
+            }
+            $scope.update_acum();
+            $scope.$apply();
+        }
+
+
         $scope.copy_clipboard = function() {
-
-            console.log('entering to copy clipboard');
-
+            //console.log('entering to copy clipboard');
             const column_hc = 1;
             const column_item_number = 2;
             const column_workorder = 3;
@@ -727,8 +813,6 @@
             const planned_interuption = 5;
 
             (async () => {
-
-
                 var text = await navigator.clipboard.readText();
                 //console.log(text);
 
