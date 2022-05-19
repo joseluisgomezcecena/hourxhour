@@ -243,7 +243,7 @@ class Reports extends CI_Controller
             if ($result[$i]['planned_shift_one']  == NULL) {
                 $result[$i]['planned_shift_one']  = 0;
             }
-            if ($result[$i]['completed_shift_one']  == NULL) {  
+            if ($result[$i]['completed_shift_one']  == NULL) {
                 $result[$i]['completed_shift_one']  = 0;
             }
 
@@ -359,7 +359,7 @@ class Reports extends CI_Controller
                     echo $employee_number, '\n';
                     echo $supervisor, '\n';
                     echo $hours, '\n';
-                
+
                     echo 'entre';
                 }
             }
@@ -537,11 +537,5 @@ class Reports extends CI_Controller
         $this->load->view('pages/reports/import_reports/import_hrs_std', $data);
         $this->load->view('templates/footer');
         */
-    }
-
-
-    public function getCleanString($csv, $column_index)
-    {
-        return trim($this->db->escape_str($csv[$column_index]));
     }
 }
