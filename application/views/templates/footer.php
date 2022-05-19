@@ -25,7 +25,7 @@
 <script src="<?php echo  base_url() ?>assets/datatables/Buttons-2.2.3/js/buttons.html5.min.js"></script>
 <script src="<?php echo  base_url() ?>assets/datatables/Buttons-2.2.3/js/buttons.print.min.js"></script>-->
 
-<script>
+<!--<script>
     $(document).ready(function() {
         $('#asset-table').DataTable({
             dom: 'Bfrtip',
@@ -34,7 +34,7 @@
             ]
         });
     });
-</script>
+</script>-->
 
 
 </body>
