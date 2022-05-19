@@ -91,7 +91,6 @@
 
     </div>
 </section>
-<script src="<?php echo  base_url() ?>assets/js/chart.min.js"></script>
 <script>
     function display_ct5() {
         var x = new Date()

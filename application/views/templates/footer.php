@@ -14,7 +14,7 @@
 
 <!-- Scripts -->
 <script src="<?php echo  base_url() ?>assets/js/vendor.js"></script>
-<script src="<?php echo  base_url() ?>assets/js/script.js"></script>
+<!--<script src="<?php echo  base_url() ?>assets/js/script.js"></script>-->
 
 <!-- Datatables -->
 <script src="<?php echo  base_url() ?>assets/datatables/DataTables-1.12.0/js/jquery.dataTables.min.js"></script>
