@@ -84,7 +84,7 @@ class Machine_model extends CI_Model
 		$this->db->join('plants', 'plants.plant_id = sites.plant_id', 'left');
 		$this->db->where("asset_id", $id);
 		$query = $this->db->get();
-		return $query->row_array();
+		return $query->result_array();
 	}
 
 
