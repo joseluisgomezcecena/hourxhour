@@ -75,6 +75,7 @@ class Machines extends CI_Controller
 		$data['title'] = "Update measuring point";
 		$data['plants'] = $this->Machine_model->get_plants();
 		$data['machine'] = $this->Machine_model->display_single($id);
+		$data['sites'] = $this->Machine_model->display_sites_by_plant($id);
 
 		if (empty($data['machine'])) {
 			show_404();
