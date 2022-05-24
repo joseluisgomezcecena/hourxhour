@@ -75,6 +75,19 @@ class Machine_model extends CI_Model
 	}
 
 
+	public function display_sites_by_plant($id)
+	{
+		//$query = $this->db->get_where("assets", array('asset_id' => $id));
+		$this->db->select('*');
+		$this->db->from('sites');
+		$this->db->join('assets', 'sites.site_id = assets.site_id', 'left');
+		$this->db->join('plants', 'plants.plant_id = sites.plant_id', 'left');
+		$this->db->where("asset_id", $id);
+		$query = $this->db->get();
+		return $query->row_array();
+	}
+
+
 
 
 
