@@ -372,6 +372,8 @@ class Reports extends CI_Controller
     public function std_hours()
     {
         $data['title'] = 'Import Standard Hours Report';
+        $data['items_by_minutes'] = $this->db->get('hours_std_xa')->result_array();
+
         $this->load->view('templates/header');
         $this->load->view('pages/reports/import_reports/import_hrs_std', $data);
         $this->load->view('templates/footer');
@@ -380,12 +382,10 @@ class Reports extends CI_Controller
     //Code for save csv...
     public function import_std_hours()
     {
-        //echo json_encode($_FILES['file']);
-        //echo json_encode($this->db->conn_id);
-
-        //if (true) return;
 
         if (count($_FILES['file']['name']) > 0) {
+
+            $this->db->truncate('hours_std_xa');
 
             for ($file_index = 0; $file_index < count($_FILES['file']['name']); $file_index++) {
 
@@ -407,10 +407,17 @@ class Reports extends CI_Controller
                 $column_posted_time   = 0;
 
 
+                //code igniter we need to fill out and array of the insert
+                $insert_array = array();
+
+                //Este array va a ser para ... 
+                $items_array = array();
+
                 while (($csv = fgetcsv($file_open, 5000, ",")) !== false) {
 
                     //Si es la primer Row entonces vamos a detectar en que columna esta cada una de acuerdo al texto del header
                     //De la columna....
+
 
                     if ($current_row == 0) {
 
@@ -462,7 +469,7 @@ class Reports extends CI_Controller
                                     break;
 
                                 default: {
-                                        echo 'default: ' . $str;
+                                        //echo 'default: ' . $str;
                                     }
                                     break;
                             }
@@ -473,67 +480,80 @@ class Reports extends CI_Controller
                         $description   = $this->getCleanString($csv, $column_description);
                         $planner       = $this->getCleanString($csv, $column_planner);
                         $whs           = $this->getCleanString($csv, $column_whs);
+                        $posted         = $this->getCleanString($csv, $column_posted);
                         $txn           = $this->getCleanString($csv, $column_txn);
                         $order         = $this->getCleanString($csv, $column_order);
                         $quantity      = $this->getCleanString($csv, $column_quantity);
-                        $class         = $this->getCleanString($csv, $column_posted_time);
-                        $posted         = $this->getCleanString($csv, $column_posted);
+                        $posted_time         = $this->getCleanString($csv, $column_posted_time);
+
 
 
                         if ($item != "" && str_replace("_", "", $item) != "") {
-                            //We read all the data with this condition,...item must have value and also it will not be taked in count the ___________line or void line.
+
                             $posted = date("Y/m/d", strtotime($posted));
+                            $insert_row = array(
+                                'item' => $item,
+                                'description' => $description,
+                                'planner' => $planner,
+                                'whs' => $whs,
+                                'posted' =>  $posted,
+                                'txn' =>  $txn,
+                                'order_number' =>  $order,
+                                'quantity' =>  $quantity,
+                                'posted_time' =>  $posted_time,
+                            );
 
-                            //En este punto debemos consultar items_php
-                            $this->db->select('item_run_labor, item_setup_hours');
-                            $this->db->from('items_pph');
-                            $this->db->where('item_number', $item);
-
-                            $labor_array = $this->db->get()->result_array();
-
-                            $run_labor = 0;
-                            $yield = 1;
-                            $setup = 0;
-
-                            if (count($labor_array) > 0) {
-
-                                foreach ($labor_array as $row_labor) {
-                                    $run_labor += $row_labor['item_run_labor'];
-                                    //$yield *= $row_labor['cur_yield'] != 0 ? $row_labor['cur_yield'] : 1;
-                                    $setup += $row_labor['item_setup_hours'];
-                                }
+                            //only will set the values of 
+                            if (!array_key_exists($item, $items_array)) {
+                                $items_array[$item]['posted_time'] = $posted_time;
+                                $items_array[$item]['info'] = null;
                             }
 
-                            //Se va a insertar o actualizar el item...
-                            $this->db->select('*');
-                            $this->db->from('hours_std_xa');
-                            $this->db->where('order_number', $order);
-                            $this->db->where('posted', $posted);
-
-                            $data = array();
-
-                            if ($this->db->get()->num_rows == 0) {
-                                //$query = "INSERT INTO `horas_std_xa`(`item`,`description`, `planner`, `whs`, `posted`, `txn`, `order_number`, `quantity`, `class`, rates, yield, setup, std_hours) 
-                                //VALUES('$item','$description','$planner','$whs','$posted','$txn','$order','$quantity','$class', '$run_labor','$yield','$setup',' $std_hours');"; 
-                            } else {
-                                //$query = "UPDATE horas_std_xa SET `quantity` = `quantity` + $quantity, rates = '$run_labor', yield = '$yield', setup = '$setup', std_hours = '$std_hours', `posted` = '$posted'
-                                //WHERE item = '$item' AND order_number = '$order' AND posted = '$posted'";
-                            }
+                            //inserta un elemento al array
+                            $insert_array[] = $insert_row;
                         }
                     }
 
-
-
                     $current_row++;
+                } //end of while, all rows are executed
+
+                $items = array_keys($items_array);
+                $str_items = implode("', '", $items);
+
+                $sql =  "SELECT routing_identifier, IF( tbc ='2 = Hours / 100 units', ROUND( (SUM(run_labor) * 60) / 100 , 2) , ROUND( SUM(run_labor_mins), 2)) as run_labor_mins_per_item,
+                ROUND( SUM(setup_hours) * 60, 2) as setup_mins FROM plan_hourxhour.routing_operations WHERE routing_identifier IN ('$str_items')
+                GROUP BY routing_identifier";
+                $run_labor_info = $this->db->query($sql)->result_array();
+
+                //echo json_encode($items_array);
+
+                foreach ($run_labor_info as $run_labor_item) {
+                    $items_array[$run_labor_item['routing_identifier']]['info'] = $run_labor_item;
                 }
+
+
+                //foreach ($insert_array as $row) {
+                for ($r = 0; $r < count($insert_array); $r++) {
+                    $found_item = $items_array[$insert_array[$r]['item']];
+                    $insert_array[$r]['run_labor_mins_per_item'] = $found_item['info']['run_labor_mins_per_item'];
+
+                    //only give one setup
+                    if ($insert_array[$r]['posted_time'] ==  $found_item['posted_time']) {
+                        //only set one setup_mins
+                        $insert_array[$r]['setup_mins'] = $found_item['info']['setup_mins'];
+                    } else {
+                        $insert_array[$r]['setup_mins'] = null;
+                    }
+                }
+
+                $this->db->insert_batch('hours_std_xa', $insert_array);
+                //proceed to insert
+                //echo json_encode($insert_array);
             }
         }
 
-        /*
-        $data['title'] = 'Import Standard Hours Report';
-        $this->load->view('templates/header');
-        $this->load->view('pages/reports/import_reports/import_hrs_std', $data);
-        $this->load->view('templates/footer');
-        */
+
+        //Go to another controller
+        redirect('reports/std_hours');
     }
 }

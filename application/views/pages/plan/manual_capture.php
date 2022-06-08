@@ -57,15 +57,14 @@
 							echo '<div id="tab-' . $shift['shift_id'] . '" class="collapse' . (($index == 0) ? ' open' : ' ') . '">';
 
 
-							if (count($shift['assets']) == 0) : ?>
+							if (count($shift['assets']) == 0) {
+								echo '<div class="alert alert_primary">
+								<strong class="uppercase"><bdi>Info!</bdi></strong>
+								This turn does not have plan production for any machine or workstation
+								</div>';
+							}
 
-						         <div class="alert alert_primary">
-							<strong class="uppercase"><bdi>Info!</bdi></strong>
-							This turn does not have plan production for any machine or workstation
-							
-						</div>
-						<? endif; ?>
-<?php
+
 							//One table by asset
 							foreach ($shift['assets'] as $asset) {
 								echo '<table class="table w-full mt-3">';
@@ -129,12 +128,6 @@
 									echo '	<button id="button_plan_by_hour_id_' . $plan_by_hour['plan_by_hour_id'] . '" class="btn mt-4 btn-icon btn-icon_large btn_success uppercase" ' . ($is_enable ? '' : 'disabled') . ' ng-click="save(' . $plan_by_hour['plan_by_hour_id'] . ')">';
 									echo '		<span id="span_plan_by_hour_id_' . $plan_by_hour['plan_by_hour_id'] . '" class="la la-save"></span>';
 									echo '	</button>';
-
-									/* 
-							la la-save
-							la la-spinner animate-spin-slow
-							la la-check
-							*/
 
 									echo '</td>';
 								}

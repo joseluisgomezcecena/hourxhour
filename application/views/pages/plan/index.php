@@ -231,13 +231,13 @@
                         <th style="min-width: 7rem;" class="bg-[#D1FAE5] text-xs">{{plan_item.time_display | date:'hh:mm'}}-{{plan_item.time_end_display | date:'hh:mm'}} {{ plan_item.time_display.getHours() >= 12  ? 'pm' : 'am'}}</th>
 
                         <!-- HC -->
-                        <td id="" class="bg-[#D1FAE5]">
+                        <td id="" class="bg-[#D1FAE5] ">
                             <input type="number" min="1" type="text" name="" onkeyup="" class="form-control input_invisible size-sm" ng-model="plan_item.planned_head_count" ng-class="{red: plan_item.invalid_planned_head_count}" ng-change="hc_changed(plan_item)" />
                         </td>
 
                         <!-- ITEM NUMBER -->
                         <td>
-                            <input placeholder="Select" type="text" ng-model="plan_item.item_number" ng-class="{red: plan_item.invalid_item_id}" ng-change="partnumber_changed(plan_item)" class="form-control input_invisible size-sm" list="dl_items" required />
+                            <input placeholder="Select" style="text-transform: uppercase;" type="text" ng-model="plan_item.item_number" ng-class="{red: plan_item.invalid_item_id}" ng-change="partnumber_changed(plan_item)" class="form-control input_invisible size-sm" list="dl_items" required />
                         </td>
 
                         <!-- WORKORDER  -->
