@@ -282,88 +282,86 @@ class Reports extends CI_Controller
     }
     public function import_tempus_reports_post()
     {
-        $date = date('Y/m/d', strtotime($_POST['date']));
-        $columna = 2;
-        $columna_supervisor = 0;
+        if (isset($_POST["Import"])) {
+            $dia_de_la_semana = 2;
+            $horas_extra_de_la_semana = 2;
+            $columna_supervisor = 0;
+            $date = $_POST['date'];
 
-        switch (date('w', strtotime($_POST['date']))) {
-            case 1: // Martes -> Nos dara reporte de Lunes
-                $columna = 2;
-                echo '1';
-                break;
-            case 2: // Miercoles -> Nos dara reporte de Martes
-                $columna = 4;
-                echo '2';
-                break;
-            case 3: // Jueves -> Nos dara reporte de Miercoles
-                $columna = 6;
-                echo '3';
-                break;
-            case 4: // Viernes -> Nos dara reporte de Jueves
-                $columna = 8;
-                echo '4';
-                break;
-            case 5: // Sabado -> Nos dara reporte de Viernes
-                $columna = 10;
-                echo '5';
-                break;
-            case 6: // Domingo -> Nos dara reporte de Sabado
-                $columna = 12;
-                echo '6';
-                break;
-            case 7: // Lunes -> Nos dara reporte de Domingo
-                $columna = 14;
-                echo '7';
-                break;
-            default:
-                $columna = 2;
-                echo '8';
-                break;
-        }
-        $count = 1;
-        $file = $_FILES["file"]["tmp_name"];
-        if ($file != "") {
-            $delete = "DELETE FROM hours_tempus";
-            $run_delete = mysqli_query($connection, $delete);
+            switch (date('w', strtotime($_POST['date']))) {
+                case 1: // Martes -> Nos dara reporte de Lunes
+                    $dia_de_la_semana = 2;
+                    $horas_extra_de_la_semana = 17;
+                    echo '1';
+                    break;
+                case 2: // Miercoles -> Nos dara reporte de Martes
+                    $dia_de_la_semana = 4;
+                    $horas_extra_de_la_semana = 18;
+                    echo '2';
+                    break;
+                case 3: // Jueves -> Nos dara reporte de Miercoles
+                    $dia_de_la_semana = 6;
+                    $horas_extra_de_la_semana = 19;
+                    echo '3';
+                    break;
+                case 4: // Viernes -> Nos dara reporte de Jueves
+                    $dia_de_la_semana = 8;
+                    $horas_extra_de_la_semana = 20;
+                    echo '4';
+                    break;
+                case 5: // Sabado -> Nos dara reporte de Viernes
+                    $dia_de_la_semana = 10;
+                    $horas_extra_de_la_semana = 21;
+                    echo '5';
+                    break;
+                case 6: // Domingo -> Nos dara reporte de Sabado
+                    $dia_de_la_semana = 12;
+                    $horas_extra_de_la_semana = 22;
+                    echo '6';
+                    break;
+                case 7: // Lunes -> Nos dara reporte de Domingo
+                    $dia_de_la_semana = 14;
+                    $horas_extra_de_la_semana = 23;
+                    echo '7';
+                    break;
+                default:
+                    $dia_de_la_semana = 2;
+                    $horas_extra_de_la_semana = 17;
+                    echo '8';
+                    break;
+            }
 
-            $file_open = fopen($file, "r");
+            $filename = $_FILES["file"]["tmp_name"];
+            if ($_FILES["file"]["size"] > 0) {
+                $file = fopen($filename, "r");
+                while (($getData = fgetcsv($file, 10000, ",")) !== FALSE) {
 
-            $current_row = 0;
+                    $extra_hours = $getData[$horas_extra_de_la_semana]; 
+                    $hours = $getData[$dia_de_la_semana];
+                    $supervisor = $getData[25];
+                    $employee_number = $getData[0];
+                    $employee_name = $getData[1];
 
-            while (($csv = fgetcsv($file_open, 5000, ",")) !== false) {
-                if ($count == 1) {
-                    $count++;
-                    $x = 0;
-                    while ($columna_supervisor == 0) {
-                        echo 'Hola 1';
-                        if ($csv[$x] == 'Super')
-                            $columna_supervisor = $x;
-                        echo 'Hola 2';
-                        $x++;
-                        if (!isset($csv[$x])) break;
+                    $sql = "INSERT into hours_tempus (employee_number,employee_name,hours,extra_hour,supervisor,posted) 
+                           values ('" . $employee_number . "','" . $employee_name . "','" . $hours . "','" . $extra_hours . "','" . $supervisor . "','" . $date . "')";
+                    if (!$this->db->simple_query($sql)) {
+                        echo 'ocurrio un error en ' . $sql;
                     }
-
-                    if ($columna_supervisor == 0)
-                        break;
-
-                    continue;
                 }
-                $employee_number = mysqli_real_escape_string($connection, $csv[0]);
-                $employee_name   = mysqli_real_escape_string($connection, $csv[1]);
-                $hours           = mysqli_real_escape_string($connection, $csv[$columna]);
-                $supervisor      = mysqli_real_escape_string($connection, $csv[$columna_supervisor]);
-
-                if ($employee_number != "") {
-                    echo 'EMPLOYE NUMBER \n';
-                    echo $employee_name, '\n';
-                    echo $employee_number, '\n';
-                    echo $supervisor, '\n';
-                    echo $hours, '\n';
-
-                    echo 'entre';
-                }
+                fclose($file);
             }
         }
+        
+        $data['extra_hours'] = $extra_hours;
+        $data['employee_number'] = $employee_number;
+        $data['employee_name'] = $employee_name;
+        $data['supervisor'] = $supervisor;
+        $data['date'] = $date;
+        $data['hours'] = $hours;
+        $data['title'] = 'Import Tempus Report';
+        $this->load->view('templates/header');
+        $this->load->view('pages/reports/import_reports/import_hrs_tempus', $data);
+        $this->load->view('templates/footer');
     }
 
     public function getCleanString($csv, $column_index)
@@ -402,11 +400,11 @@ class Reports extends CI_Controller
                 $column_description   = 0;
                 $column_planner       = 0;
                 $column_whs           = 0;
-                $column_posted           = 0;
+                $column_posted        = 0;
                 $column_txn           = 0;
                 $column_order         = 0;
                 $column_quantity      = 0;
-                $column_posted_time         = 0;
+                $column_posted_time   = 0;
 
 
                 while (($csv = fgetcsv($file_open, 5000, ",")) !== false) {

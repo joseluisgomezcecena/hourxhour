@@ -1,7 +1,3 @@
-<?php
-
-?>
-
 <section class="breadcrumb">
     <h1><?= $title ?></h1>
     <ul>
@@ -25,7 +21,7 @@
                             <input id="file" type="file" name="file" accept=".csv" required>
                         </div>
                         <div>
-                            <input id="submit" type="submit" name="submit_tempus_file" class="btn btn_info uppercase" value="Import CSV" />
+                            <input type="submit" id="submit" name="Import" class="btn btn_info uppercase" value="Import CSV" />
                         </div>
                     </div>
                 </form>
@@ -41,7 +37,13 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td class="text-center"></td>
+                            <td class="text-center"><?=$employee_number?></td>
+                            <td class="text-center"><?=$employee_name?></td>
+                            <td class="text-center"><?=$hours?></td>
+                            <td class="text-center"><?=$supervisor?></td>
+                            <td class="text-center"><?=$posted?></td>
+                            <!--<td class="text-center"></td>
+                            <td class="text-center"></td>-->
                         </tr>
                     </tbody>
                 </table>
