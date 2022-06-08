@@ -18,7 +18,7 @@ class Interruption_Cause extends CI_Controller
         $shift_date = $this->shift->getIdFromCurrentTime(new DateTime);
 
         $this->shift->Load($shift_date['shift_id']);
-        $this->productionplan->LoadPlan($this->input->get('asset_id'), $shift_date['date']->format(DATE_FORMAT), $shift_date['shift_id'], $this->shift->shift_start_time, $this->shift->shift_end_time);
+        $this->productionplan->LoadPlan($this->input->get('asset_id'), $shift_date['date']->format(DATE_FORMAT));
 
         $data['production_plan'] =  $this->productionplan;
         $data['interruptions'] = $this->db->get('interruptions')->result();

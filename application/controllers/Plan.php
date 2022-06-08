@@ -39,7 +39,6 @@ class Plan extends CI_Controller
         $data['asset_id'] = $asset_id = $this->input->get('asset_id');
         $shift_date = $this->shift->getIdFromCurrentTime($now);
 
-        $data['shift_id'] = $shift_date['shift_id'];
         $data['date'] = $date = $shift_date['date']->format(DATE_FORMAT);
 
         $this->load->view('templates/header');
@@ -63,10 +62,10 @@ class Plan extends CI_Controller
 
         $this->load->model('productionplan');
         $asset_id = $this->input->get('asset_id');
-        $shift_id = $this->input->get('shift_id');
+        //$shift_id = $this->input->get('shift_id');
         $date = $this->input->get('date');
-        $this->shift->Load($shift_id);
-        $this->productionplan->LoadPlan($asset_id, $date, $shift_id, $this->shift->shift_start_time, $this->shift->shift_end_time);
+        //$this->shift->Load($shift_id);
+        $this->productionplan->LoadPlan($asset_id, $date);
         $data['production_plan'] =  $this->productionplan;
 
 
@@ -114,7 +113,6 @@ class Plan extends CI_Controller
 
         $data['asset_id'] = $plan->asset_id;
         $data['date'] = $plan->date;
-        $data['shift_id'] = $plan->shift_id;
         $data['supervisor'] = $plan->supervisor;
 
         $data['use_multiplier_factor'] = intval($plan->use_multiplier_factor);
@@ -216,8 +214,8 @@ class Plan extends CI_Controller
             }
         }
 
-        if (!$is_new_record)
-            $this->sendMail($plan->plan_id);
+        //if (!$is_new_record)
+        //    $this->sendMail($plan->plan_id);
     }
 
 

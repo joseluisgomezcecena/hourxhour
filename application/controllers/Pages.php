@@ -55,7 +55,6 @@ class Pages extends CI_Controller
        WHERE plants.plant_id = sub_plant_id
        AND sites.site_id = sub_site_id
        AND assets.asset_id = sub_asset_id
-       AND production_plans.shift_id = $shift_id
        AND plan_by_hours.time BETWEEN '$start_date' AND '$end_date'
        GROUP BY plants.plant_id,  sites.site_id, assets.asset_id
         ) as planned,
@@ -68,7 +67,6 @@ class Pages extends CI_Controller
        WHERE plants.plant_id = sub_plant_id
        AND sites.site_id = sub_site_id
        AND assets.asset_id = sub_asset_id
-       AND production_plans.shift_id = $shift_id
        AND plan_by_hours.time BETWEEN '$start_date' AND '$end_date'
        GROUP BY plants.plant_id,  sites.site_id, assets.asset_id
         ) as completed

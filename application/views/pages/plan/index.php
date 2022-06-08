@@ -178,10 +178,7 @@
                     <th scope="col">
                         <input type="text" name="" value="" ng-model="production_plan.asset_name" disabled class="form-control input_invisible size-sm">
                     </th>
-                    <th scope="col" class="bg-[#D1FAE5]"><small>SHIFT:</small></th>
-                    <th scope="col">
-                        <input type="text" name="shift_id" ng-model="production_plan.shift_name" disabled class="form-control input_invisible size-sm">
-                    </th>
+
                     <th scope="col" class="bg-[#D1FAE5]"><small>HC:</small></th>
                     <th scope="col">
                         <input type="number" min="1" name="hc" id="" onkeyup="" ng-model="production_plan.hc" ng-change="sethc()" class="form-control input_invisible size-sm" />
@@ -362,20 +359,17 @@
 
         $scope.display_loading = true;
 
-        $scope.init = function(asset_id, shift_id, date) {
-            $scope.shift_id = shift_id;
+        $scope.init = function(asset_id, date) {
             $scope.asset_id = asset_id;
             $scope.date = date;
-
             console.log('date de hoy ' + $scope.date);
-
             $scope.getData();
 
         }
 
         $scope.change_date = function() {
             var changed_date = $scope.production_plan.date_display.toISOString().split('T')[0];
-            $scope.init($scope.asset_id, $scope.shift_id, changed_date);
+            $scope.init($scope.asset_id, changed_date);
         }
 
 
@@ -385,7 +379,6 @@
                 url: '<?= base_url() ?>index.php/api/plan/get_data',
                 params: {
                     asset_id: $scope.asset_id,
-                    shift_id: $scope.shift_id,
                     date: $scope.date
                 }
             }).then(function successCallback(response) {
@@ -862,6 +855,6 @@
         //este es al cargar
 
 
-        $scope.init(<?php echo $asset_id . ", " . $shift_id . ", '" . $date . "'" ?>);
+        $scope.init(<?php echo $asset_id . ", '" . $date . "'" ?>);
     }]);
 </script>

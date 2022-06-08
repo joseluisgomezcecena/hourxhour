@@ -41,7 +41,7 @@ class Manual_Capture extends CI_Controller
                 $asset_id = $assets[$a]['asset_id'];
 
                 //Cargar el production plan
-                $this->productionplan->LoadPlan($asset_id, $date->format(DATE_FORMAT), $shift_id,  $shift_start_time, $shift_end_time);
+                $this->productionplan->LoadPlan($asset_id, $date->format(DATE_FORMAT), $shift_id);
                 if ($this->productionplan->plan_id != NULL) {
                     //Si no hay production plan
                     //$assets[$a]['production_plan'] = $this->productionplan;

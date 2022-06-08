@@ -55,20 +55,14 @@ class ProductionPlan extends CI_Model
     * theses two variables are used only when the the hours are generated, I mean when the production plan and plan by hours are not saved in database storage
     * the starting values are not really important because the LoadPlan function is the generator of the values.
     */
-    protected $start_hour = '23:00:00';
-    protected $end_hour = '04:00:00';
 
-    public function LoadPlan($asset_id, $date, $shift_id, $start_hour, $end_hour)
+
+    public function LoadPlan($asset_id, $date)
     {
         //initialize variables
         $this->plan_id = NULL;
         unset($this->plan_by_hours);
         $this->plan_by_hours = array();
-
-
-        $this->start_hour = $start_hour;
-        $this->end_hour = $end_hour;
-
 
         /*
          * This query is created to retrieve a production plan
@@ -76,7 +70,7 @@ class ProductionPlan extends CI_Model
          * also retrieves the asset, site and plant info, the info array is assigned to the $data variable 
          * */
 
-        $select = '*, shifts.shift_short_name as shift_name, assets.site_id as site_id, ';
+        $select = '*, assets.site_id as site_id, ';
         $select .= 'assets.asset_name as asset_name, assets.asset_id as asset_id, ';
         $select .= 'sites.site_id as site_id, sites.site_name as site_name, ';
         $select .= 'plants.plant_id as plant_id, plants.plant_name as plant_name';
@@ -84,9 +78,7 @@ class ProductionPlan extends CI_Model
         $this->db->select($select);
         $this->db->where('production_plans.asset_id', $asset_id);
         $this->db->where('production_plans.date', $date);
-        $this->db->where('production_plans.shift_id', $shift_id);
 
-        $this->db->join('shifts', 'production_plans.shift_id = shifts.shift_id', 'inner');
         $this->db->join('assets', 'production_plans.asset_id = assets.asset_id', 'inner');
         $this->db->join('sites', 'assets.site_id = sites.site_id', 'inner');
         $this->db->join('plants', 'sites.plant_id = plants.plant_id', 'inner');
@@ -129,18 +121,18 @@ class ProductionPlan extends CI_Model
             $this->plant_name = $rowAssets['plant_name']; //foreign
 
             $this->date = $date;
-            $this->shift_id = $shift_id;
             $this->supervisor = NULL;
             $this->hc = 1;
 
             $this->use_multiplier_factor = false;
             $this->multiplier_factor = NULL;
 
+            //The shift is not neccessary anymore...
             //Load shift_name with $shift_id
-            $this->db->select('shift_short_name');
-            $this->db->where('shift_id', $shift_id);
-            $this->db->from('shifts');
-            $this->shift_name = $this->db->get()->result_array()[0]['shift_short_name'];
+            //$this->db->select('shift_short_name');
+            //$this->db->where('shift_id', $shift_id);
+            //$this->db->from('shifts');
+            //$this->shift_name = $this->db->get()->result_array()[0]['shift_short_name'];
 
             $this->GenerateHours();
         } else {
@@ -176,9 +168,6 @@ class ProductionPlan extends CI_Model
         $this->plant_name = $row['plant_name']; //foreign
 
         $this->date = $row['date'];
-
-        $this->shift_id = intval($row['shift_id']);
-        $this->shift_name = $row['shift_name']; //foreign
 
         $this->hc = intval($row['hc']);
 
@@ -232,40 +221,24 @@ class ProductionPlan extends CI_Model
 
     public function GenerateHours()
     {
-        $interval_in_milliseconds = self::time_interval_in_minutes  * 60 * 1000;
-
+        //Create 24 hours of each day...
+        //El turno comienza a las 6 de la mañANA
         $start_date = date_create($this->date);
-        $parsed_start = date_parse($this->start_hour);
-        $start_date->setTime($parsed_start['hour'], $parsed_start['minute'], $parsed_start['second']);
+        $start_date = $start_date->setTime(6, 0, 0);
 
         $end_date = date_create($this->date);
-        $parsed_end = date_parse($this->end_hour);
-        $end_date->setTime($parsed_end['hour'], $parsed_end['minute'], $parsed_end['second']);
+        $end_date = $end_date->setTime(7, 0, 0);
 
-        $start_millis = $start_date->format('Uv');
-        $end_millis = $end_date->format('Uv');
+        for ($h = 0; $h < 24; $h++) {
 
-        if (($end_millis - $start_millis) < 0) {
-            $end_date->add(new DateInterval('P1D'));
-            $end_millis = $end_date->format('Uv');
-        }
-
-
-        for ($m = $start_millis; $m < $end_millis; $m += $interval_in_milliseconds) {
-            $date = new DateTime();
-            $date->setTimeStamp($m / 1000);
-
-            $date_end = new DateTime();
-            $date_end->setTimeStamp(($m + $interval_in_milliseconds) / 1000);
-
-
-            $plan_by_hour['time'] = $date->format(DATETIME_FORMAT);
-            $plan_by_hour['time_end'] = $date_end->format(DATETIME_FORMAT);
-
+            $plan_by_hour['time'] = $start_date->format(DATETIME_FORMAT);
+            $plan_by_hour['time_end'] = $end_date->format(DATETIME_FORMAT);
             $plan_by_hour['created_at'] = $this->created_at;
             $plan_by_hour['updated_at'] = $this->created_at;
-
             array_push($this->plan_by_hours, $plan_by_hour);
+
+            $start_date->modify("+1 hour");
+            $end_date->modify("+1 hour");
         }
     }
 
@@ -285,7 +258,7 @@ class ProductionPlan extends CI_Model
     *  getProductionPlan retrieves prodution plan based on asset_id, shift_id, and date,
     * these three elements are unique in productions_plans table and it makes easy to get current running plan based on current time.
     */
-    public function getProductionPlan($asset_id, $shift_id, $date)
+    public function getProductionPlan($asset_id, $date)
     {
         $this->db->select('production_plans.*, assets.asset_name, sites.site_name, plants.plant_name');
         $this->db->from('production_plans');
@@ -295,7 +268,6 @@ class ProductionPlan extends CI_Model
         $this->db->join('plants', 'sites.plant_id = plants.plant_id', 'inner');
 
         $this->db->where('production_plans.asset_id', $asset_id);
-        $this->db->where('production_plans.shift_id', $shift_id);
         $this->db->where('production_plans.date', $date);
         $query = $this->db->get();
         $result = $query->result();
