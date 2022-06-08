@@ -101,6 +101,11 @@ $route['andon_dashboard'] = 'andon/index';
 //import_reports
 $route['import_report/tempus'] = 'reports/import_tempus_reports';
 $route['import_report/tempus/save']['post'] = 'reports/import_tempus_reports_post';
+//import_std_hours
+$route['import_report/std_hours'] = 'reports/std_hours';
+$route['import_report/std_hours/import']['post'] = 'reports/import_std_hours';
+
+
 //reports
 $route['daily_report'] = 'reports/daily_report';
 $route['custom_report'] = 'reports/custom_report';
