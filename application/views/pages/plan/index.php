@@ -122,6 +122,11 @@
     .table-success {
         background-color: green;
     }
+
+    .sticky{
+        position: sticky !important;
+        top: 5rem;
+    }
 </style>
 <!-- Breadcrumb -->
 <section class="breadcrumb" ng-app='plannerApp' ng-controller='planController'>
@@ -165,7 +170,6 @@
         <table class="table table_bordered w-full mt-3">
             <thead class="text-xs">
                 <tr>
-
                     <th scope="col" class="bg-[#D1FAE5]"><small>PLANT:</small></th>
                     <th scope="col">
                         <input type="text" name="" value="" ng-model="production_plan.plant_name" disabled class="form-control input_invisible size-sm">
@@ -178,7 +182,6 @@
                     <th scope="col">
                         <input type="text" name="" value="" ng-model="production_plan.asset_name" disabled class="form-control input_invisible size-sm">
                     </th>
-
                     <th scope="col" class="bg-[#D1FAE5]"><small>HC:</small></th>
                     <th scope="col">
                         <input type="number" min="1" name="hc" id="" onkeyup="" ng-model="production_plan.hc" ng-change="sethc()" class="form-control input_invisible size-sm" />
@@ -202,19 +205,19 @@
             </div>
         </div>
         <div>
-            <table class="table table_bordered w-full mt-3 text-center">
+            <table class="table relative table_bordered w-full mt-3 text-center">
                 <thead>
-                    <tr class="bg-[#059669]">
-                        <th scope="col" class="text-white text-xs">HR</th>
-                        <th scope="col" class="text-white text-xs">HC</th>
-                        <th scope="col" class="text-white text-xs">ITEM NUMBER</th>
-                        <th scope="col" class="text-white text-xs">WO NUMBER</th>
-                        <th scope="col" class="text-white text-xs">PLAN BY HR</th>
-                        <th scope="col" class="text-white text-xs">CUM PLAN</th>
-                        <th scope="col" class="text-white text-xs">PLANNED INTERRUPTION</th>
-                        <th scope="col" class="text-white text-xs">LESS TIME</th>
-                        <th scope="col" class="text-white text-xs">STD TIME</th>
-                        <th scope="col" class="text-white text-xs">
+                    <tr class="bg-[#059669] sticky my-5">
+                        <th scope="col" class="text-white text-xs sticky top-0">HR</th>
+                        <th scope="col" class="text-white text-xs sticky top-0">HC</th>
+                        <th scope="col" class="text-white text-xs sticky top-0">ITEM NUMBER</th>
+                        <th scope="col" class="text-white text-xs sticky top-0">WO NUMBER</th>
+                        <th scope="col" class="text-white text-xs sticky top-0">PLAN BY HR</th>
+                        <th scope="col" class="text-white text-xs sticky top-0">CUM PLAN</th>
+                        <th scope="col" class="text-white text-xs sticky top-0">PLANNED INTERRUPTION</th>
+                        <th scope="col" class="text-white text-xs sticky top-0">LESS TIME</th>
+                        <th scope="col" class="text-white text-xs sticky top-0">STD TIME</th>
+                        <th scope="col" class="text-white text-xs sticky top-0">
                             CALCULATED QTY BY HR <br />
                             (HC - LESS TIME) / STD TIME
                         </th>

@@ -282,8 +282,8 @@ class Manual_Capture extends CI_Controller
         echo $emails = implode(',', $recipients);
 
 
-        $this->load->helper('sendemail');
-        send($emails, $subject, $message, 'jgomez@martechmedical.com', 'jgomez@martechmedical.com');
+        //$this->load->helper('sendemail');
+        //send($emails, $subject, $message, 'jgomez@martechmedical.com', 'jgomez@martechmedical.com');
     }
 
 
