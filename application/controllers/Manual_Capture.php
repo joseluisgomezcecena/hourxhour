@@ -23,7 +23,13 @@ class Manual_Capture extends CI_Controller
         $site_id = $this->input->get('site_id');
         if ($site_id == -1) $site_id = null;
 
-        $shifts = $this->shift->get_shifts_with_date();
+
+        $current_date = new DateTime();
+        $current_date_more_one_day = new DateTime();
+        $current_date_more_one_day->modify('+1 day');
+
+        $shifts = $this->db->get('shifts')->result_array();
+
         for ($i = 0; $i < count($shifts); $i++) {
             //En los shifts traigo el shift_id y el date, solo me falta el asset_id para saber de que plan se trata
 
@@ -33,31 +39,59 @@ class Manual_Capture extends CI_Controller
             //$shifts[$i]['assets'] = $this->machine_model->get_pom_active();
 
             $shift_id = $shifts[$i]['shift_id'];
-            $date = $shifts[$i]['date'];
             $shift_start_time = $shifts[$i]['shift_start_time'];
             $shift_end_time = $shifts[$i]['shift_end_time'];
+
+
+            if ($shift_start_time < $shift_end_time) {
+                $shift_start_time = $current_date->format(DATE_FORMAT) . ' ' . $shift_start_time;
+                $shift_end_time = $current_date->format(DATE_FORMAT) . ' ' . $shift_end_time;
+            } else {
+                $shift_start_time = $current_date->format(DATE_FORMAT) . ' ' . $shift_start_time;
+                $shift_end_time = $current_date_more_one_day->format(DATE_FORMAT) . ' ' . $shift_end_time;
+            }
 
             for ($a = 0; $a < count($assets); $a++) {
                 $asset_id = $assets[$a]['asset_id'];
 
+                // echo $asset_id . ' ';
                 //Cargar el production plan
-                $this->productionplan->LoadPlan($asset_id, $date->format(DATE_FORMAT), $shift_id);
-                if ($this->productionplan->plan_id != NULL) {
-                    //Si no hay production plan
-                    //$assets[$a]['production_plan'] = $this->productionplan;
+                $this->db->select('production_plans.plan_id, production_plans.asset_id, production_plans.date, assets.asset_name, sites.site_name');
+                $this->db->from('production_plans');
+                $this->db->join('assets', 'production_plans.asset_id = assets.asset_id', 'inner');
+                $this->db->join('sites', 'assets.site_id = sites.site_id', 'inner');
+                $this->db->where('production_plans.asset_id', $asset_id);
+                $this->db->where('production_plans.date', $current_date->format(DATE_FORMAT));
 
-                    $assets[$a]['production_plan'] =  clone $this->productionplan;
+                $production_plan = $this->db->get()->row_array();
+
+                //echo json_encode($production_plan) . $current_date->format(DATE_FORMAT);
+
+                if (isset($production_plan)) {
+                    $assets[$a]['production_plan'] =  $production_plan;
+
+                    //echo json_encode($production_plan);
+
+                    $assets[$a]['shift_start_time'] = $shift_start_time;
+                    $assets[$a]['shift_end_time'] = $shift_end_time;
+                    //plan_by_hours
+
+                    $query = $this->db->query("SELECT * FROM plan_by_hours WHERE plan_id = " . $production_plan['plan_id'] . " AND ( time >= '$shift_start_time' AND time_end <= '$shift_end_time')");
+                    $assets[$a]['production_plan']['plan_by_hours'] = $query->result_array();
+
                     array_push($assets_with_plan, $assets[$a]);
                 }
             }
 
-            //if($i == 0)
             $shifts[$i]['assets'] = $assets_with_plan;
         }
+
 
         $data['plant_id'] = $plant_id;
         $data['site_id'] = $site_id;
         $data['shifts'] = $shifts;
+
+
 
         $this->load->view('templates/header');
         $this->load->view('pages/plan/manual_capture', $data);
