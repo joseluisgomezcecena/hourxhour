@@ -132,7 +132,7 @@ class Manual_Capture extends CI_Controller
         //$current_datetime->setTime(6, 0, 0); //for test purposes
 
         $shift_date = $this->shift->getIdFromCurrentTime($current_datetime);
-        $plan = $this->productionplan->getProductionPlan($this->input->get('asset_id'), $shift_date['shift_id'], $shift_date['date']->format(DATE_FORMAT));
+        $plan = $this->productionplan->getProductionPlan($this->input->get('asset_id'),  $shift_date['date']->format(DATE_FORMAT));
 
         //echo json_encode($plan);
         //if (true) return;
@@ -343,7 +343,7 @@ class Manual_Capture extends CI_Controller
     public function measuring_point()
     {
         $this->load->model('plant');
-        $this->load->model('shift');
+        //$this->load->model('shift');
 
         $shift_date = $this->shift->getIdFromCurrentTime(new DateTime);
 
@@ -351,7 +351,7 @@ class Manual_Capture extends CI_Controller
         $site_id  =   $this->input->get('site_id');
 
         $sql = "SELECT assets.asset_id, assets.site_id, assets.asset_name, ";
-        $sql .= "(SELECT plan_id FROM production_plans WHERE production_plans.asset_id = assets.asset_id AND production_plans.date = '{$shift_date['date']->format(DATE_FORMAT)}' AND shift_id = {$shift_date['shift_id']}) as plan_id FROM assets ";
+        $sql .= "(SELECT plan_id FROM production_plans WHERE production_plans.asset_id = assets.asset_id AND production_plans.date = '{$shift_date['date']->format(DATE_FORMAT)}') as plan_id FROM assets ";
         $sql .= "WHERE assets.asset_active=1 AND assets.site_id = {$site_id} AND assets.asset_is_pom = 1";
 
         $query = $this->db->query($sql);
@@ -361,6 +361,7 @@ class Manual_Capture extends CI_Controller
         $data['plant_id'] = $plant_id;
         $data['site_id'] = $site_id;
         $data['shift_id'] = $shift_date['shift_id'];
+
         $this->plant->Load($plant_id);
         $this->load->view('templates/header_logged_out');
         $this->load->view('pages/plan/tablet/select_measuring_point_tablet', $data);
