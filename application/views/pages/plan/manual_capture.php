@@ -1,4 +1,4 @@
-	<div ng-app='manualCaptureApp' ng-controller='manualCaptureController'>
+	<div ng-app='manualCaptureApp' ng-controller='manualCaptureController' id="rootApp">
 
 		<!-- Breadcrumb -->
 		<section class="breadcrumb lg:flex items-start">
@@ -112,7 +112,7 @@
 									echo '<td>';
 									echo ' <p>' . ($is_enable ? $plan_by_hour['item_number'] : 'N/A')  . '</p>';
 									echo '<input type="number" name="plant_id" value="' . $plant_id . '" hidden/>';
-									echo '	<input class="form-control" type="number" id="input_plan_by_hour_id_' . $plan_by_hour['plan_by_hour_id'] . '" value="' . $plan_by_hour['completed'] . '" style="min-width: 8rem;" ' . ($is_enable ? '' : 'disabled') . ' onchange="onchangeinput(this)" />';
+									echo '	<input class="form-control" type="number" id="input_plan_by_hour_id_' . $plan_by_hour['plan_by_hour_id'] . '" value="' . $plan_by_hour['completed'] . '" style="min-width: 8rem;" ' . ($is_enable ? '' : 'disabled') . ' onchange="input_change(' . $plan_by_hour['plan_by_hour_id'] . ')" />';
 
 									//echo '<p>' . $plan_by_hour['completed'] . '/' . $plan_by_hour['plan_by_hour_id'] . '<p/>';
 									if ($plan_by_hour['planned'] == null)
@@ -120,9 +120,9 @@
 									else
 										echo '<div>  <span id="span_completed_plan_by_hour_id_' . $plan_by_hour['plan_by_hour_id'] . '">' . $plan_by_hour['completed'] . '</span><span>/</span><span>' . $plan_by_hour['planned'] . '</span> </div>';
 
-									echo '	<button id="button_plan_by_hour_id_' . $plan_by_hour['plan_by_hour_id'] . '" class="btn mt-4 btn-icon btn-icon_large btn_success uppercase" ' . ($is_enable ? '' : 'disabled') . ' ng-click="save(' . $plan_by_hour['plan_by_hour_id'] . ')">';
-									echo '		<span id="span_plan_by_hour_id_' . $plan_by_hour['plan_by_hour_id'] . '" class="la la-save"></span>';
-									echo '	</button>';
+									//echo '	<button id="button_plan_by_hour_id_' . $plan_by_hour['plan_by_hour_id'] . '" class="btn mt-4 btn-icon btn-icon_large btn_success uppercase" ' . ($is_enable ? '' : 'disabled') . ' ng-click="save(' . $plan_by_hour['plan_by_hour_id'] . ')">';
+									//echo '		<span id="span_plan_by_hour_id_' . $plan_by_hour['plan_by_hour_id'] . '" class="la la-save"></span>';
+									//echo '	</button>';
 
 									echo '</td>';
 								}
@@ -151,8 +151,18 @@
 	</div>
 
 	<script>
-		function onchangeinput(control) {
-			console.log(control.value);
+		function input_change(id) {
+			//console.log(id);
+
+			//var scope = angular.element(document.getElementById('rootApp')).scope();
+			//scope.save(1);
+			//console.log(scope);
+			//angular.element(document.getElementById('rootApp')).injector().get('$rootScope').$save(id);
+
+			var scope = angular.element(document.getElementById('rootApp')).scope();
+			scope.$apply(function() {
+				scope.save(id);
+			})
 		}
 
 		/*
@@ -233,24 +243,13 @@
 			}
 
 
-			/* 
-							la la-save
-							la la-spinner animate-spin-slow
-							la la-check
-			*/
-
 			$scope.save = function(plan_by_hour_id) {
-				//console.log('save ' + plan_by_hour_id);
 
 				var inputIdString = 'input_plan_by_hour_id_' + plan_by_hour_id;
 				var value = document.getElementById(inputIdString).value;
 
-				var spanIdString = 'span_plan_by_hour_id_' + plan_by_hour_id;
-
-				//console.log(value);		
-				document.getElementById(spanIdString).classList.remove('la-save');
-				document.getElementById(spanIdString).classList.add('la-spinner');
-				document.getElementById(spanIdString).classList.add('animate-spin-slow');
+				value = Math.abs(value);
+				document.getElementById(inputIdString).value = value;
 
 				var data = {
 					"value": value,
@@ -267,21 +266,7 @@
 						'Content-Type': 'application/x-www-form-urlencoded' // Note the appropriate header
 					}
 				}).then(function(response) {
-					/* do something here */
 					console.log(response);
-					document.getElementById(spanIdString).classList.remove('la-spinner');
-					document.getElementById(spanIdString).classList.remove('animate-spin-slow');
-					document.getElementById(spanIdString).classList.add('la-check');
-
-					setTimeout(function() {
-						document.getElementById(spanIdString).classList.remove('la-check');
-						document.getElementById(spanIdString).classList.add('la-save');
-
-						var spanIdCompetedString = 'span_completed_plan_by_hour_id_' + plan_by_hour_id;
-						document.getElementById(spanIdCompetedString).innerHTML = value;
-						//update field
-
-					}, 500);
 				});
 			}
 
