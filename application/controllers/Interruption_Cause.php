@@ -99,7 +99,7 @@ class Interruption_Cause extends CI_Controller
         $site_id  =   $this->input->get('site_id');
 
         $sql = "SELECT assets.asset_id, assets.site_id, assets.asset_name, ";
-        $sql .= "(SELECT plan_id FROM production_plans WHERE production_plans.asset_id = assets.asset_id AND production_plans.date = '{$shift_date['date']->format(DATE_FORMAT)}' AND shift_id = {$shift_date['shift_id']}) as plan_id FROM assets ";
+        $sql .= "(SELECT plan_id FROM production_plans WHERE production_plans.asset_id = assets.asset_id AND production_plans.date = '{$shift_date['date']->format(DATE_FORMAT)}' ) as plan_id FROM assets ";
         $sql .= "WHERE assets.asset_active=1 AND assets.site_id = {$site_id} AND assets.asset_is_pom = 1";
 
         $query = $this->db->query($sql);
