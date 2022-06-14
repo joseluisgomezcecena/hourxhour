@@ -21,7 +21,7 @@ class Reports extends CI_Controller
        WHERE plants.plant_id = sub_plant_id
        AND sites.site_id = sub_site_id
        AND assets.asset_id = sub_asset_id
-       AND production_plans.shift_id = 1
+    --   AND production_plans.shift_id = 1
        AND plan_by_hours.time BETWEEN '$start_date' AND '$end_date'
        GROUP BY plants.plant_id,  sites.site_id, assets.asset_id
         ) as planned_shift_one,
@@ -34,7 +34,7 @@ class Reports extends CI_Controller
        WHERE plants.plant_id = sub_plant_id
        AND sites.site_id = sub_site_id
        AND assets.asset_id = sub_asset_id
-       AND production_plans.shift_id = 1
+    --   AND production_plans.shift_id = 1
        AND plan_by_hours.time BETWEEN '$start_date' AND '$end_date'
        GROUP BY plants.plant_id,  sites.site_id, assets.asset_id
         ) as completed_shift_one,
@@ -47,7 +47,7 @@ class Reports extends CI_Controller
        WHERE plants.plant_id = sub_plant_id
        AND sites.site_id = sub_site_id
        AND assets.asset_id = sub_asset_id
-       AND production_plans.shift_id = 2
+    --   AND production_plans.shift_id = 2
        AND plan_by_hours.time BETWEEN '$start_date' AND '$end_date'
        GROUP BY plants.plant_id,  sites.site_id, assets.asset_id
         ) as planned_shift_two,
@@ -60,7 +60,7 @@ class Reports extends CI_Controller
        WHERE plants.plant_id = sub_plant_id
        AND sites.site_id = sub_site_id
        AND assets.asset_id = sub_asset_id
-       AND production_plans.shift_id = 2
+    --   AND production_plans.shift_id = 2
        AND plan_by_hours.time BETWEEN '$start_date' AND '$end_date'
        GROUP BY plants.plant_id,  sites.site_id, assets.asset_id
         ) as completed_shift_two,
@@ -73,7 +73,7 @@ class Reports extends CI_Controller
        WHERE plants.plant_id = sub_plant_id
        AND sites.site_id = sub_site_id
        AND assets.asset_id = sub_asset_id
-       AND production_plans.shift_id = 3
+    --   AND production_plans.shift_id = 3
        AND plan_by_hours.time BETWEEN '$start_date'AND '$end_date'
        GROUP BY plants.plant_id,  sites.site_id, assets.asset_id
         ) as planned_shift_three,
@@ -86,7 +86,7 @@ class Reports extends CI_Controller
        WHERE plants.plant_id = sub_plant_id
        AND sites.site_id = sub_site_id
        AND assets.asset_id = sub_asset_id
-       AND production_plans.shift_id = 3
+    --   AND production_plans.shift_id = 3
        AND plan_by_hours.time BETWEEN '$start_date' AND '$end_date'
        GROUP BY plants.plant_id,  sites.site_id, assets.asset_id
         ) as completed_shift_three
