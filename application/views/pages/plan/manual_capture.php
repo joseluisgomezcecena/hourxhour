@@ -36,13 +36,13 @@
 					<nav class="tab-nav mt-5">
 
 						<?php
-
 						foreach ($shifts as $index => $shift) {
 							echo '<button class="nav-link h5 uppercase' . (($index == 0) ? ' active' : ' ')  . '" data-toggle="tab" data-target="#tab-' . $shift['shift_id']  . '">';
 							echo '<span class="las ' . $shift['icon'] . '"></span>';
 							echo $shift['shift_name'];
 							echo '</button>';
 						}
+
 						?>
 
 					</nav>
@@ -76,7 +76,7 @@
 								//THEAD	
 								echo '<thead><tr>';
 								echo '<th >Estación</th>';
-								foreach ($production_plan->plan_by_hours as $plan_by_hour) {
+								foreach ($production_plan['plan_by_hours'] as $plan_by_hour) {
 									$start = new DateTime($plan_by_hour['time']);
 									$end = new DateTime($plan_by_hour['time_end']);
 
@@ -106,16 +106,12 @@
 								echo '</td>';
 
 
-								foreach ($production_plan->plan_by_hours as $plan_by_hour) {
+								foreach ($production_plan['plan_by_hours'] as $plan_by_hour) {
 									$is_enable = isset($plan_by_hour['item_number']);
 
 									echo '<td>';
 									echo ' <p>' . ($is_enable ? $plan_by_hour['item_number'] : 'N/A')  . '</p>';
-
-
 									echo '<input type="number" name="plant_id" value="' . $plant_id . '" hidden/>';
-
-
 									echo '	<input class="form-control" type="number" id="input_plan_by_hour_id_' . $plan_by_hour['plan_by_hour_id'] . '" value="' . $plan_by_hour['completed'] . '" style="min-width: 8rem;" ' . ($is_enable ? '' : 'disabled') . ' onchange="onchangeinput(this)" />';
 
 									//echo '<p>' . $plan_by_hour['completed'] . '/' . $plan_by_hour['plan_by_hour_id'] . '<p/>';
@@ -123,7 +119,6 @@
 										echo '<div>  <span id="span_completed_plan_by_hour_id_' . $plan_by_hour['plan_by_hour_id'] . '">N/A</span> </div>';
 									else
 										echo '<div>  <span id="span_completed_plan_by_hour_id_' . $plan_by_hour['plan_by_hour_id'] . '">' . $plan_by_hour['completed'] . '</span><span>/</span><span>' . $plan_by_hour['planned'] . '</span> </div>';
-
 
 									echo '	<button id="button_plan_by_hour_id_' . $plan_by_hour['plan_by_hour_id'] . '" class="btn mt-4 btn-icon btn-icon_large btn_success uppercase" ' . ($is_enable ? '' : 'disabled') . ' ng-click="save(' . $plan_by_hour['plan_by_hour_id'] . ')">';
 									echo '		<span id="span_plan_by_hour_id_' . $plan_by_hour['plan_by_hour_id'] . '" class="la la-save"></span>';
@@ -176,10 +171,8 @@
 			$scope.selected_site = null;
 
 			$scope.init = function(plant_id, site_id) {
-
 				console.log('init plant_id ' + plant_id);
 				$scope.getPlants(plant_id, site_id);
-
 			}
 
 			$scope.getPlants = function(plant_id = null, site_id = null) {
@@ -196,11 +189,7 @@
 							return Number(plant.plant_id) === Number(plant_id);
 						})[0];
 						$scope.selected_plant = plant;
-
-
 						$scope.getSites(site_id);
-
-
 					}
 				});
 			}

@@ -131,11 +131,14 @@ class Shift extends CI_Model
     /*
     * Author: Emanuel Jauregui
     * Date: 04/05/2022
-    * El proposito de esta funcion es traer un arreglo con los turonos y con el dia
+    * El proposito de esta funcion es traer un arreglo con los turnos y con el dia
     */
-    public function get_shifts_with_date()
+    /*public function get_shifts_with_date()
     {
         $current = new DateTime();
+
+        //$this->db->select('*, IF( shift_start_time < shift_end_time, HOUR(timediff(shift_end_time, shift_start_time)),  (24 + HOUR(shift_end_time)) - HOUR(shift_start_time) )  as diff');
+        //$this->db->from('shifts');
 
         $query = $this->db->get('shifts');
         $shifts = $query->result_array();
@@ -157,5 +160,5 @@ class Shift extends CI_Model
         }
 
         return $shifts;
-    }
+    }*/
 }

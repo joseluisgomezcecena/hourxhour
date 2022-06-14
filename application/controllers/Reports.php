@@ -7,8 +7,25 @@ class Reports extends CI_Controller
         if (!$this->session->userdata(IS_LOGGED_IN))
             redirect(LOGIN_URL);
 
-        $start_date = date(DATE_FORMAT) . ' 0:00:00';
-        $end_date = date(DATE_FORMAT) . ' 23:59:59';
+
+        $this->db->select('shift_start_time, shift_end_time');
+        $this->db->from('shifts');
+        $result_array = $this->db->get()->result_array();
+
+        $start_date_one = date(DATE_FORMAT) . ' ' . $result_array[0]['shift_start_time'];
+        $end_date_one = date(DATE_FORMAT) . ' ' . $result_array[0]['shift_end_time'];
+
+        $start_date_two = date(DATE_FORMAT) . ' ' . $result_array[1]['shift_start_time'];
+        $end_date_two = date(DATE_FORMAT) . ' ' . $result_array[1]['shift_end_time'];
+
+        $start_date_three = date(DATE_FORMAT) . ' ' . $result_array[2]['shift_start_time'];
+        $next_day = new DateTime();
+        $next_day->modify('+1 day');
+        $end_date_three = $next_day->format(DATE_FORMAT) . ' ' . $result_array[2]['shift_end_time'];
+
+
+        $start_date = $start_date_one;
+        $end_date = $end_date_three;
 
         $data['title'] = "Daily Report";
         $query = $this->db->query("SELECT DISTINCT plants.plant_id as sub_plant_id, plants.plant_name, sites.site_id as sub_site_id,sites.site_name, assets.asset_id AS sub_asset_id, assets.asset_name,
@@ -21,8 +38,7 @@ class Reports extends CI_Controller
        WHERE plants.plant_id = sub_plant_id
        AND sites.site_id = sub_site_id
        AND assets.asset_id = sub_asset_id
-       AND production_plans.shift_id = 1
-       AND plan_by_hours.time BETWEEN '$start_date' AND '$end_date'
+       AND (plan_by_hours.time >= '$start_date_one' AND plan_by_hours.time < '$end_date_one')
        GROUP BY plants.plant_id,  sites.site_id, assets.asset_id
         ) as planned_shift_one,
         (
@@ -34,8 +50,7 @@ class Reports extends CI_Controller
        WHERE plants.plant_id = sub_plant_id
        AND sites.site_id = sub_site_id
        AND assets.asset_id = sub_asset_id
-       AND production_plans.shift_id = 1
-       AND plan_by_hours.time BETWEEN '$start_date' AND '$end_date'
+       AND (plan_by_hours.time >= '$start_date_one' AND plan_by_hours.time < '$end_date_one')
        GROUP BY plants.plant_id,  sites.site_id, assets.asset_id
         ) as completed_shift_one,
          (
@@ -47,8 +62,7 @@ class Reports extends CI_Controller
        WHERE plants.plant_id = sub_plant_id
        AND sites.site_id = sub_site_id
        AND assets.asset_id = sub_asset_id
-       AND production_plans.shift_id = 2
-       AND plan_by_hours.time BETWEEN '$start_date' AND '$end_date'
+       AND (plan_by_hours.time >= '$start_date_two' AND plan_by_hours.time < '$end_date_two')
        GROUP BY plants.plant_id,  sites.site_id, assets.asset_id
         ) as planned_shift_two,
         (
@@ -60,8 +74,7 @@ class Reports extends CI_Controller
        WHERE plants.plant_id = sub_plant_id
        AND sites.site_id = sub_site_id
        AND assets.asset_id = sub_asset_id
-       AND production_plans.shift_id = 2
-       AND plan_by_hours.time BETWEEN '$start_date' AND '$end_date'
+       AND (plan_by_hours.time >= '$start_date_two' AND plan_by_hours.time < '$end_date_two')
        GROUP BY plants.plant_id,  sites.site_id, assets.asset_id
         ) as completed_shift_two,
          (
@@ -73,8 +86,7 @@ class Reports extends CI_Controller
        WHERE plants.plant_id = sub_plant_id
        AND sites.site_id = sub_site_id
        AND assets.asset_id = sub_asset_id
-       AND production_plans.shift_id = 3
-       AND plan_by_hours.time BETWEEN '$start_date'AND '$end_date'
+       AND (plan_by_hours.time >= '$start_date_three' AND plan_by_hours.time < '$end_date_three')
        GROUP BY plants.plant_id,  sites.site_id, assets.asset_id
         ) as planned_shift_three,
         (
@@ -86,8 +98,7 @@ class Reports extends CI_Controller
        WHERE plants.plant_id = sub_plant_id
        AND sites.site_id = sub_site_id
        AND assets.asset_id = sub_asset_id
-       AND production_plans.shift_id = 3
-       AND plan_by_hours.time BETWEEN '$start_date' AND '$end_date'
+       AND (plan_by_hours.time >= '$start_date_three' AND plan_by_hours.time < '$end_date_three')
        GROUP BY plants.plant_id,  sites.site_id, assets.asset_id
         ) as completed_shift_three
        FROM plan_hourxhour.plan_by_hours
@@ -95,9 +106,10 @@ class Reports extends CI_Controller
        INNER JOIN assets ON production_plans.asset_id = assets.asset_id
        INNER JOIN sites ON assets.site_id = sites.site_id
        INNER JOIN plants ON sites.plant_id = plants.plant_id
-       WHERE plan_by_hours.time BETWEEN '$start_date' AND '$end_date';");
+       WHERE (plan_by_hours.time >= '$start_date' AND plan_by_hours.time < '$end_date');");
 
         $result = $query->result_array();
+
 
         for ($i = 0; $i < count($result); $i++) {
 
@@ -134,6 +146,9 @@ class Reports extends CI_Controller
         $this->load->view('pages/reports/daily_report', $data);
         $this->load->view('templates/footer');
     }
+
+
+
     public function custom_report()
     {
         if (!$this->session->userdata(IS_LOGGED_IN))
@@ -142,12 +157,49 @@ class Reports extends CI_Controller
         $start_date = $this->input->get('start_date');
         $end_date  =   $this->input->get('end_date');
 
-        if (!isset($start_date)) {
-            $start_date = date(DATE_FORMAT) . ' 0:00:00';
+        if ($start_date == null) {
+            $start_date = new DateTime();
+        } else {
+            $start_date = new DateTime($start_date);
         }
-        if (!isset($end_date)) {
-            $end_date = date(DATE_FORMAT) . ' 23:59:59';
+
+        if ($end_date == null) {
+            $end_date = new DateTime();
+        } else {
+            $end_date = new DateTime($end_date);
         }
+        $end_date = $end_date->modify('+1 day');
+
+        $this->db->select('shift_start_time, shift_end_time');
+        $this->db->from('shifts');
+        $result_array = $this->db->get()->result_array();
+
+        $start_time_one = $result_array[0]['shift_start_time'];
+        $end_time_one = $result_array[0]['shift_end_time'];
+
+        $start_time_two = $result_array[1]['shift_start_time'];
+        $end_time_two = $result_array[1]['shift_end_time'];
+
+        $start_time_three_first = $result_array[2]['shift_start_time'];
+        $end_time_three_first = '24:00:00';
+
+        $start_time_three_second = '00:00:00';
+        $end_time_three_second = $result_array[2]['shift_end_time'];
+
+        $start_date = $start_date->format(DATE_FORMAT) . ' ' . $start_time_one;
+        $end_date = $end_date->format(DATE_FORMAT)  . ' ' . $end_time_three_second;
+
+        /*
+        if (true) {
+            echo '1.- ' . $start_time_one . '...' . $end_time_one;
+            echo '2.- ' . $start_time_two . '...' . $end_time_two;
+            echo '3.- ' . $start_time_three_first . '...' . $end_time_three_first;
+            echo '3.- ' . $start_time_three_second . '...' . $end_time_three_second;
+
+            echo '/n' . $start_date . ' ' . $end_date;
+            return;
+        }
+        */
 
         $data['title'] = "Custom Report";
         $query = $this->db->query("SELECT DISTINCT plants.plant_id as sub_plant_id, plants.plant_name, sites.site_id as sub_site_id,sites.site_name, assets.asset_id AS sub_asset_id, assets.asset_name,
@@ -160,8 +212,7 @@ class Reports extends CI_Controller
        WHERE plants.plant_id = sub_plant_id
        AND sites.site_id = sub_site_id
        AND assets.asset_id = sub_asset_id
-       AND production_plans.shift_id = 1
-       AND plan_by_hours.time BETWEEN '$start_date' AND '$end_date'
+       AND (HOUR(plan_by_hours.time) >=  '$start_time_one' AND HOUR(plan_by_hours.time) < '$end_time_one')
        GROUP BY plants.plant_id,  sites.site_id, assets.asset_id
         ) as planned_shift_one,
         (
@@ -173,8 +224,7 @@ class Reports extends CI_Controller
        WHERE plants.plant_id = sub_plant_id
        AND sites.site_id = sub_site_id
        AND assets.asset_id = sub_asset_id
-       AND production_plans.shift_id = 1
-       AND plan_by_hours.time BETWEEN '$start_date' AND '$end_date'
+       AND (HOUR(plan_by_hours.time) >=  '$start_time_one' AND HOUR(plan_by_hours.time) < '$end_time_one')
        GROUP BY plants.plant_id,  sites.site_id, assets.asset_id
         ) as completed_shift_one,
          (
@@ -186,8 +236,8 @@ class Reports extends CI_Controller
        WHERE plants.plant_id = sub_plant_id
        AND sites.site_id = sub_site_id
        AND assets.asset_id = sub_asset_id
-       AND production_plans.shift_id = 2
-       AND plan_by_hours.time BETWEEN '$start_date' AND '$end_date'
+       
+       AND (HOUR(plan_by_hours.time) >=  '$start_time_two' AND HOUR(plan_by_hours.time) < '$end_time_two')
        GROUP BY plants.plant_id,  sites.site_id, assets.asset_id
         ) as planned_shift_two,
         (
@@ -199,8 +249,8 @@ class Reports extends CI_Controller
        WHERE plants.plant_id = sub_plant_id
        AND sites.site_id = sub_site_id
        AND assets.asset_id = sub_asset_id
-       AND production_plans.shift_id = 2
-       AND plan_by_hours.time BETWEEN '$start_date' AND '$end_date'
+       
+       AND (HOUR(plan_by_hours.time) >=  '$start_time_two' AND HOUR(plan_by_hours.time) < '$end_time_two')
        GROUP BY plants.plant_id,  sites.site_id, assets.asset_id
         ) as completed_shift_two,
          (
@@ -212,8 +262,8 @@ class Reports extends CI_Controller
        WHERE plants.plant_id = sub_plant_id
        AND sites.site_id = sub_site_id
        AND assets.asset_id = sub_asset_id
-       AND production_plans.shift_id = 3
-       AND plan_by_hours.time BETWEEN '$start_date'AND '$end_date'
+       
+       AND (   (HOUR(plan_by_hours.time) >=  '$start_time_three_first' AND HOUR(plan_by_hours.time) < '$end_time_three_first') OR (HOUR(plan_by_hours.time) >=  '$start_time_three_second' AND HOUR(plan_by_hours.time) < '$end_time_three_second') )
        GROUP BY plants.plant_id,  sites.site_id, assets.asset_id
         ) as planned_shift_three,
         (
@@ -225,8 +275,8 @@ class Reports extends CI_Controller
        WHERE plants.plant_id = sub_plant_id
        AND sites.site_id = sub_site_id
        AND assets.asset_id = sub_asset_id
-       AND production_plans.shift_id = 3
-       AND plan_by_hours.time BETWEEN '$start_date' AND '$end_date'
+       
+       AND (   (HOUR(plan_by_hours.time) >=  '$start_time_three_first' AND HOUR(plan_by_hours.time) < '$end_time_three_first') OR (HOUR(plan_by_hours.time) >=  '$start_time_three_second' AND HOUR(plan_by_hours.time) < '$end_time_three_second') )
        GROUP BY plants.plant_id,  sites.site_id, assets.asset_id
         ) as completed_shift_three
        FROM plan_hourxhour.plan_by_hours
@@ -234,7 +284,7 @@ class Reports extends CI_Controller
        INNER JOIN assets ON production_plans.asset_id = assets.asset_id
        INNER JOIN sites ON assets.site_id = sites.site_id
        INNER JOIN plants ON sites.plant_id = plants.plant_id
-       WHERE plan_by_hours.time BETWEEN '$start_date' AND '$end_date';");
+       WHERE (plan_by_hours.time >= '$start_date' AND plan_by_hours.time < '$end_date');");
 
         $result = $query->result_array();
 
@@ -273,6 +323,10 @@ class Reports extends CI_Controller
         $this->load->view('pages/reports/custom_report', $data);
         $this->load->view('templates/footer');
     }
+
+
+
+
     public function import_tempus_reports()
     {
         $data['title'] = 'Import Tempus Report';
@@ -336,7 +390,7 @@ class Reports extends CI_Controller
                 $file = fopen($filename, "r");
                 while (($getData = fgetcsv($file, 10000, ",")) !== FALSE) {
 
-                    $extra_hours = $getData[$horas_extra_de_la_semana]; 
+                    $extra_hours = $getData[$horas_extra_de_la_semana];
                     $hours = $getData[$dia_de_la_semana];
                     $supervisor = $getData[25];
                     $employee_number = $getData[0];
@@ -351,7 +405,7 @@ class Reports extends CI_Controller
                 fclose($file);
             }
         }
-        
+
         $data['extra_hours'] = $extra_hours;
         $data['employee_number'] = $employee_number;
         $data['employee_name'] = $employee_name;
