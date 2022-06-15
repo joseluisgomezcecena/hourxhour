@@ -11,7 +11,7 @@
     <div class="lg:col-span-3 xl:col-span-3">
         <div class="card p-5">
             <div class="mt-5">
-                <form action="<?= base_url() ?>import_report/import_std_hours" method="post" enctype="multipart/form-data" onSubmit="return validateForm()">
+                <form action="<?= base_url() ?>import_report/std_hours/import" method="post" enctype="multipart/form-data" onSubmit="return validateForm()">
                     <div class="grid lg:grid-cols-3 gap-5 my-5">
                         <div class="text-success">
                             <label for="date" class="mx-5"><b>Fecha de reporte</b></label>
@@ -34,34 +34,37 @@
                             <th style="font-size: 11px !important;" class="text-center uppercase">Planner</th>
                             <th style="font-size: 11px !important;" class="text-center uppercase">Whs</th>
                             <th style="font-size: 11px !important;" class="text-center uppercase">Posted</th>
+                            <th style="font-size: 11px !important;" class="text-center uppercase">Posted Time</th>
                             <th style="font-size: 11px !important;" class="text-center uppercase">Txn</th>
                             <th style="font-size: 11px !important;" class="text-center uppercase">Order</th>
                             <th style="font-size: 11px !important;" class="text-center uppercase">Quantity</th>
-                            <th style="font-size: 11px !important;" class="text-center uppercase">Class</th>
-                            <th style="font-size: 11px !important;" class="text-center uppercase">Run Labor</th>
-                            <th style="font-size: 11px !important;" class="text-center uppercase">Yield</th>
-                            <th style="font-size: 11px !important;" class="text-center uppercase">Setup hours</th>
-                            <th style="font-size: 11px !important;" class="text-center uppercase">Std hours</th>
+                            <th style="font-size: 11px !important;" class="text-center uppercase">Run labor (item x min)</th>
+                            <th style="font-size: 11px !important;" class="text-center uppercase">Setup minutes</th>
+
 
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td class="text-center">item</td>
-                            <td class="text-center"></td>
-                            <td class="text-center"></td>
-                            <td class="text-center"></td>
-                            <td class="text-center"></td>
-                            <td class="text-center"></td>
-                            <td class="text-center"></td>
-                            <td class="text-center"></td>
-                            <td class="text-center"></td>
-                            <td class="text-center"></td>
-                            <td class="text-center"></td>
-                            <td class="text-center"></td>
-                            <td class="text-center"></td>
-                            <td class="text-center"></td>
-                        </tr>
+
+                        //items_by_minutes
+                        <?php foreach ($items_by_minutes as $item) : ?>
+                            <tr>
+                                <td class="text-center"><?= $item['id']; ?></td>
+                                <td class="text-center"><?= $item['item']; ?></td>
+                                <td class="text-center"><?= $item['description']; ?></td>
+                                <td class="text-center"><?= $item['planner']; ?></td>
+                                <td class="text-center"><?= $item['whs']; ?></td>
+                                <td class="text-center"><?= $item['posted']; ?></td>
+                                <td class="text-center"><?= $item['posted_time']; ?></td>
+                                <td class="text-center"><?= $item['txn']; ?></td>
+                                <td class="text-center"><?= $item['order_number']; ?></td>
+                                <td class="text-center"><?= $item['quantity']; ?></td>
+                                <td class="text-center"><?= $item['run_labor_mins_per_item']; ?></td>
+                                <td class="text-center"><?= $item['setup_mins']; ?></td>
+
+                            </tr>
+                        <?php endforeach; ?>
+
                     </tbody>
                 </table>
             </div>

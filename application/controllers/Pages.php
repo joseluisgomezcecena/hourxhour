@@ -30,21 +30,15 @@ class Pages extends CI_Controller
         $shift_response =  $this->shift->getIdFromCurrentTime(new DateTime);
         $shift_id = $shift_response['shift_id'];
         $start_shift_date = $shift_response['date'];
-        $end_shift_date = $shift_response['date'];
+
+        //Se presentan el status como lo que ocurrio la hora anterior....
+        $end_shift_date = new DateTime();
+        $end_shift_date = $end_shift_date->modify('-1 hour');
+
         $this->shift->Load($shift_id);
 
-        //Si el dia actual es el mismo dia en el que comienza el turno
-        if ($this->shift->shift_start_time > $this->shift->shift_end_time) {
-            //Esto si se imprime... la condicion se detecta
-            /*if ('23:00:00' > '06:00:00') {
-                echo 'es mas grande';
-            }*/
-            //Se le necesita agregar un dia al end data
-            $end_shift_date->modify("+1 day");
-        }
-
         $start_date = $start_shift_date->format(DATE_FORMAT) . ' ' . $this->shift->shift_start_time;
-        $end_date = $end_shift_date->format(DATE_FORMAT) . ' ' . $this->shift->shift_end_time;
+        $end_date = $end_shift_date->format(DATETIME_FORMAT_ZERO_MINUTES_AND_SECONDS);
 
         $plants = $this->db->query("SELECT plant_id, plant_name FROM plants")->result_array();
 
@@ -61,7 +55,6 @@ class Pages extends CI_Controller
        WHERE plants.plant_id = sub_plant_id
        AND sites.site_id = sub_site_id
        AND assets.asset_id = sub_asset_id
-       AND production_plans.shift_id = $shift_id
        AND plan_by_hours.time BETWEEN '$start_date' AND '$end_date'
        GROUP BY plants.plant_id,  sites.site_id, assets.asset_id
         ) as planned,
@@ -74,7 +67,6 @@ class Pages extends CI_Controller
        WHERE plants.plant_id = sub_plant_id
        AND sites.site_id = sub_site_id
        AND assets.asset_id = sub_asset_id
-       AND production_plans.shift_id = $shift_id
        AND plan_by_hours.time BETWEEN '$start_date' AND '$end_date'
        GROUP BY plants.plant_id,  sites.site_id, assets.asset_id
         ) as completed
@@ -95,8 +87,6 @@ class Pages extends CI_Controller
             $plants[$i]['data'] = $data_info_items;
             //echo json_encode($query->result_array());
         }
-
-        //echo json_encode($plants);
 
         $data['title'] = ucfirst($page);
         $data['plants'] = $plants;

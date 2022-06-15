@@ -20,15 +20,44 @@
         justify-content: center;
         align-content: center;
         text-align: center !important;
-        overflow-x: hidden;
+        overflow: hidden;
+        white-space: nowrap;
+    }
+
+    .marquee_table {
+        top: 0;
+        position: relative;
+        animation: slider 20s linear infinite;
+        background-color: #fff;
+        display: block;
+    }
+
+    .marquee_table_2 {
+        top: 0;
+        position: relative;
+        animation: slider 20s linear infinite;
+        display: block;
+
+    }
+
+    @keyframes slider {
+        0% {
+            top: 0
+        }
+
+        100% {
+            top: -1000px
+        }
     }
 
     .andon {
-        position: relative;
+        position: fixed;
         width: 100vw;
-        height: 2rem;
-        /*padding: 1rem;*/
+        height: 100vh;
+        margin-top: 35rem;
         box-sizing: border-box;
+        background-color: #fff;
+        z-index: 1 !important;
     }
 
     .table-andon {
@@ -38,33 +67,33 @@
         animation: marquee 30s linear infinite;
     }
 
-
     .th-andon {
         border: 0.1rem solid gray;
     }
-
-    /*@keyframes marquee {
-        0% {
-            transform: translateX(100vw);
-            visibility: visible;
-        }
-
-        99% {
-            transform: translateX(-100vw);
-            visibility: hidden;
-        }
-
-        100% {
-            transform: translateX(100vw);
-            visibility: hidden;
-        }
-    }*/
 </style>
 
 <body>
     <main class="container-fluid mt-0 px-0" ng-app="OutputVsPlanApp" ng-controller="OutputVsPlanCtrl">
+        <!--ANDON START -->
+        <div class="container-fluid andon">
+            <div class="table-andon my-4">
+                <table class="table table-responsive text-center">
+                    <thead>
+                        <tr>
+                            <th ng-repeat="issue in issues" class="th-andon uppercase {{ issue.status }}">
+                                <span><b>{{issue.maquina_centro_trabajo}} -</b></span>
+                                {{issue.tipo_error}}
+                            </th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+        <!-- END ANDON -->
+
         <div id="table" ng-model="isHidden">
-            <table class="table table-responsive px-0 mx-0">
+            <!-- TABLE INFO PLANT AND AREA -->
+            <table class="table table-responsive px-0 mx-0" style="z-index: 100 !important;">
                 <thead>
                     <tr class="text-white text-center">
                         <th class="py-1 uppercase bg-dark">Plant</th>
@@ -74,7 +103,10 @@
                     </tr>
                 </thead>
             </table>
-            <div id="table-container" ng-repeat="plan in plan_productions">
+            <!-- END TABLE INFO PLANT AND AREA -->
+
+            <!--FIRST TABLE UPLOAD INFO-->
+            <div ng-repeat="plan in plan_productions" class="marquee_table" id="table_one" style="z-index: -1;">
                 <table class="table table-responsive mt-1 mb-0">
                     <thead>
                         <tr>
@@ -88,7 +120,6 @@
                         </tr>
                     </thead>
                 </table>
-
                 <table class="table table-responsive">
                     <thead>
                         <tr>
@@ -153,21 +184,91 @@
                     </tbody>
                 </table>
             </div>
-            <div class="container-fluid andon">
-                <div class="table-andon">
-                    <table class="table table-responsive text-center">
-                        <thead>
-                            <tr>
-                                <th ng-repeat="issue in issues" class="th-andon uppercase {{ issue.status }}">
-                                    <span><b>{{issue.maquina_centro_trabajo}} -</b></span>
-                                    {{issue.tipo_error}}
-                                </th>
-                            </tr>
-                        </thead>
-                    </table>
-                </div>
+            <!--END FIRST TABLE UPLOAD INFO-->
+
+            <!--SECOND TABLE UPLOAD INFO-->
+            <div ng-repeat="plan in plan_productions" style="z-index: -1;" id="table_two" class="marquee_table_2">
+                <table class="table table-responsive mt-1 mb-0">
+                    <thead>
+                        <tr>
+                            <th class="uppercase text-white bg-success">Output</th>
+                            <th class="uppercase table-success">{{ plan.asset_name }}</th>
+                            <th class="uppercase text-white bg-success">Shift status</th>
+
+                            <th class="uppercase table-danger" ng-show="plan.shift_status < 84">{{ plan.shift_status }}%</th>
+                            <th class="uppercase table-warning" ng-show="plan.shift_status >= 85 && plan.shift_status < 90">{{ plan.shift_status }}%</th>
+                            <th class="uppercase table-success" ng-show="plan.shift_status >= 90">{{ plan.shift_status }}%</th>
+                        </tr>
+                    </thead>
+                </table>
+                <table class="table table-responsive">
+                    <thead>
+                        <tr>
+                            <th class="uppercase ">HOUR</th>
+                            <th class="uppercase ">HC</th>
+                            <th class="uppercase ">Item Number</th>
+                            <th class="uppercase ">WO Number</th>
+                            <th class="uppercase ">Plan By Hour</th>
+                            <th class="uppercase ">CUM Plan</th>
+                            <th class="uppercase ">Output QTY</th>
+                            <th class="uppercase ">CUM Output</th>
+                            <th class="uppercase ">Interruption Cause</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-if="plan.current_hour_index > 0">
+                            <td class="table-secondary"><b> {{ plan.plan_by_hours[plan.current_hour_index - 1].time }}-{{ plan.plan_by_hours[plan.current_hour_index - 1].time_end }} </b></td>
+                            <td class="table-secondary">{{ plan.plan_by_hours[plan.current_hour_index - 1].planned_head_count }}</td>
+                            <td class="table-secondary">{{ plan.plan_by_hours[plan.current_hour_index - 1].item_number }}</td>
+                            <td class="table-secondary">{{ plan.plan_by_hours[plan.current_hour_index - 1].workorder }}</td>
+                            <td class="table-secondary">{{ plan.plan_by_hours[plan.current_hour_index - 1].planned }}</td>
+                            <td class="table-secondary">{{ plan.plan_by_hours[plan.current_hour_index - 1].planned_sum }}</td>
+                            <td class="table-secondary">{{ plan.plan_by_hours[plan.current_hour_index - 1].completed }}</td>
+                            <td class="table-secondary">{{ plan.plan_by_hours[plan.current_hour_index - 1].completed_sum }}</td>
+                            <td class="table-secondary">{{ plan.plan_by_hours[plan.current_hour_index - 1].interruption }}</td>
+                        </tr>
+                        <tr>
+                            <td class="table-success"><b> {{ plan.plan_by_hours[plan.current_hour_index].time }}-{{ plan.plan_by_hours[plan.current_hour_index].time_end }} </b></td>
+                            <td class="table-success">{{ plan.plan_by_hours[plan.current_hour_index].planned_head_count }}</td>
+                            <td class="table-success">{{ plan.plan_by_hours[plan.current_hour_index].item_number }}</td>
+                            <td class="table-success">{{ plan.plan_by_hours[plan.current_hour_index].workorder }}</td>
+                            <td class="table-success">{{ plan.plan_by_hours[plan.current_hour_index].planned }}</td>
+                            <td class="table-success">{{ plan.plan_by_hours[plan.current_hour_index].planned_sum }}</td>
+                            <td class="table-success">{{ plan.plan_by_hours[plan.current_hour_index].completed }}</td>
+                            <td class="table-success">{{ plan.plan_by_hours[plan.current_hour_index].completed_sum }}</td>
+                            <td class="table-success">{{ plan.plan_by_hours[plan.current_hour_index ].interruption }} </td>
+                        </tr>
+                        <tr ng-if="(plan.current_hour_index + 1) < plan.plan_by_hours.length">
+                            <td class=""><b> {{ plan.plan_by_hours[plan.current_hour_index + 1].time }}-{{ plan.plan_by_hours[plan.current_hour_index + 1].time_end }} </b></td>
+                            <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 1].planned_head_count }}</td>
+                            <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 1].item_number }}</td>
+                            <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 1].workorder }}</td>
+                            <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 1].planned }}</td>
+                            <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 1].planned_sum }}</td>
+                            <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 1].completed }}</td>
+                            <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 1].completed_sum }}</td>
+                            <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 1 ].interruption }} </td>
+                        </tr>
+                        <tr ng-if="(plan.current_hour_index + 2) < plan.plan_by_hours.length">
+                            <td class=""><b> {{ plan.plan_by_hours[plan.current_hour_index + 2].time }}-{{ plan.plan_by_hours[plan.current_hour_index + 2].time_end }} </b></td>
+                            <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 2].planned_head_count }}</td>
+                            <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 2].item_number }}</td>
+                            <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 2].workorder }}</td>
+                            <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 2].planned }}</td>
+                            <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 2].planned_sum }}</td>
+                            <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 2].completed }}</td>
+                            <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 2].completed_sum }}</td>
+                            <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 2].interruption }} </td>
+
+                        </tr>
+                    </tbody>
+                </table>
             </div>
+            <!--END SECOND TABLE UPLOAD INFO-->
         </div>
+
+        <!--ALERT NO PLAN UPLOAD -->
         <div ng-hide="isHidden" class="alert alert_primary" style="text-align: center;">
             <strong class="uppercase"><bdi>
                     <h1>No plan loaded!</h1>
@@ -177,8 +278,13 @@
             </strong>
             <a type="button" href="<?php echo base_url(); ?>index.php/output_vs_plan/select_monitor" class="btn btn_active uppercase my-5">Go back</a>
         </div>
+        <!--END ALERT NO PLAN UPLOAD -->
     </main>
     <script>
+        var table_one = document.getElementById('table_one');
+        var table_two = document.getElementById('table_two');
+
+        console.log(table_one)
         var app = angular.module('OutputVsPlanApp', []);
         app.controller('OutputVsPlanCtrl', function($scope, $http, $interval, $timeout) {
 
@@ -216,10 +322,20 @@
                 }).then(function successCallback(response) {
                     $scope.plan_productions = response.data.production_plans;
 
+
                     $scope.plan_productions.forEach(plan => {
 
+                        if ($scope.plan_productions.length <= 2) {
+                            if (table_two.style.display === "block") {
+                                table_one.style.display = "block";
+                            } else {
+                                table_one.style.display = "none";
+                                table_two.classList.remove('marquee_table_2')
+                            }
+                        }
+
                         plan.plan_by_hours.forEach(plan_by_hour => {
-                            console.log(plan_by_hour);
+                            //console.info(plan_by_hour);
                             //planned_head_count, item_number, workorder, planned, interruption
                             if (plan_by_hour.planned_head_count == null) plan_by_hour.planned_head_count = '-';
                             if (plan_by_hour.item_number == null) plan_by_hour.item_number = '-';
@@ -229,11 +345,11 @@
                         });
                     });
 
-                    console.log(response.data);
+                    //console.log(response.data);
                     $scope.issues = response.data.andon;
                     //$scope.loadAndon();
 
-                    console.log($scope.plan_productions);
+                    //console.table($scope.plan_productions);
                     if ($scope.plan_productions.length === 0) {
                         $scope.isHidden = false;
                     } else {
@@ -247,14 +363,14 @@
             $scope.loadAndon = function() {
                 var api_url = "<?php echo base_url() . 'output_vs_plan/get_andon_data'; ?>";
 
-                console.log(api_url);
+                //console.log(api_url);
 
                 $http({
                     method: 'get',
                     url: api_url
                 }).then(function successCallback(response) {
                     $scope.issues = response.data;
-                    console.log($scope.issues);
+                    //console.log($scope.issues);
                 }).catch((e) => {
                     console.log('Error' + e);
                 })
@@ -264,7 +380,6 @@
             $scope.init();
         });
     </script>
-
     <!-- Scripts -->
     <script src="<?php echo  base_url() ?>assets/js/vendor.js"></script>
     <script src="<?php echo  base_url() ?>assets/js/script.js"></script>

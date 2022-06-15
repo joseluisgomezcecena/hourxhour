@@ -213,7 +213,7 @@ class Output_VS_Plan extends CI_Controller
             $this->db->where('plants.plant_id', $plant_id);
             $this->db->where('sites.site_id', $site_id);
             $this->db->where('production_plans.date', $date);
-            $this->db->where('production_plans.shift_id', $shift_id);
+            //$this->db->where('production_plans.shift_id', $shift_id);
         } else {
             //Si esta por monitor....desplegar lo que esta configurado en el monitor
             $this->db->select('production_plans.plan_id, plants.plant_name, sites.site_name, assets.asset_name');
@@ -225,7 +225,7 @@ class Output_VS_Plan extends CI_Controller
             $this->db->join('plants', 'sites.plant_id = plants.plant_id', 'inner');
             $this->db->where('monitors_assets.monitor_id', $monitor_id);
             $this->db->where('production_plans.date', $date);
-            $this->db->where('production_plans.shift_id', $shift_id);
+            //$this->db->where('production_plans.shift_id', $shift_id);
         }
 
 

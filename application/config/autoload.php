@@ -133,3 +133,5 @@ $autoload['language'] = array();
 |	$autoload['model'] = array('first_model' => 'first');
 */
 $autoload['model'] = array('Machine_model', 'Plant', 'Site');
+
+$autoload['time_zone'] = date_default_timezone_set('America/Tijuana');
