@@ -76,8 +76,10 @@ class Manual_Capture extends CI_Controller
                     $assets[$a]['shift_end_time'] = $shift_end_time;
                     //plan_by_hours
 
-                    $query = $this->db->query("SELECT plan_by_hour_id, planned, completed, time, time_end, item_number FROM plan_by_hours INNER JOIN items_pph ON plan_by_hours.item_id = items_pph.item_id WHERE plan_id = " . $production_plan['plan_id'] . " AND ( plan_by_hours.time >= '$shift_start_time' AND plan_by_hours.time_end <= '$shift_end_time')");
+                    $sql = "SELECT plan_by_hour_id, planned, completed, time, time_end, item_number FROM plan_by_hours LEFT JOIN items_pph ON plan_by_hours.item_id = items_pph.item_id WHERE plan_id = " . $production_plan['plan_id'] . " AND ( plan_by_hours.time >= '$shift_start_time' AND plan_by_hours.time_end <= '$shift_end_time')";
+                    $query = $this->db->query($sql);
                     $assets[$a]['production_plan']['plan_by_hours'] = $query->result_array();
+
 
                     array_push($assets_with_plan, $assets[$a]);
                 }
