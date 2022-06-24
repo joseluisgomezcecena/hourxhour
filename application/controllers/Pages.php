@@ -26,7 +26,9 @@ class Pages extends CI_Controller
             tambien tenemos que incrementar un dia.
         */
 
-        $this->load->model('shift');
+        //Si es de las 0 horas al primer turno entonces
+
+        /*$this->load->model('shift');
         $shift_response =  $this->shift->getIdFromCurrentTime(new DateTime);
         $shift_id = $shift_response['shift_id'];
         $start_shift_date = $shift_response['date'];
@@ -36,8 +38,26 @@ class Pages extends CI_Controller
         $end_shift_date = $end_shift_date->modify('-1 hour');
 
         $this->shift->Load($shift_id);
+        */
 
-        $start_date = $start_shift_date->format(DATE_FORMAT) . ' ' . $this->shift->shift_start_time;
+        $start_shift_date = new DateTime();
+
+        $this->db->select('*');
+        $this->db->from('shifts');
+        $this->db->where('shift_id', 1);
+        $first_shift = $this->db->get()->row_array();
+
+        //Siempre va a ser la jpra actual menos una hora....
+        $end_shift_date = new DateTime();
+        $end_shift_date = $end_shift_date->modify('-1 hour');
+
+        $hour = $start_shift_date->format(HOUR_FORMAT_WITH_ZEROS);
+        if (!($hour >= $first_shift['shift_start_time'])) {
+            //el turno comienza en el dia anterior
+            $start_shift_date = $start_shift_date->modify("-1 day");
+        }
+
+        $start_date = $start_shift_date->format(DATE_FORMAT) . ' ' . $first_shift['shift_start_time'];
         $end_date = $end_shift_date->format(DATETIME_FORMAT_ZERO_MINUTES_AND_SECONDS);
 
         $plants = $this->db->query("SELECT plant_id, plant_name FROM plants")->result_array();
