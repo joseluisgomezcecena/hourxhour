@@ -212,10 +212,10 @@
                         Load Plan
                     </a>
                 </div>-->
-                <!--<a href="#no-link" class="active" data-toggle="collapse" data-target="#reports">
+                <a href="#no-link" class="active" data-toggle="collapse" data-target="#reports">
                     <span class="collapse-indicator la la-arrow-circle-down"></span>
                     Reports
-                </a>-->
+                </a>
                 <div id="reports" class="collapse">
                     <a href="<?php echo base_url(); ?>index.php/daily_report">
                         Daily Report
@@ -224,10 +224,10 @@
                         Custom Report
                     </a>
                 </div>
-                <a href="#no-link" class="active" data-toggle="collapse" data-target="#import_reports">
+                <!--<a href="#no-link" class="active" data-toggle="collapse" data-target="#import_reports">
                     <span class="collapse-indicator la la-arrow-circle-down"></span>
                     Import Reports
-                </a>
+                </a>-->
                 <div id="import_reports" class="collapse">
                     <a href="<?php echo base_url(); ?>import_report/tempus">
                         Tempus Report
