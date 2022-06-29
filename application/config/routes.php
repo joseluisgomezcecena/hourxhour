@@ -128,8 +128,8 @@ $route['manual_capture/save']['post'] = '/manual_capture/save_manual_capture';
 //trigger
 $route['trigger'] = '/trigger/index';
 //Output vs plan
-$route['output_vs_plan/select_site'] = 'output_vs_plan/select_site';
-$route['output_vs_plan/select_monitor'] = 'output_vs_plan/select_monitor';
+$route['site'] = 'output_vs_plan/select_site';
+$route['monitor'] = 'output_vs_plan/select_monitor';
 
 $route['output_vs_plan/get_data_plants_sites'] = 'output_vs_plan/get_data_plants_sites';
 $route['output_vs_plan/get_data_monitor'] = 'output_vs_plan/get_data_monitor';
