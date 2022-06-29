@@ -223,6 +223,10 @@
                     <a href="<?php echo base_url(); ?>index.php/custom_report">
                         Custom Report
                     </a>
+
+                    <a href="<?php echo base_url(); ?>index.php/detail_report">
+                        Hour x Hour Detail
+                    </a>
                 </div>
                 <a href="#no-link" class="active" data-toggle="collapse" data-target="#import_reports">
                     <span class="collapse-indicator la la-arrow-circle-down"></span>

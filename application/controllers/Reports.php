@@ -189,17 +189,7 @@ class Reports extends CI_Controller
         $start_date = $start_date->format(DATE_FORMAT) . ' ' . $start_time_one;
         $end_date = $end_date->format(DATE_FORMAT)  . ' ' . $end_time_three_second;
 
-        /*
-        if (true) {
-            echo '1.- ' . $start_time_one . '...' . $end_time_one;
-            echo '2.- ' . $start_time_two . '...' . $end_time_two;
-            echo '3.- ' . $start_time_three_first . '...' . $end_time_three_first;
-            echo '3.- ' . $start_time_three_second . '...' . $end_time_three_second;
 
-            echo '/n' . $start_date . ' ' . $end_date;
-            return;
-        }
-        */
 
         $data['title'] = "Custom Report";
         $query = $this->db->query("SELECT DISTINCT plants.plant_id as sub_plant_id, plants.plant_name, sites.site_id as sub_site_id,sites.site_name, assets.asset_id AS sub_asset_id, assets.asset_name,
@@ -321,6 +311,27 @@ class Reports extends CI_Controller
         $data['custom_report'] =   $result;
         $this->load->view('templates/header');
         $this->load->view('pages/reports/custom_report', $data);
+        $this->load->view('templates/footer');
+    }
+
+
+
+    public function detail_report()
+    {
+        if (!$this->session->userdata(IS_LOGGED_IN))
+            redirect(LOGIN_URL);
+
+        $this->load->model('shift');
+        //necesitamos la fecha de hoy, el shift_id y el asset_id
+        $now = new DateTime();
+
+        $data['title'] = "Hour x Hour Detail";
+        //$data['asset_id'] =  $this->input->get('asset_id');
+        //$shift_date = $this->shift->getIdFromCurrentTime($now);
+        //$data['date'] = $date = $shift_date['date']->format(DATE_FORMAT);
+
+        $this->load->view('templates/header');
+        $this->load->view('pages/reports/detail_report', $data);
         $this->load->view('templates/footer');
     }
 
