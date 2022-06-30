@@ -123,7 +123,7 @@
         background-color: green;
     }
 
-    .sticky{
+    .sticky {
         position: sticky !important;
         top: 5rem;
     }
@@ -615,6 +615,7 @@
 
             //esta variable se utiliza para validar que haya algun row para guardar de la totalidad, si no tiene datos para guardar descartar el guardado
             var has_edited_rows = false;
+            var total_planned_hours = 0;
 
             for (let i = 0; i < $scope.production_plan.plan_by_hours.length; i++) {
 
@@ -622,6 +623,9 @@
                 console.log($scope.production_plan.plan_by_hours[i])
 
                 let currentItem = $scope.production_plan.plan_by_hours[i];
+
+                if (currentItem.planned != null)
+                    total_planned_hours += $scope.production_plan.plan_by_hours[i].planned;
 
                 let has_planned = true;
                 let has_item_id = true;
@@ -661,6 +665,12 @@
 
             }
 
+            console.log("PLANNED HOURS " + total_planned_hours);
+            if (total_planned_hours <= 0) {
+                $scope.display_loading = false;
+                swal("Something was wrong!", "You have no planned hours at all, at least one planned hour must be greated than 0 in play by hour column. ", "error");
+                return;
+            }
 
             if (has_errors) {
                 $scope.display_loading = false;
