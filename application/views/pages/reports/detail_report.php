@@ -158,54 +158,79 @@
     </div>
 
     <form method="POST" enctype="multipart/form-data" ng-hide="display_loading">
-        <div style="display:flex; justify-content: flex-end;">
 
-            <!-- Removed ng-click="copy_clipboard()" -->
-            <a data-toggle="tooltip" data-tippy-content="Paste the information of the excel table" data-tippy-placement="right">
-                <button type="button" class="btn btn-icon btn-icon_large btn_info uppercase" data-toggle="modal" data-target="#inputExcelDataModal" aria-expanded="false">
-                    <span class="las la-paste"></span>
-                </button>
-            </a>
-        </div>
         <table class="table table_bordered w-full mt-3">
             <thead class="text-xs">
                 <tr>
                     <th scope="col" class="bg-[#D1FAE5]"><small>PLANT:</small></th>
-                    <th scope="col">
-                        <input type="text" name="" value="" ng-model="production_plan.plant_name" disabled class="form-control input_invisible size-sm">
+                    <th scope="col" style="width:15rem !important;">
+                        <select class="form-control size-md" ng-model="selected_plant">
+                            <option value="">---select plant---</option>
+                            <option ng-repeat="plant in plants" value="{{plant.plant_id}}">{{ plant.plant_name }}</option>
+                        </select>
+                        <!--<input type="text" name="" value="" ng-model="production_plan.plant_name" disabled class="form-control input_invisible size-sm">-->
                     </th>
                     <th scope="col" class="bg-[#D1FAE5]"><small>AREA:</small></th>
-                    <th scope="col">
-                        <input type="text" name="" value="" ng-model="production_plan.site_name" disabled class="form-control input_invisible size-sm">
+                    <th scope="col" style="width:15rem !important;">
+                        <select class="form-control size-md" ng-model="selected_site">
+                            <option value="">---select sites---</option>
+                            <option ng-repeat="site in sites | filter:{plant_id: selected_plant }" value="{{site.site_id}}" ng-show="selected_plant">{{ site.site_name }}</option>
+                        </select>
+                        <!--<input type="text" name="" value="" ng-model="production_plan.site_name" disabled class="form-control input_invisible size-sm"> -->
+
                     </th>
+
                     <th scope="col" class="bg-[#D1FAE5]"><small>OUTPUT:</small></th>
-                    <th scope="col">
+                    <th scope="col" style="width:15rem !important;">
+                        <select class="form-control size-md" ng-model="selected_asset">
+                            <option value="">---select asset---</option>
+                            <option ng-repeat="asset in assets | filter:{site_id: selected_site }" value="{{asset.asset_id}}" ng-show="selected_site">{{ asset.asset_name }}</option>
+                        </select>
+
+                        <!--
                         <input type="text" name="" value="" ng-model="production_plan.asset_name" disabled class="form-control input_invisible size-sm">
+                        -->
                     </th>
-                    <th scope="col" class="bg-[#D1FAE5]"><small>HC:</small></th>
-                    <th scope="col">
-                        <input type="number" min="1" name="hc" id="" onkeyup="" ng-model="production_plan.hc" ng-change="sethc()" class="form-control input_invisible size-sm" />
-                    </th>
-                    <th scope="col" class="bg-[#D1FAE5]"><small>DATE:</small></th>
-                    <th scope="col">
-                        <input style="min-width: 10rem; border: 0;" name="date" ng-model="production_plan.date_display" ng-change="change_date()" class="form-control size-sm" type="date">
-                    </th>
-                    <th scope="col" class="bg-[#D1FAE5]"><small>SUPERVISOR:</small></th>
-                    <th scope="col">
-                        <input placeholder="Select" type="text" ng-model="production_plan.supervisor" class="form-control size-sm" list="dl_supervisors" required />
-                    </th>
+
+
+
                 </tr>
+
+                <tr>
+
+
+                    <th scope="col" class="bg-[#D1FAE5]"><small>DATE:</small></th>
+
+                    <th scope="col" style="width:15rem !important;">
+                        <input style=" border: 0;" name="date" ng-model="selected_date" class="form-control size-md" type="date">
+                    </th>
+
+
+                    <th colspan="2">
+                        <button type="button" class="btn btn_success uppercase d-grid gap-2 col-6 mx-5" ng-click="search()" ng-disabled="selected_asset == null || selected_date == null ">
+                            <span class="la la-eye ltr:mr-2 rtl:ml-2"></span>
+                            Search
+                        </button>
+                    </th>
+
+                    <th scope="col"><small>SUPERVISOR:</small></th>
+                    <th scope="col">
+                        <input placeholder="Select" type="text" ng-model="production_plan.supervisor" class="form-control size-md" list="dl_supervisors" readonly />
+                    </th>
+                    <!-- <th scope="col" style="border-right:solid transparent;">
+                    </th> -->
+
+
+                </tr>
+
             </thead>
         </table>
-        <div style="display: flex; justify-content:flex-end;">
-            <div class=" my-3 px-5 text-right mt-3">
-                <input class="form-check-input mt-1" id="flexCheckDefault" ng-model="production_plan.use_multiplier_factor" type="checkbox">
-                <label class="form-check-label px-3 mt-0" for="flexCheckDefault">Factor multiplicador</label>
-                <input class="form-control" style="width: 12rem;" type="number" min="2" ng-model="production_plan.multiplier_factor" ng-disabled="!production_plan.use_multiplier_factor" value="1" id="">
-            </div>
-        </div>
+
         <div>
-            <table class="table relative table_bordered w-full mt-3 text-center">
+
+
+
+            <table class="table relative table_bordered w-full mt-3 text-center" ng-if="production_plan.plan_id != null">
                 <thead>
                     <tr class="bg-[#059669] sticky my-5">
                         <th scope="col" class="text-white text-xs sticky top-0">HR</th>
@@ -214,13 +239,23 @@
                         <th scope="col" class="text-white text-xs sticky top-0">WO NUMBER</th>
                         <th scope="col" class="text-white text-xs sticky top-0">PLAN BY HR</th>
                         <th scope="col" class="text-white text-xs sticky top-0">CUM PLAN</th>
+
+                        <th scope="col" class="text-white text-xs sticky top-0">DONE BY HR</th>
+                        <th scope="col" class="text-white text-xs sticky top-0">CUM DONE</th>
+
+                        <th scope="col" class="text-white text-xs sticky top-0">%</th>
+
                         <th scope="col" class="text-white text-xs sticky top-0">PLANNED INTERRUPTION</th>
+                        <th scope="col" class="text-white text-xs sticky top-0">NOT PLANNED INTERRUPTION</th>
+
+                        <!--
                         <th scope="col" class="text-white text-xs sticky top-0">LESS TIME</th>
                         <th scope="col" class="text-white text-xs sticky top-0">STD TIME</th>
                         <th scope="col" class="text-white text-xs sticky top-0">
                             CALCULATED QTY BY HR <br />
                             (HC - LESS TIME) / STD TIME
                         </th>
+-->
                     </tr>
                 </thead>
                 <tbody class="text-center">
@@ -252,6 +287,21 @@
                             <input type="number" min="0" ng-model="plan_item.planned_acum" class="form-control input_invisible size-sm" disabled>
                         </td>
 
+
+                        <!-- PLAN BY HOUR -->
+                        <td id=""><input type="number" min="0" onkeyup="" ng-model="plan_item.completed" ng-class="{red: plan_item.invalid_planned}" class="form-control input_invisible size-sm" /></td>
+
+                        <!-- CUM PLAN -->
+                        <td id="" name="" class="bg-[#D1FAE5] form-control size-sm">
+                            <input type="number" min="0" ng-model="plan_item.completed_acum" class="form-control input_invisible size-sm" disabled>
+                        </td>
+
+
+                        <td id="" name="" class="bg-[#D1FAE5] form-control size-sm">
+                            <input type="text" min="0" ng-model="plan_item.completed_percent" class="form-control input_invisible size-sm" disabled>
+                        </td>
+
+
                         <!-- PLANNED INTERRUPTION -->
                         <td>
                             <select class="form-control input_invisible" ng-model="plan_item.selected_interruption" ng-change="interruption_changed(plan_item)" ng-options="interruption as interruption.interruption_name for interruption in interruptions">
@@ -259,20 +309,30 @@
                             </select>
                         </td>
 
-                        <!-- LESS TIME -->
+
+                        <!-- NOT PLANNED INTERRUPTION -->
+                        <td>
+                            <select class="form-control input_invisible" ng-model="plan_item.selected_not_planned_interruption" ng-change="interruption_changed(plan_item)" ng-options="interruption as interruption.interruption_name for interruption in not_planned_interruptions">
+                                <option value="" ng-if="false"></option>
+                            </select>
+                        </td>
+
+                        <!--
                         <td class="bg-[#D1FAE5] form-control size-sm" id="">
                             <input class="size-sm" type="number" ng-model="plan_item.interruption_value" name="" id="" disabled="true">
                         </td>
 
-                        <!-- STD TIME -->
+                      
                         <td class="bg-[#D1FAE5] form-control size-sm" id="">
                             <input class="size-sm" type="number" name="" id="" ng-model="plan_item.std_time" disabled="true">
                         </td>
 
-                        <!-- CALCULATED QTY BY HR -->
+                      
                         <td class="bg-[#D1FAE5] form-control size-sm" id="">
                             <input class="size-sm" type="text" name="" id="" disabled="true" ng-model="plan_item.formula">
                         </td>
+                        -->
+
                     </tr>
 
                     <datalist id="dl_items">
@@ -285,16 +345,15 @@
 
                 </tbody>
             </table>
+
+
+            <h3 class="text-center mt-3" ng-show="production_plan.plan_id == null && detail_loaded == true">There was no Plan for the date and output.</h3>
+
             <div class="flex justify-end mt-5">
 
                 <button type="button" class="btn btn_secondary uppercase ltr:mr-2" ng-click="cancel()">
                     <span class="la la-arrow-left ltr:mr-2 rtl:ml-2"></span>
-                    Cancel
-                </button>
-
-                <button type="button" class="btn btn_success uppercase" ng-click="save()">
-                    <span class="la la-save ltr:mr-2 rtl:ml-2"></span>
-                    Save Plan
+                    Back
                 </button>
             </div>
         </div>
@@ -348,21 +407,49 @@
     var fetch = angular.module('plannerApp', []);
     fetch.controller('planController', ['$scope', '$http', function($scope, $http) {
 
+        $scope.plants = null;
+        $scope.selected_plant;
+
+        $scope.sites = null;
+        $scope.selected_site;
+
+        $scope.assets = null;
+        $scope.selected_asset;
+
+        $scope.selected_date;
+
         //El plan de produccion
         $scope.production_plan = null;
         //$scope.plan_date = null;
-
         //La lista de items (item_number, etc..)
         $scope.items = null;
-
         //Lista de interrupciones
         $scope.interruptions = null;
 
+        $scope.not_planned_interruptions = null;
+
         $scope.supervisors = null;
 
-        $scope.display_loading = true;
+        $scope.display_loading = false;
 
-        $scope.init = function(asset_id, date) {
+        //api/plan/get_selection_data
+
+        $scope.init = function() {
+            //get data for download selection system...
+
+            $http({
+                method: 'get',
+                url: '<?= base_url() ?>index.php/api/plan/get_selection_data',
+            }).then(function successCallback(response) {
+                console.log(response.data);
+                $scope.plants = response.data.plants;
+                $scope.sites = response.data.sites;
+                $scope.assets = response.data.assets;
+            });
+
+        }
+
+        $scope.switch_plan = function(asset_id, date) {
             $scope.asset_id = asset_id;
             $scope.date = date;
             console.log('date de hoy ' + $scope.date);
@@ -372,14 +459,23 @@
 
         $scope.change_date = function() {
             var changed_date = $scope.production_plan.date_display.toISOString().split('T')[0];
-            $scope.init($scope.asset_id, changed_date);
+            $scope.switch_plan($scope.asset_id, changed_date);
+        }
+
+
+        $scope.detail_loaded = false;
+
+        $scope.search = function() {
+            $scope.display_loading = true;
+            var changed_date = $scope.selected_date.toISOString().split('T')[0];
+            $scope.switch_plan($scope.selected_asset, changed_date);
         }
 
 
         $scope.getData = function() {
             $http({
                 method: 'get',
-                url: '<?= base_url() ?>index.php/api/plan/get_data',
+                url: '<?= base_url() ?>index.php/api/plan/get_detail_data',
                 params: {
                     asset_id: $scope.asset_id,
                     date: $scope.date
@@ -393,6 +489,8 @@
 
                 //Load interruptions
                 $scope.interruptions = response.data.interruptions;
+
+                $scope.not_planned_interruptions = response.data.not_planned_interruptions;
 
                 $scope.supervisors = response.data.supervisors;
 
@@ -426,10 +524,17 @@
                     else
                         plan_item.planned_head_count = Number($scope.production_plan.plan_by_hours[i].planned_head_count);
 
-                    if ($scope.production_plan.plan_by_hours[i].planned == null)
+                    if ($scope.production_plan.plan_by_hours[i].planned == null) {
                         plan_item.planned = undefined;
-                    else
+                        plan_item.completed = undefined;
+                    } else {
                         plan_item.planned = Number($scope.production_plan.plan_by_hours[i].planned);
+                        plan_item.completed = Number($scope.production_plan.plan_by_hours[i].completed);
+                    }
+
+
+
+
 
                     if ($scope.production_plan.plan_by_hours[i].std_time == null)
                         plan_item.std_time = undefined;
@@ -440,13 +545,17 @@
                         plan_item.interruption_value = undefined;
                     else
                         plan_item.interruption_value = Number($scope.production_plan.plan_by_hours[i].interruption_value);
+
+
+
+
                     //plan_item.interruption_id = plan_item.selected_interruption.interruption_id;
                 }
 
                 $scope.updateItems();
 
                 $scope.display_loading = false;
-
+                $scope.detail_loaded = true;
             });
         }
 
@@ -466,6 +575,15 @@
                 })[0];
                 if (foundInterruption)
                     $scope.production_plan.plan_by_hours[i].selected_interruption = foundInterruption;
+
+
+                var foundNotPlannedInterruption = $scope.not_planned_interruptions.filter(function(interr) {
+                    return Number(interr.not_planned_interruption_id) === $scope.production_plan.plan_by_hours[i].not_planned_interruption_id;
+                })[0];
+                if (foundNotPlannedInterruption)
+                    $scope.production_plan.plan_by_hours[i].selected_not_planned_interruption = foundNotPlannedInterruption;
+
+
 
                 if ($scope.production_plan.plan_by_hours[i].item_id != undefined) {
                     var found = $scope.items.filter(function(item) {
@@ -554,15 +672,27 @@
         $scope.update_acum = function() {
             var count = $scope.production_plan.plan_by_hours.length;
             var total = 0;
+            var totalCompleted = 0;
             for (let i = 0; i < count; i++) {
                 //$scope.production_plan.plan_by_hours[i].planned_acum = $scope.production_plan.plan_by_hours[i].planned;
 
                 if ($scope.production_plan.plan_by_hours[i].planned == null || $scope.production_plan.plan_by_hours[i].undefined) {
                     total += 0;
+                    totalCompleted += 0;
                 } else {
                     total += $scope.production_plan.plan_by_hours[i].planned;
                     $scope.production_plan.plan_by_hours[i].planned_acum = total;
+
+                    totalCompleted += $scope.production_plan.plan_by_hours[i].completed;
+                    $scope.production_plan.plan_by_hours[i].completed_acum = totalCompleted;
+
+                    //completed_percent
+
+                    $scope.production_plan.plan_by_hours[i].completed_percent = '' + parseInt((totalCompleted * 100) / total) + '%';
+
                 }
+
+
             }
         }
 
@@ -596,278 +726,19 @@
         }
 
 
-        /* Author: Emanuel Jauregui
-         * Date: 04/04/2022
-         * Last Update: 04/04/2022
-         * 
-         * Method: save
-         * Parameters: None
-         * $scope.production_plan Represents all the production plan of the entire screen
-         * $scope.production_plan.plan_by_hours represents each row of the plan, the row containing the Date (start - end date)
-         *  the method send to the api a json string of the $scope.production_plan to be stored.   
-         *  It will have a validation for not completed rows based on HC, item_number, work order and plany by hours
-         */
-        $scope.save = function() {
-
-            $scope.display_loading = true;
-
-            var has_errors = false;
-
-            //esta variable se utiliza para validar que haya algun row para guardar de la totalidad, si no tiene datos para guardar descartar el guardado
-            var has_edited_rows = false;
-            var total_planned_hours = 0;
-
-            for (let i = 0; i < $scope.production_plan.plan_by_hours.length; i++) {
-
-                console.log('item ' + i);
-                console.log($scope.production_plan.plan_by_hours[i])
-
-                let currentItem = $scope.production_plan.plan_by_hours[i];
-
-                if (currentItem.planned != null)
-                    total_planned_hours += $scope.production_plan.plan_by_hours[i].planned;
-
-                let has_planned = true;
-                let has_item_id = true;
-                let has_workorder = true;
-                let has_planned_head_count = true;
-
-                if (currentItem.planned == undefined || currentItem.planned == null) {
-                    has_planned = false;
-                }
-
-                if (currentItem.item_id == undefined || currentItem.item_id == null) {
-                    has_item_id = false;
-                }
-
-                if (currentItem.workorder == undefined || currentItem.workorder == null || currentItem.workorder == "") {
-                    has_workorder = false;
-                }
-
-                if (currentItem.planned_head_count == undefined || currentItem.planned_head_count == null) {
-                    has_planned_head_count = false;
-                }
-
-                if (has_planned || has_item_id || has_workorder || has_planned_head_count) {
-                    //Checar que esten definidos los 4 Datos
-                    if (!(has_planned && has_item_id && has_workorder && has_planned_head_count)) {
-                        has_errors = true;
-                        currentItem.invalid_planned_head_count = !has_planned_head_count;
-                        currentItem.invalid_item_id = !has_item_id;
-                        currentItem.invalid_workorder = !has_workorder;
-                        currentItem.invalid_planned = !has_planned;
-                    }
-                }
-
-                if (has_planned && has_item_id && has_workorder && has_planned_head_count) {
-                    has_edited_rows = true;
-                }
-
-            }
-
-            console.log("PLANNED HOURS " + total_planned_hours);
-            if (total_planned_hours <= 0) {
-                $scope.display_loading = false;
-                swal("Something was wrong!", "You have no planned hours at all, at least one planned hour must be greated than 0 in play by hour column. ", "error");
-                return;
-            }
-
-            if (has_errors) {
-                $scope.display_loading = false;
-                swal("Something was wrong!", "You have some data incompleted! check item number, workorder, hc and planned from all row ", "error");
-                return;
-            }
-
-            if (!has_edited_rows) {
-                $scope.display_loading = false;
-                swal("Something was wrong!", "You have no data to save! you need to fill at least one row.", "error");
-                return;
-            }
-
-
-            if ($scope.production_plan.use_multiplier_factor) {
-                var validated = true;
-                if (isNaN($scope.production_plan.multiplier_factor)) {
-                    validated = false;
-                } else {
-
-                    if (!Number.isInteger($scope.production_plan.multiplier_factor)) {
-                        //Si no es entero
-                        validated = false;
-                    } else {
-                        //Si es entero validar que sea mayor que uno
-                        if (Number($scope.production_plan.multiplier_factor) < 2) {
-                            validated = fase;
-                        }
-                    }
-                }
-                if (!validated) {
-                    $scope.display_loading = false;
-                    swal("Something was wrong!", "The multiplier factor must be a number greater than one.", "error");
-                    return;
-                }
-            }
-
-            if ($scope.production_plan.supervisor == null || $scope.production_plan.supervisor == undefined || $scope.production_plan.supervisor == '') {
-                $scope.display_loading = false;
-                swal("Something was wrong!", "Please fill the supervisor field.", "error");
-                return;
-            }
-
-
-            for (let i = 0; i < $scope.production_plan.plan_by_hours.length; i++) {
-                let currentItem = $scope.production_plan.plan_by_hours[i];
-                currentItem.invalid_planned_head_count = false;
-                currentItem.invalid_item_id = false;
-                currentItem.invalid_workorder = false;
-                currentItem.invalid_planned = false;
-            }
-
-            console.log($scope.production_plan);
-
-            //if($scope.production_plan.plan_by_hours[i]
-
-            var url = '<?= base_url() ?>index.php/api/plan/save';
-            var data = {
-                plan: $scope.production_plan
-            }
-            var config = {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            }
-            $http.post(url, data, config).then(function(response) {
-                $scope.display_loading = false;
-                console.log(response.data);
-                swal("Your plan modifications have been saved. You'll be redirected.")
-                    .then((value) => {
-                        window.location.replace("<?php echo base_url() ?>measuring_point?site_id=" + $scope.production_plan.site_id + "&plant_id=" + $scope.production_plan.plant_id);
-                    });
-
-            }, function(response) {
-                $scope.display_loading = false;
-                // this function handles error
-            });
-        }
 
         $scope.cancel = function() {
-            window.location.replace("<?php echo base_url() ?>measuring_point?site_id=" + $scope.production_plan.site_id + "&plant_id=" + $scope.production_plan.plant_id);
+            window.location.replace("<?php echo base_url() ?>");
         }
 
 
         $scope.excel_data = null;
 
-        $scope.paste_from_input = function() {
-            console.log($scope.excel_data);
-            if ($scope.excel_data == null) return;
 
-            const column_hc = 1;
-            const column_item_number = 2;
-            const column_workorder = 3;
-            const plan_by_hour = 4;
-            const planned_interuption = 5;
-            var lines = $scope.excel_data.trim().split("\n");
-
-            //deleted box...
-            $scope.excel_data = null;
-
-            let table_row = 0;
-            for (let i = 1; i < lines.length; i++) {
-                //console.log('goes beyond all lines');
-
-                var line = lines[i];
-                if (line == '') {
-                    //console.log('arrived here');
-                    break;
-                }
-
-                var rows = line.split("\t");
-
-                //console.log(rows);
-                $scope.production_plan.plan_by_hours[table_row].planned_head_count = Number(rows[column_hc]);
-
-                $scope.production_plan.plan_by_hours[table_row].item_number = rows[column_item_number];
-                $scope.partnumber_changed($scope.production_plan.plan_by_hours[table_row]);
-
-                $scope.production_plan.plan_by_hours[table_row].workorder = rows[column_workorder];
-                $scope.production_plan.plan_by_hours[table_row].planned = Number(rows[plan_by_hour]);
-
-                console.log('buscar ' + rows[planned_interuption]);
-                $scope.production_plan.plan_by_hours[table_row].selected_interruption = $scope.getInterruptionFromName(rows[planned_interuption]);
-
-                if ($scope.production_plan.plan_by_hours[table_row].selected_interruption != null) {
-                    console.log('found interruption changed');
-                    $scope.production_plan.plan_by_hours[table_row].interruption_id = $scope.production_plan.plan_by_hours[table_row].selected_interruption.interruption_id;
-                    $scope.interruption_changed($scope.production_plan.plan_by_hours[table_row]);
-                }
-
-                $scope.calculate_formula();
-
-                table_row++;
-            }
-            $scope.update_acum();
-            $scope.$apply();
-        }
-
-
-        $scope.copy_clipboard = function() {
-            //console.log('entering to copy clipboard');
-            const column_hc = 1;
-            const column_item_number = 2;
-            const column_workorder = 3;
-            const plan_by_hour = 4;
-            const planned_interuption = 5;
-
-            (async () => {
-                var text = await navigator.clipboard.readText();
-                //console.log(text);
-
-                var lines = text.split("\n");
-
-                let table_row = 0;
-
-                for (let i = 1; i < lines.length; i++) {
-                    //console.log('goes beyond all lines');
-
-                    var line = lines[i];
-                    if (line == '') {
-                        //console.log('arrived here');
-                        break;
-                    }
-
-                    var rows = line.split("\t");
-
-                    //console.log(rows);
-                    $scope.production_plan.plan_by_hours[table_row].planned_head_count = Number(rows[column_hc]);
-
-                    $scope.production_plan.plan_by_hours[table_row].item_number = rows[column_item_number];
-                    $scope.partnumber_changed($scope.production_plan.plan_by_hours[table_row]);
-
-                    $scope.production_plan.plan_by_hours[table_row].workorder = rows[column_workorder];
-                    $scope.production_plan.plan_by_hours[table_row].planned = Number(rows[plan_by_hour]);
-
-                    console.log('buscar ' + rows[planned_interuption]);
-                    $scope.production_plan.plan_by_hours[table_row].selected_interruption = $scope.getInterruptionFromName(rows[planned_interuption]);
-
-                    if ($scope.production_plan.plan_by_hours[table_row].selected_interruption != null) {
-                        console.log('found interruption changed');
-                        $scope.production_plan.plan_by_hours[table_row].interruption_id = $scope.production_plan.plan_by_hours[table_row].selected_interruption.interruption_id;
-                        $scope.interruption_changed($scope.production_plan.plan_by_hours[table_row]);
-                    }
-
-                    $scope.calculate_formula();
-
-                    table_row++;
-                }
-                $scope.update_acum();
-                $scope.$apply();
-
-            })();
-        }
         //2022-03-29 11:05:52
         //este es al cargar
 
+        $scope.init();
 
-        $scope.init(<?php echo $asset_id . ", '" . $date . "'" ?>);
     }]);
 </script>

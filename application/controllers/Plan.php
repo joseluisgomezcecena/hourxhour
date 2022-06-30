@@ -88,6 +88,65 @@ class Plan extends CI_Controller
     }
 
 
+
+    public function api_get_detail_data()
+    {
+        $query = $this->db->query('SELECT item_id, item_number, max( CAST(item_pph AS DECIMAL(10,2)) ) as item_pph, item_run_labor, item_pph FROM plan_hourxhour.items_pph GROUP BY item_number ORDER BY item_number');
+        $data['items'] =   $query->result_array();
+
+        $query = $this->db->query('SELECT * FROM interruptions');
+        $data['interruptions'] =   $query->result_array();
+
+
+        $query = $this->db->query('SELECT * FROM not_planned_interruptions');
+        $data['not_planned_interruptions'] =   $query->result_array();
+
+        $this->load->model('productionplan');
+        $asset_id = $this->input->get('asset_id');
+        //$shift_id = $this->input->get('shift_id');
+        $date = $this->input->get('date');
+        //$this->shift->Load($shift_id);
+        $this->productionplan->LoadPlan($asset_id, $date);
+        $data['production_plan'] =  $this->productionplan;
+
+
+        $this->db->db_select('authentication');
+        $department_name = 'Production';
+        $level_name = 'Supervisor';
+        $this->db->select('users.user_id, users.user_email, users.user_name, users.user_lastname, users.user_martech_number,users.user_active, users.user_level_id, levels.level_name, users.user_department_id, departments.department_name');
+        $this->db->from('users');
+        $this->db->join('departments', 'users.user_department_id = departments.department_id', 'inner');
+        $this->db->join('levels', 'users.user_level_id = levels.level_id', 'inner');
+        if ($department_name != null)
+            $this->db->where('departments.department_name', $department_name);
+        if ($level_name != null)
+            $this->db->where('levels.level_name', $level_name);
+        $query = $this->db->get();
+        $data['supervisors'] = $query->result_array();
+
+
+        echo json_encode($data);
+    }
+
+
+    public function api_get_selection_data()
+    {
+        $this->db->select('plant_id, plant_name');
+        $this->db->from('plants');
+        $data['plants'] = $this->db->get()->result_array();
+
+        $this->db->select('site_id, site_name, plant_id');
+        $this->db->from('sites');
+        $data['sites'] = $this->db->get()->result_array();
+
+        $this->db->select('asset_id, asset_name, site_id');
+        $this->db->from('assets');
+        $data['assets'] = $this->db->get()->result_array();
+
+        echo json_encode($data);
+    }
+
+
     /*
      *  Function api_save_plan
      *  This is the core of the plan, this method insert or update the production plan and the items of each hour

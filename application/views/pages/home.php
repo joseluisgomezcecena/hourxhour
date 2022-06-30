@@ -59,7 +59,7 @@
                         //echo json_encode($item);
                         $percent = 0;
 
-                        if ($item['completed'] > 0)
+                        if ($item['completed'] > 0 && $item['planned'] > 0)
                             $percent = ceil(($item['completed'] / $item['planned']) * 100);
 
                         if ($percent >= 99) {

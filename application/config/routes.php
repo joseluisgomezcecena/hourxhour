@@ -71,6 +71,11 @@ $route['translate_uri_dashes'] = FALSE;
 $route['planners'] = 'plan/index';
 
 $route['api/plan/get_data'] = 'plan/api_get_data';
+$route['api/plan/get_detail_data'] = 'plan/api_get_detail_data';
+
+
+
+
 
 
 $route['api/plan/save']['post'] = 'plan/api_save_plan';
@@ -110,6 +115,11 @@ $route['import_report/std_hours/import']['post'] = 'reports/import_std_hours';
 $route['daily_report'] = 'reports/daily_report';
 $route['custom_report'] = 'reports/custom_report';
 $route['api/custom_report/save']['post'] = 'reports/save_custom_report';
+
+$route['detail_report'] = 'reports/detail_report';
+$route['api/plan/get_selection_data'] = 'plan/api_get_selection_data';
+
+
 //measuring_point
 $route['measuring_point'] = '/measuring_point/index';
 //manual_capture
