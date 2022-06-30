@@ -267,19 +267,21 @@
 
                         <!-- HC -->
                         <td id="" class="bg-[#D1FAE5] ">
-                            <input type="number" min="1" type="text" name="" onkeyup="" class="form-control input_invisible size-sm" ng-model="plan_item.planned_head_count" ng-class="{red: plan_item.invalid_planned_head_count}" ng-change="hc_changed(plan_item)" />
+                            <input type="number" min="1" type="text" name="" onkeyup="" class="form-control input_invisible size-sm" ng-model="plan_item.planned_head_count" ng-class="{red: plan_item.invalid_planned_head_count}" ng-change="hc_changed(plan_item)" disabled />
                         </td>
 
                         <!-- ITEM NUMBER -->
                         <td>
-                            <input placeholder="Select" style="text-transform: uppercase;" type="text" ng-model="plan_item.item_number" ng-class="{red: plan_item.invalid_item_id}" ng-change="partnumber_changed(plan_item)" class="form-control input_invisible size-sm" list="dl_items" required />
+                            <input placeholder="Select" style="text-transform: uppercase;" type="text" ng-model="plan_item.item_number" ng-class="{red: plan_item.invalid_item_id}" ng-change="partnumber_changed(plan_item)" class="form-control input_invisible size-sm" list="dl_items" disabled />
                         </td>
 
                         <!-- WORKORDER  -->
-                        <td><input type="text" name="" ng-model="plan_item.workorder" ng-class="{red: plan_item.invalid_workorder}" class="form-control input_invisible size-sm"></td>
+                        <td>
+                            <input type="text" name="" ng-model="plan_item.workorder" ng-class="{red: plan_item.invalid_workorder}" class="form-control input_invisible size-sm" disabled>
+                        </td>
 
                         <!-- PLAN BY HOUR -->
-                        <td id=""><input type="number" min="0" onkeyup="" ng-model="plan_item.planned" ng-class="{red: plan_item.invalid_planned}" ng-change="planned_changed(plan_item)" class="form-control input_invisible size-sm" /></td>
+                        <td id=""><input type="number" min="0" onkeyup="" ng-model="plan_item.planned" ng-class="{red: plan_item.invalid_planned}" ng-change="planned_changed(plan_item)" class="form-control input_invisible size-sm" disabled /></td>
 
 
                         <!-- CUM PLAN -->
@@ -289,7 +291,7 @@
 
 
                         <!-- PLAN BY HOUR -->
-                        <td id=""><input type="number" min="0" onkeyup="" ng-model="plan_item.completed" ng-class="{red: plan_item.invalid_planned}" class="form-control input_invisible size-sm" /></td>
+                        <td id=""><input type="number" min="0" onkeyup="" ng-model="plan_item.completed" ng-class="{red: plan_item.invalid_planned}" class="form-control input_invisible size-sm" disabled /></td>
 
                         <!-- CUM PLAN -->
                         <td id="" name="" class="bg-[#D1FAE5] form-control size-sm">
@@ -304,7 +306,7 @@
 
                         <!-- PLANNED INTERRUPTION -->
                         <td>
-                            <select class="form-control input_invisible" ng-model="plan_item.selected_interruption" ng-change="interruption_changed(plan_item)" ng-options="interruption as interruption.interruption_name for interruption in interruptions">
+                            <select class="form-control input_invisible" ng-model="plan_item.selected_interruption" ng-change="interruption_changed(plan_item)" ng-options="interruption as interruption.interruption_name for interruption in interruptions" disabled>
                                 <option value="" ng-if="false"></option>
                             </select>
                         </td>
@@ -312,7 +314,7 @@
 
                         <!-- NOT PLANNED INTERRUPTION -->
                         <td>
-                            <select class="form-control input_invisible" ng-model="plan_item.selected_not_planned_interruption" ng-change="interruption_changed(plan_item)" ng-options="interruption as interruption.interruption_name for interruption in not_planned_interruptions">
+                            <select class="form-control input_invisible" ng-model="plan_item.selected_not_planned_interruption" ng-change="interruption_changed(plan_item)" ng-options="interruption as interruption.interruption_name for interruption in not_planned_interruptions" disabled>
                                 <option value="" ng-if="false"></option>
                             </select>
                         </td>
