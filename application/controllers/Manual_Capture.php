@@ -28,6 +28,13 @@ class Manual_Capture extends CI_Controller
         $current_date_more_one_day = new DateTime();
         $current_date_more_one_day->modify('+1 day');
 
+        //Este codigo esta diseniado para las horas de las 0 hasta antes de las 6, el tercer turno
+        //debe tomar el plan del dia anterior...
+        if ($current_date->format('H') < 6) {
+            $current_date->modify('-1 day');
+            $current_date_more_one_day->modify('-1 day');
+        }
+
         $shifts = $this->db->get('shifts')->result_array();
 
         for ($i = 0; $i < count($shifts); $i++) {

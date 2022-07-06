@@ -160,6 +160,12 @@
     <form method="POST" enctype="multipart/form-data" ng-hide="display_loading">
         <div style="display:flex; justify-content: flex-end;">
 
+            <a data-toggle="tooltip" data-tippy-content="Download the information in excel" data-tippy-placement="right">
+                <button type="button" class="btn btn-icon btn-icon_large btn_info uppercase" style="margin-right: 5px;" aria-expanded="false" ng-csv="getRowsForExcel()" csv-header="getHeadersForExcel()" field-separator="," decimal-separator="." filename="MyPlan.csv">
+                    <span class="las la-download"></span>
+                </button>
+            </a>
+
             <!-- Removed ng-click="copy_clipboard()" -->
             <a data-toggle="tooltip" data-tippy-content="Paste the information of the excel table" data-tippy-placement="right">
                 <button type="button" class="btn btn-icon btn-icon_large btn_info uppercase" data-toggle="modal" data-target="#inputExcelDataModal" aria-expanded="false">
@@ -345,7 +351,7 @@
      * workorder: the number of work order, for 
      * planned: is the planned production for that hour for traceability purposes
      */
-    var fetch = angular.module('plannerApp', []);
+    var fetch = angular.module('plannerApp', ['ngSanitize', 'ngCsv']);
     fetch.controller('planController', ['$scope', '$http', function($scope, $http) {
 
         //El plan de produccion
@@ -499,7 +505,10 @@
 
 
         $scope.getInterruptionFromName = function(interruption_name) {
-            //console.log('load interuption ' + $scope.interruptions);
+
+
+            console.log('getInterruptionFromName ' + interruption_name);
+
             var found = null;
             for (let i = 0; i < $scope.interruptions.length; i++) {
                 console.log($scope.interruptions[i].interruption_name);
@@ -783,14 +792,21 @@
 
                 var rows = line.split("\t");
 
-                //console.log(rows);
-                $scope.production_plan.plan_by_hours[table_row].planned_head_count = Number(rows[column_hc]);
+                console.log(rows);
+                if (rows[column_hc] == '')
+                    $scope.production_plan.plan_by_hours[table_row].planned_head_count = undefined;
+                else
+                    $scope.production_plan.plan_by_hours[table_row].planned_head_count = Number(rows[column_hc]);
 
                 $scope.production_plan.plan_by_hours[table_row].item_number = rows[column_item_number];
                 $scope.partnumber_changed($scope.production_plan.plan_by_hours[table_row]);
 
                 $scope.production_plan.plan_by_hours[table_row].workorder = rows[column_workorder];
-                $scope.production_plan.plan_by_hours[table_row].planned = Number(rows[plan_by_hour]);
+
+                if (rows[plan_by_hour] == '')
+                    $scope.production_plan.plan_by_hours[table_row].planned = undefined;
+                else
+                    $scope.production_plan.plan_by_hours[table_row].planned = Number(rows[plan_by_hour]);
 
                 console.log('buscar ' + rows[planned_interuption]);
                 $scope.production_plan.plan_by_hours[table_row].selected_interruption = $scope.getInterruptionFromName(rows[planned_interuption]);
@@ -827,7 +843,7 @@
                 let table_row = 0;
 
                 for (let i = 1; i < lines.length; i++) {
-                    //console.log('goes beyond all lines');
+                    console.log('doing in line' + i);
 
                     var line = lines[i];
                     if (line == '') {
@@ -866,6 +882,49 @@
         }
         //2022-03-29 11:05:52
         //este es al cargar
+
+        $scope.download_excel_data = function() {
+
+        }
+
+
+        $scope.getHeadersForExcel = function() {
+            return ["HR", "HC", "ITEM NUMBER", "WORKORDER", "PLANNED", "INTERRUPTION"];
+        }
+
+
+        $scope.getHour = function(dateTime, use_ampm) {
+            console.log(dateTime);
+
+            var hours = dateTime.getHours() % 12 || 12;
+
+            var str = hours + ':00';
+
+            if (use_ampm) {
+                if (dateTime.getHours() >= 12)
+                    str += ' pm';
+                else
+                    str += ' am';
+            }
+
+
+            return str;
+        }
+
+
+        $scope.getRowsForExcel = function() {
+
+            // plan_item in production_plan.plan_by_hours
+            const items = [];
+
+            $scope.production_plan.plan_by_hours.forEach(element => {
+                let time = $scope.getHour(element.time_display, false) + '-' + $scope.getHour(element.time_end_display, true);
+                const item = [time, element.planned_head_count, element.item_number, element.workorder, element.planned, element.interruption_name];
+                items.push(item);
+            });
+
+            return items;
+        }
 
 
         $scope.init(<?php echo $asset_id . ", '" . $date . "'" ?>);
