@@ -651,7 +651,6 @@
 
                 }
 
-
             }
         }
 
@@ -671,16 +670,32 @@
 
 
         $scope.calculate_formula = function(plan_item) {
-            //console.log("calculate formula....")
+            console.log("calculate formula....")
             //console.log(plan_item);
 
             if (plan_item == undefined)
                 return;
 
             if (plan_item.planned_head_count == undefined || plan_item.planned == undefined || plan_item.std_time == undefined) {
+
+                console.log("debug 01....");
+                console.log("hc" + plan_item.planned_head_count);
+                console.log("planned" + plan_item.planned);
+                console.log("std" + plan_item.std_time);
                 plan_item.formula = undefined;
             } else {
-                plan_item.formula = parseFloat((plan_item.planned_head_count - (plan_item.interruption_value == undefined ? 0 : plan_item.interruption_value)) / plan_item.std_time).toFixed(2);
+
+                let less_time = 0;
+                if (!(plan_item.interruption_value == undefined || plan_item.interruption_value == '')) {
+                    less_time = plan_item.interruption_value;
+                }
+
+                //plan_item.formula = parseFloat((plan_item.planned_head_count - (plan_item.interruption_value == undefined ? 0 : plan_item.interruption_value)) / plan_item.std_time).toFixed(2);
+                plan_item.formula = parseInt(plan_item.planned_head_count * ((1 - less_time) / plan_item.std_time.toFixed(2)));
+
+                console.log("formula es " + plan_item.formula);
+                //1 x (1 - )
+
             }
         }
 

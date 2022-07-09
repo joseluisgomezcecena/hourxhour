@@ -272,12 +272,12 @@
 
                         <!-- STD TIME -->
                         <td id="">
-                            <input class="form-control input_invisible size-sm" type="number" name="" id="" ng-model="plan_item.std_time">
+                            <input class="form-control input_invisible size-sm" type="number" name="" id="" ng-model="plan_item.std_time" ng-change="stdtime_changed(plan_item)">
                         </td>
 
                         <!-- CALCULATED QTY BY HR -->
                         <td class="bg-[#D1FAE5] form-control size-sm" id="">
-                            <input class="size-sm" type="text" name="" id="" disabled="true" ng-model="plan_item.formula">
+                            <input class="size-sm" type="number" name="" id="" disabled="true" ng-model="plan_item.formula">
                         </td>
                     </tr>
 
@@ -462,10 +462,12 @@
                     else
                         plan_item.interruption_value = Number($scope.production_plan.plan_by_hours[i].interruption_value);
                     //plan_item.interruption_id = plan_item.selected_interruption.interruption_id;
+
+                    $scope.calculate_formula(plan_item);
                 }
 
-
                 $scope.updateItems();
+
 
 
                 $scope.display_loading = false;
@@ -490,7 +492,9 @@
                 if (foundInterruption)
                     $scope.production_plan.plan_by_hours[i].selected_interruption = foundInterruption;
 
+
             }
+
 
             $scope.update_acum();
 
@@ -530,7 +534,6 @@
 
 
         $scope.planned_changed = function(plan_item) {
-            $scope.calculate_formula(plan_item);
             $scope.update_acum();
         }
 
@@ -548,12 +551,17 @@
                     total += $scope.production_plan.plan_by_hours[i].planned;
                     $scope.production_plan.plan_by_hours[i].planned_acum = total;
                 }
+
             }
         }
 
 
 
         $scope.hc_changed = function(plan_item) {
+            $scope.calculate_formula(plan_item);
+        }
+
+        $scope.stdtime_changed = function(plan_item) {
             $scope.calculate_formula(plan_item);
         }
 
@@ -567,16 +575,32 @@
 
 
         $scope.calculate_formula = function(plan_item) {
-            //console.log("calculate formula....")
+            console.log("calculate formula....")
             //console.log(plan_item);
 
             if (plan_item == undefined)
                 return;
 
             if (plan_item.planned_head_count == undefined || plan_item.planned == undefined || plan_item.std_time == undefined) {
+
+                console.log("debug 01....");
+                console.log("hc" + plan_item.planned_head_count);
+                console.log("planned" + plan_item.planned);
+                console.log("std" + plan_item.std_time);
                 plan_item.formula = undefined;
             } else {
-                plan_item.formula = parseFloat((plan_item.planned_head_count - (plan_item.interruption_value == undefined ? 0 : plan_item.interruption_value)) / plan_item.std_time).toFixed(2);
+
+                let less_time = 0;
+                if (!(plan_item.interruption_value == undefined || plan_item.interruption_value == '')) {
+                    less_time = plan_item.interruption_value;
+                }
+
+                //plan_item.formula = parseFloat((plan_item.planned_head_count - (plan_item.interruption_value == undefined ? 0 : plan_item.interruption_value)) / plan_item.std_time).toFixed(2);
+                plan_item.formula = parseInt(plan_item.planned_head_count * ((1 - less_time) / plan_item.std_time.toFixed(2)));
+
+                console.log("formula es " + plan_item.formula);
+                //1 x (1 - )
+
             }
         }
 
