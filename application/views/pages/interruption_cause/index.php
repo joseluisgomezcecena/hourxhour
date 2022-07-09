@@ -107,7 +107,7 @@
                         echo '<tr>';
                         echo "    <td><b>${start_time} - ${end_time}</b></td>";
                         echo "    <td>${get_plan['planned_head_count']}</td>";
-                        echo "    <td>${get_plan['item_number']}</td>";
+                        echo "    <td>${get_plan['item']}</td>";
                         echo "    <td>${get_plan['workorder']}</td>";
                         echo "    <td>${get_plan['planned']}</td>";
                         echo "    <td>${sum_planned}</td>";

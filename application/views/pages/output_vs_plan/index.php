@@ -139,7 +139,7 @@
                         <tr ng-if="plan.current_hour_index > 0">
                             <td class="table-secondary"><b> {{ plan.plan_by_hours[plan.current_hour_index - 1].time }}-{{ plan.plan_by_hours[plan.current_hour_index - 1].time_end }} </b></td>
                             <td class="table-secondary">{{ plan.plan_by_hours[plan.current_hour_index - 1].planned_head_count }}</td>
-                            <td class="table-secondary">{{ plan.plan_by_hours[plan.current_hour_index - 1].item_number }}</td>
+                            <td class="table-secondary">{{ plan.plan_by_hours[plan.current_hour_index - 1].item }}</td>
                             <td class="table-secondary">{{ plan.plan_by_hours[plan.current_hour_index - 1].workorder }}</td>
                             <td class="table-secondary">{{ plan.plan_by_hours[plan.current_hour_index - 1].planned }}</td>
                             <td class="table-secondary">{{ plan.plan_by_hours[plan.current_hour_index - 1].planned_sum }}</td>
@@ -150,7 +150,7 @@
                         <tr>
                             <td class="table-success"><b> {{ plan.plan_by_hours[plan.current_hour_index].time }}-{{ plan.plan_by_hours[plan.current_hour_index].time_end }} </b></td>
                             <td class="table-success">{{ plan.plan_by_hours[plan.current_hour_index].planned_head_count }}</td>
-                            <td class="table-success">{{ plan.plan_by_hours[plan.current_hour_index].item_number }}</td>
+                            <td class="table-success">{{ plan.plan_by_hours[plan.current_hour_index].item }}</td>
                             <td class="table-success">{{ plan.plan_by_hours[plan.current_hour_index].workorder }}</td>
                             <td class="table-success">{{ plan.plan_by_hours[plan.current_hour_index].planned }}</td>
                             <td class="table-success">{{ plan.plan_by_hours[plan.current_hour_index].planned_sum }}</td>
@@ -161,7 +161,7 @@
                         <tr ng-if="(plan.current_hour_index + 1) < plan.plan_by_hours.length">
                             <td class=""><b> {{ plan.plan_by_hours[plan.current_hour_index + 1].time }}-{{ plan.plan_by_hours[plan.current_hour_index + 1].time_end }} </b></td>
                             <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 1].planned_head_count }}</td>
-                            <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 1].item_number }}</td>
+                            <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 1].item }}</td>
                             <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 1].workorder }}</td>
                             <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 1].planned }}</td>
                             <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 1].planned_sum }}</td>
@@ -172,7 +172,7 @@
                         <tr ng-if="(plan.current_hour_index + 2) < plan.plan_by_hours.length">
                             <td class=""><b> {{ plan.plan_by_hours[plan.current_hour_index + 2].time }}-{{ plan.plan_by_hours[plan.current_hour_index + 2].time_end }} </b></td>
                             <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 2].planned_head_count }}</td>
-                            <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 2].item_number }}</td>
+                            <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 2].item }}</td>
                             <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 2].workorder }}</td>
                             <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 2].planned }}</td>
                             <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 2].planned_sum }}</td>
@@ -220,7 +220,7 @@
                         <tr ng-if="plan.current_hour_index > 0">
                             <td class="table-secondary"><b> {{ plan.plan_by_hours[plan.current_hour_index - 1].time }}-{{ plan.plan_by_hours[plan.current_hour_index - 1].time_end }} </b></td>
                             <td class="table-secondary">{{ plan.plan_by_hours[plan.current_hour_index - 1].planned_head_count }}</td>
-                            <td class="table-secondary">{{ plan.plan_by_hours[plan.current_hour_index - 1].item_number }}</td>
+                            <td class="table-secondary">{{ plan.plan_by_hours[plan.current_hour_index - 1].item }}</td>
                             <td class="table-secondary">{{ plan.plan_by_hours[plan.current_hour_index - 1].workorder }}</td>
                             <td class="table-secondary">{{ plan.plan_by_hours[plan.current_hour_index - 1].planned }}</td>
                             <td class="table-secondary">{{ plan.plan_by_hours[plan.current_hour_index - 1].planned_sum }}</td>
@@ -231,7 +231,7 @@
                         <tr>
                             <td class="table-success"><b> {{ plan.plan_by_hours[plan.current_hour_index].time }}-{{ plan.plan_by_hours[plan.current_hour_index].time_end }} </b></td>
                             <td class="table-success">{{ plan.plan_by_hours[plan.current_hour_index].planned_head_count }}</td>
-                            <td class="table-success">{{ plan.plan_by_hours[plan.current_hour_index].item_number }}</td>
+                            <td class="table-success">{{ plan.plan_by_hours[plan.current_hour_index].item }}</td>
                             <td class="table-success">{{ plan.plan_by_hours[plan.current_hour_index].workorder }}</td>
                             <td class="table-success">{{ plan.plan_by_hours[plan.current_hour_index].planned }}</td>
                             <td class="table-success">{{ plan.plan_by_hours[plan.current_hour_index].planned_sum }}</td>
@@ -242,7 +242,7 @@
                         <tr ng-if="(plan.current_hour_index + 1) < plan.plan_by_hours.length">
                             <td class=""><b> {{ plan.plan_by_hours[plan.current_hour_index + 1].time }}-{{ plan.plan_by_hours[plan.current_hour_index + 1].time_end }} </b></td>
                             <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 1].planned_head_count }}</td>
-                            <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 1].item_number }}</td>
+                            <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 1].item }}</td>
                             <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 1].workorder }}</td>
                             <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 1].planned }}</td>
                             <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 1].planned_sum }}</td>
@@ -253,7 +253,7 @@
                         <tr ng-if="(plan.current_hour_index + 2) < plan.plan_by_hours.length">
                             <td class=""><b> {{ plan.plan_by_hours[plan.current_hour_index + 2].time }}-{{ plan.plan_by_hours[plan.current_hour_index + 2].time_end }} </b></td>
                             <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 2].planned_head_count }}</td>
-                            <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 2].item_number }}</td>
+                            <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 2].item }}</td>
                             <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 2].workorder }}</td>
                             <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 2].planned }}</td>
                             <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 2].planned_sum }}</td>
@@ -336,9 +336,9 @@
 
                         plan.plan_by_hours.forEach(plan_by_hour => {
                             //console.info(plan_by_hour);
-                            //planned_head_count, item_number, workorder, planned, interruption
+                            //planned_head_count, item, workorder, planned, interruption
                             if (plan_by_hour.planned_head_count == null) plan_by_hour.planned_head_count = '-';
-                            if (plan_by_hour.item_number == null) plan_by_hour.item_number = '-';
+                            if (plan_by_hour.item == null) plan_by_hour.item = '-';
                             if (plan_by_hour.workorder == null) plan_by_hour.workorder = '-';
                             if (plan_by_hour.planned == null) plan_by_hour.planned = '-';
                             if (plan_by_hour.interruption == '') plan_by_hour.interruption = '-';

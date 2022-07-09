@@ -59,7 +59,7 @@
                             echo '<table class="table w-full mt-3">';
                             $production_plan = $asset['production_plan'];
                             echo '<table class="table w-full mt-3">';
-                            $current_item_number = 'N/A';
+                            $current_item = 'N/A';
                             //THEAD	
                             echo '<thead><tr>';
                             echo '<th >Estación</th>';
@@ -68,10 +68,10 @@
                                 $end = new DateTime($plan_by_hour['time_end']);
 
                                 if ($current >= $start && $current < $end) {
-                                    if (isset($plan_by_hour['item_number']))
-                                        $current_item_number = $plan_by_hour['item_number'];
+                                    if (isset($plan_by_hour['item']))
+                                        $current_item = $plan_by_hour['item'];
                                     else
-                                        $current_item_number = 'N/A';
+                                        $current_item = 'N/A';
                                     echo '<th id="th_2" style="background-color: #BAE6FD;">' . date(HOUR_MINUTE_FORMAT, strtotime($plan_by_hour['time'])) . '</th>';
                                 } else {
                                     echo '<th id="th_2">' . date(HOUR_MINUTE_FORMAT, strtotime($plan_by_hour['time'])) . '</th>';
@@ -85,13 +85,13 @@
                             echo '    <div>';
                             echo '       <p>' . $asset['asset_name'] . '</p>';
                             echo '       <p>' . $asset['site_name'] . '</p>';
-                            echo '       <p>' . $current_item_number . '</p>';
+                            echo '       <p>' . $current_item . '</p>';
                             echo '    </div>';
                             echo '</td>';
                             foreach ($production_plan['plan_by_hours'] as $plan_by_hour) {
-                                $is_enable = isset($plan_by_hour['item_number']);
+                                $is_enable = isset($plan_by_hour['item']);
                                 echo '<td>';
-                                echo ' <p>' . ($is_enable ? $plan_by_hour['item_number'] : 'N/A')  . '</p>';
+                                echo ' <p>' . ($is_enable ? $plan_by_hour['item'] : 'N/A')  . '</p>';
                                 echo '<input type="number" name="plant_id" value="' . $plant_id . '" hidden/>';
                                 echo '	<input class="form-control" type="number" id="input_plan_by_hour_id_' . $plan_by_hour['plan_by_hour_id'] . '" value="' . $plan_by_hour['completed'] . '" style="min-width: 8rem;" ' . ($is_enable ? '' : 'disabled') . ' onkeyup="input_change(' . $plan_by_hour['plan_by_hour_id'] . ')" />';
                                 if ($plan_by_hour['planned'] == null)
@@ -198,7 +198,7 @@
         $scope.save = function(plan_by_hour_id) {
             var inputIdString = 'input_plan_by_hour_id_' + plan_by_hour_id;
             var value = document.getElementById(inputIdString).value;
-            var getValueCompleted = document.getElementById("get_value_completed_"+plan_by_hour_id);
+            var getValueCompleted = document.getElementById("get_value_completed_" + plan_by_hour_id);
 
             getValueCompleted.value = value;
 
