@@ -7,14 +7,17 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/style.css">
 
-	<link rel="shortcut icon" href="<?php echo base_url(); ?>assets/images/favicon/favicon.ico">
+    <link rel="shortcut icon" href="<?php echo base_url(); ?>assets/images/favicon/favicon.ico">
 
     <!--data tables-->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css">
-	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/custom_datatables_styles.css">
+    <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/custom_datatables_styles.css">
 
     <script src='<?= base_url() ?>assets/angular-1.8.2/angular.min.js'></script>
+    <script src='<?= base_url() ?>assets/angular-1.8.2/angular-sanitize.min.js'></script>
+
+
     <script src="<?php echo  base_url() ?>assets/js/jquery.min.js"></script>
     <script src="<?php echo  base_url() ?>assets/js/sweetalert.min.js"></script>
     <title>Hour By Hour | Andon</title>

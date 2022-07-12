@@ -238,11 +238,10 @@ class Output_VS_Plan extends CI_Controller
 
             /*
                 set @planned_sum = 0; set @completed_sum = 0;
-                SELECT plan_by_hours.plan_by_hour_id, plan_by_hours.time, plan_by_hours.time_end, plan_by_hours.planned_head_count, items_pph.item_number, plan_by_hours.workorder, plan_by_hours.planned,
+                SELECT plan_by_hours.plan_by_hour_id, plan_by_hours.time, plan_by_hours.time_end, plan_by_hours.planned_head_count, plan_by_hours.item, plan_by_hours.workorder, plan_by_hours.planned,
                 (@planned_sum:=@planned_sum + IFNULL(plan_by_hours.planned, 0) ) as planned_sum, plan_by_hours.completed,
                 (@completed_sum:=@completed_sum + plan_by_hours.completed) as completed_sum
                 FROM plan_by_hours
-                LEFT JOIN items_pph ON plan_by_hours.item_id = items_pph.item_id
                 WHERE plan_by_hours.plan_id = 87
             */
 
@@ -259,12 +258,11 @@ class Output_VS_Plan extends CI_Controller
             $current_time->modify('+4 hours');
             $end_time = $current_time->format(DATETIME_FORMAT_ZERO_MINUTES_AND_SECONDS);
 
-            $sql = 'SELECT plan_by_hours.plan_by_hour_id, TIME_FORMAT(plan_by_hours.time, "%H") as time, DATE_FORMAT(plan_by_hours.time_end, "%H") as time_end, plan_by_hours.planned_head_count, items_pph.item_number, ';
+            $sql = 'SELECT plan_by_hours.plan_by_hour_id, TIME_FORMAT(plan_by_hours.time, "%H") as time, DATE_FORMAT(plan_by_hours.time_end, "%H") as time_end, plan_by_hours.planned_head_count, plan_by_hours.item, ';
             $sql .=  'plan_by_hours.workorder, plan_by_hours.planned, (@planned_sum:=@planned_sum + IFNULL(plan_by_hours.planned, 0) ) as planned_sum, ';
             $sql .=  "plan_by_hours.completed, (@completed_sum:=@completed_sum + plan_by_hours.completed) as completed_sum, IF( plan_by_hours.time = '" . $select_time . "', '1', '0') as current, ";
             $sql .=  "interruptions.interruption_name, not_planned_interruptions.interruption_name as not_planned_interruption_name";
             $sql .= " FROM plan_by_hours ";
-            $sql .= ' LEFT JOIN items_pph ON plan_by_hours.item_id = items_pph.item_id';
             $sql .= ' LEFT JOIN interruptions ON plan_by_hours.interruption_id = interruptions.interruption_id';
             $sql .= ' LEFT JOIN not_planned_interruptions ON plan_by_hours.not_planned_interruption_id = not_planned_interruptions.interruption_id';
             $sql .= ' WHERE plan_by_hours.plan_id = ' . $plan_id;

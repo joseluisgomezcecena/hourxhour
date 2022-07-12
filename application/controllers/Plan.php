@@ -41,6 +41,7 @@ class Plan extends CI_Controller
 
         $data['date'] = $date = $shift_date['date']->format(DATE_FORMAT);
 
+
         $this->load->view('templates/header');
         $this->load->view('pages/plan/index', $data);
         $this->load->view('templates/footer');
@@ -54,7 +55,8 @@ class Plan extends CI_Controller
     */
     public function api_get_data()
     {
-        $query = $this->db->query('SELECT item_id, item_number, max( CAST(item_pph AS DECIMAL(10,2)) ) as item_pph, item_run_labor, item_pph FROM plan_hourxhour.items_pph GROUP BY item_number ORDER BY item_number');
+
+        $query = $this->db->query('SELECT DISTINCT item_number FROM plan_hourxhour.items_pph ORDER BY item_number');
         $data['items'] =   $query->result_array();
 
         $query = $this->db->query('SELECT * FROM interruptions');
@@ -211,7 +213,7 @@ class Plan extends CI_Controller
                 $data_item['updated_at'] = $now->format(DATETIME_FORMAT);
                 $data_item['created_at'] = $now->format(DATETIME_FORMAT);
 
-                $sql = "INSERT INTO plan_by_hours (`plan_id`, `time`, `time_end`, `planned`, `planned_head_count`, `workorder`, `item_id`, `interruption_id`, `interruption_value`, `std_time`, `updated_at`, `created_at`)";
+                $sql = "INSERT INTO plan_by_hours (`plan_id`, `time`, `time_end`, `planned`, `planned_head_count`, `workorder`, `item`, `interruption_id`, `interruption_value`, `std_time`, `updated_at`, `created_at`)";
                 $sql .= " VALUES (";
 
                 $sql .= $plan->plan_id . ", ";
@@ -220,7 +222,7 @@ class Plan extends CI_Controller
                 $sql .= (isset($item->planned) ? $item->planned : 'NULL') . ", ";
                 $sql .= (isset($item->planned_head_count) ? $item->planned_head_count : 'NULL') . ", ";
                 $sql .= (isset($item->workorder) ? "'" . $item->workorder . "'" : 'NULL') . ", ";
-                $sql .= (isset($item->item_id) ? $item->item_id : 'NULL') . ", ";
+                $sql .= (isset($item->item) ? "'" . $item->item : 'NULL') . "'" . ", ";
                 $sql .= (isset($item->interruption_id) ? $item->interruption_id : 'NULL') . ", ";
                 $sql .= (isset($item->interruption_value) ? $item->interruption_value : 'NULL') . ", ";
                 //$sql .= (isset($item->less_time) ? $item->less_time : 'NULL') . ", ";
@@ -250,8 +252,8 @@ class Plan extends CI_Controller
                 $sql .= "workorder = ";
                 $sql .= (isset($item->workorder) ? "'" . $item->workorder . "'" : 'NULL') . ", ";
 
-                $sql .= "item_id = ";
-                $sql .= (isset($item->item_id) ? $item->item_id : 'NULL') . ", ";
+                $sql .= "item = ";
+                $sql .= (isset($item->item) ? "'" . $item->item : 'NULL') . "'"  . ", ";
 
                 $sql .= "interruption_id = ";
                 $sql .= (isset($item->interruption_id) ? $item->interruption_id : 'NULL') . ", ";
