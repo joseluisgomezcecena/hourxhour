@@ -505,7 +505,7 @@
 
         $scope.getInterruptionFromName = function(interruption_name) {
 
-
+            if (interruption_name == undefined) return null;
             console.log('getInterruptionFromName ' + interruption_name);
 
             var found = null;
@@ -641,23 +641,31 @@
                 let has_workorder = true;
                 let has_planned_head_count = true;
 
-                if (currentItem.planned == undefined || currentItem.planned == null) {
+                if (currentItem.planned == undefined || currentItem.planned == null || currentItem.planned == '') {
                     has_planned = false;
                 }
 
-                if (currentItem.item == undefined || currentItem.item == null) {
+                if (currentItem.item == undefined || currentItem.item == null || currentItem.item == '') {
                     has_item = false;
                 }
 
-                if (currentItem.workorder == undefined || currentItem.workorder == null || currentItem.workorder == "") {
+                if (currentItem.workorder == undefined || currentItem.workorder == null || currentItem.workorder == '') {
                     has_workorder = false;
                 }
 
-                if (currentItem.planned_head_count == undefined || currentItem.planned_head_count == null) {
+                if (currentItem.planned_head_count == undefined || currentItem.planned_head_count == null || currentItem.planned_head_count == '') {
                     has_planned_head_count = false;
                 }
 
+                console.log('debug 01');
+                console.log('has_planned' + has_planned);
+                console.log('has_item' + has_item);
+                console.log('has_workorder' + has_workorder);
+                console.log('has_planned_head_count' + has_planned_head_count);
+
                 if (has_planned || has_item || has_workorder || has_planned_head_count) {
+
+                    console
                     //Checar que esten definidos los 4 Datos
                     if (!(has_planned && has_item && has_workorder && has_planned_head_count)) {
                         has_errors = true;
@@ -783,14 +791,18 @@
             $scope.excel_data = null;
 
             let table_row = 0;
-            for (let i = 1; i < lines.length; i++) {
+            for (let i = 1; i <= lines.length; i++) {
                 //console.log('goes beyond all lines');
 
                 var line = lines[i];
-                if (line == '') {
+                if (line == '' || line == undefined) {
                     //console.log('arrived here');
                     break;
                 }
+
+                console.log('line is ' + line);
+
+
 
                 var rows = line.split("\t");
 
@@ -801,7 +813,7 @@
                     $scope.production_plan.plan_by_hours[table_row].planned_head_count = Number(rows[column_hc]);
 
                 $scope.production_plan.plan_by_hours[table_row].item = rows[column_item];
-                $scope.partnumber_changed($scope.production_plan.plan_by_hours[table_row]);
+
 
                 $scope.production_plan.plan_by_hours[table_row].workorder = rows[column_workorder];
 
@@ -859,7 +871,7 @@
                     $scope.production_plan.plan_by_hours[table_row].planned_head_count = Number(rows[column_hc]);
 
                     $scope.production_plan.plan_by_hours[table_row].item = rows[column_item];
-                    $scope.partnumber_changed($scope.production_plan.plan_by_hours[table_row]);
+
 
                     $scope.production_plan.plan_by_hours[table_row].workorder = rows[column_workorder];
                     $scope.production_plan.plan_by_hours[table_row].planned = Number(rows[plan_by_hour]);
@@ -920,8 +932,14 @@
             const items = [];
 
             $scope.production_plan.plan_by_hours.forEach(element => {
+
+                console.log(element);
+
                 let time = $scope.getHour(element.time_display, false) + '-' + $scope.getHour(element.time_end_display, true);
-                const item = [time, element.planned_head_count, element.item, element.workorder, element.planned, element.interruption_name];
+
+                let interruption_name = (element.selected_interruption == null) ? '' : element.selected_interruption.interruption_name;
+
+                const item = [time, element.planned_head_count, element.item, element.workorder, element.planned, interruption_name];
                 items.push(item);
             });
 
