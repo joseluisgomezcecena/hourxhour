@@ -222,7 +222,7 @@ class Plan extends CI_Controller
                 $sql .= (isset($item->planned) ? $item->planned : 'NULL') . ", ";
                 $sql .= (isset($item->planned_head_count) ? $item->planned_head_count : 'NULL') . ", ";
                 $sql .= (isset($item->workorder) ? "'" . $item->workorder . "'" : 'NULL') . ", ";
-                $sql .= (isset($item->item) ? "'" . $item->item : 'NULL') . "'" . ", ";
+                $sql .= (isset($item->item) ? "'" . $item->item . "'" : 'NULL')  . ", ";
                 $sql .= (isset($item->interruption_id) ? $item->interruption_id : 'NULL') . ", ";
                 $sql .= (isset($item->interruption_value) ? $item->interruption_value : 'NULL') . ", ";
                 //$sql .= (isset($item->less_time) ? $item->less_time : 'NULL') . ", ";
@@ -253,7 +253,7 @@ class Plan extends CI_Controller
                 $sql .= (isset($item->workorder) ? "'" . $item->workorder . "'" : 'NULL') . ", ";
 
                 $sql .= "item = ";
-                $sql .= (isset($item->item) ? "'" . $item->item : 'NULL') . "'"  . ", ";
+                $sql .= (isset($item->item) ? "'" . $item->item . "'" : 'NULL')   . ", ";
 
                 $sql .= "interruption_id = ";
                 $sql .= (isset($item->interruption_id) ? $item->interruption_id : 'NULL') . ", ";
