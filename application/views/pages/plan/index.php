@@ -641,19 +641,28 @@
                 let has_workorder = true;
                 let has_planned_head_count = true;
 
-                if (currentItem.planned == undefined || currentItem.planned == null || currentItem.planned == '') {
+                if (currentItem.planned == undefined || currentItem.planned == null || currentItem.planned == ''
+
+                ) {
                     has_planned = false;
                 }
 
-                if (currentItem.item == undefined || currentItem.item == null || currentItem.item == '') {
+                if (currentItem.item == undefined || currentItem.item == null || currentItem.item == ''
+
+                ) {
                     has_item = false;
                 }
 
-                if (currentItem.workorder == undefined || currentItem.workorder == null || currentItem.workorder == '') {
+                if (currentItem.workorder == undefined || currentItem.workorder == null || currentItem.workorder == ''
+
+                ) {
                     has_workorder = false;
                 }
 
-                if (currentItem.planned_head_count == undefined || currentItem.planned_head_count == null || currentItem.planned_head_count == '') {
+
+                if (currentItem.planned_head_count == undefined || currentItem.planned_head_count == null || currentItem.planned_head_count == ''
+
+                ) {
                     has_planned_head_count = false;
                 }
 
@@ -791,7 +800,7 @@
             $scope.excel_data = null;
 
             let table_row = 0;
-            for (let i = 1; i <= lines.length; i++) {
+            for (let i = 1; i < lines.length; i++) {
                 //console.log('goes beyond all lines');
 
                 var line = lines[i];
@@ -802,11 +811,14 @@
 
                 console.log('line is ' + line);
 
-
-
                 var rows = line.split("\t");
 
-                console.log(rows);
+                if (rows.length < 5) {
+                    rows = rows.concat(['', '', '', '', '', ]);
+                }
+
+                console.log('+++++++' + rows);
+
                 if (rows[column_hc] == '')
                     $scope.production_plan.plan_by_hours[table_row].planned_head_count = undefined;
                 else
