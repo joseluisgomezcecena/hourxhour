@@ -301,7 +301,7 @@ class Output_VS_Plan extends CI_Controller
             }
 
             //If it is the first row
-            if ($index_for_shift_status == -1)
+            if ($index_for_shift_status == -1 || $plan_by_hours[$index_for_shift_status]['planned_sum'] == 0)
                 $data['production_plans'][$i]['shift_status'] = 0;
             else
                 $data['production_plans'][$i]['shift_status'] =  ceil(($plan_by_hours[$index_for_shift_status]['completed_sum'] * 100) / $plan_by_hours[$index_for_shift_status]['planned_sum']);
