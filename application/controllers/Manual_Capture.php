@@ -83,7 +83,7 @@ class Manual_Capture extends CI_Controller
                     $assets[$a]['shift_end_time'] = $shift_end_time;
                     //plan_by_hours
 
-                    $sql = "SELECT plan_by_hour_id, planned, completed, time, time_end, item_number FROM plan_by_hours LEFT JOIN items_pph ON plan_by_hours.item_id = items_pph.item_id WHERE plan_id = " . $production_plan['plan_id'] . " AND ( plan_by_hours.time >= '$shift_start_time' AND plan_by_hours.time_end <= '$shift_end_time')";
+                    $sql = "SELECT plan_by_hours.plan_by_hour_id, plan_by_hours.planned, plan_by_hours.completed, plan_by_hours.time, plan_by_hours.time_end, plan_by_hours.item FROM plan_by_hours WHERE plan_id = " . $production_plan['plan_id'] . " AND ( plan_by_hours.time >= '$shift_start_time' AND plan_by_hours.time_end <= '$shift_end_time')";
                     $query = $this->db->query($sql);
                     $assets[$a]['production_plan']['plan_by_hours'] = $query->result_array();
 
@@ -156,7 +156,7 @@ class Manual_Capture extends CI_Controller
         $this->planbyhour->Load($plan_by_hour_id);
 
         $plan_id = $this->planbyhour->plan_id;
-        $item_id = $this->planbyhour->item_id;
+        $item = $this->planbyhour->item;
         $time = $this->planbyhour->time;
         $time_end = $this->planbyhour->time_end;
         $time = date(HOUR_MINUTE_FORMAT, strtotime($time));
@@ -178,8 +178,7 @@ class Manual_Capture extends CI_Controller
         $data['site_name'] = $plan->site_name;
         $data['asset_name'] = $plan->asset_name;
         $data['plant_name'] = $plan->plant_name;
-        $data['item_id'] = $item_id;
-        $data['item_number'] = $this->planbyhour->item_number;
+        $data['item'] = $this->planbyhour->item;
         $data['workorder'] = $this->planbyhour->workorder;
         $data['planned'] = $this->planbyhour->planned;
         $data['completed'] = $this->planbyhour->completed;
@@ -192,7 +191,7 @@ class Manual_Capture extends CI_Controller
         $last_hour_id = $this->capture->get_current_hour($plan->plan_id, $result);
 
 
-        $data['last_item_number'] = 'N/A';
+        $data['last_item'] = 'N/A';
         $data['last_workorder'] = 'N/A';
         $data['last_completed'] = 'N/A';
         $data['last_hc'] = 'N/A';
@@ -212,7 +211,7 @@ class Manual_Capture extends CI_Controller
                 $data['last_time_end'] = $last_time_end;
             } else {
 
-                $data['last_item_number'] = $this->planbyhour->item_number;
+                $data['last_item'] = $this->planbyhour->item;
                 $data['last_workorder'] = $this->planbyhour->workorder;
                 $data['last_completed'] = $this->planbyhour->completed;
                 $data['last_hc'] = $this->planbyhour->planned_head_count;
@@ -290,7 +289,7 @@ class Manual_Capture extends CI_Controller
         $message .= '<li>Site: ' . $plan->site_name . '</li>';
         $message .= '<li>Asset: ' . $plan->asset_name . '</li>';
         $message .= '<li>Hour: ' . $this->planbyhour->time . '</li>';
-        $message .= '<li>Item Number: ' . $this->planbyhour->item_number . '</li>';
+        $message .= '<li>Item Number: ' . $this->planbyhour->item . '</li>';
         $message .= '<li>Work order: ' . $this->planbyhour->workorder . '</li>';
         $message .= '<li>Planned Production: ' .  $result['planned'] . '</li>';
         $message .= '<li>Completed Production: ' . $result['completed'] . '</li>';

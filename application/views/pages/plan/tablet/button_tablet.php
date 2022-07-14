@@ -84,7 +84,7 @@
 
 
                         <td class="table-disabled"><?= $last_hc ?></td>
-                        <td class="table-disabled"><?= $last_item_number ?></td>
+                        <td class="table-disabled"><?= $last_item ?></td>
                         <td class="table-disabled"><?= $last_workorder ?></td>
                         <td class="table-disabled"><?= $last_completed ?></td>
                     </tr>
@@ -97,7 +97,7 @@
             <h5 class="mt-4">Item number:</h5>
             <h1 class="text-primary <?php if (!isset($multiplier_factor)) {
                                         echo 'mb-8';
-                                    } ?> "><b><?= $item_number ?></b></h1>
+                                    } ?> "><b><?= $item ?></b></h1>
 
             <?php
             if (isset($multiplier_factor)) {
@@ -172,9 +172,9 @@
         $scope.completed = <?= $completed ?>;
 
         $scope.isVerify = function() {
-            var item_id = '<?= $item_id ?>';
+            var item = '<?= $item ?>';
 
-            if (item_id == '') {
+            if (item == '') {
                 $scope.verified = false;
             } else {
                 $scope.verified = true;
