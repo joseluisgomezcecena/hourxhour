@@ -17,7 +17,7 @@ class Measuring_Point extends CI_Controller
 		$plant_id  = $this->input->get('plant_id');
 		$site_id  =   $this->input->get('site_id');
 
-		$data['title'] = "Measuring Point";
+		$data['title'] = "Puntos de medición";
 		$data['plant_id'] = $plant_id;
 		$data['site_id'] = $site_id;
 

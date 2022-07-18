@@ -2,7 +2,7 @@
 	<section class="breadcrumb">
 	    <h1><?= $title ?></h1>
 	    <ul>
-        <li><a href= "<?php echo base_url(); ?>index.php" >Home</a></li>
+        <li><a href= "<?php echo base_url(); ?>index.php" >Inicio</a></li>
 	        <li class="divider la la-arrow-right"></li>
 	        <li><?= $title ?></li>
 	    </ul>

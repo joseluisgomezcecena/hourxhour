@@ -12,7 +12,7 @@
 
 	<div class="flex gap-x-2 mb-5">
 		<!-- Add New -->
-		<a href="<?php echo base_url() ?>machines/create" class="btn btn_primary uppercase">Add New</a>
+		<a href="<?php echo base_url() ?>machines/create" class="btn btn_primary uppercase">Agregar</a>
 	</div>
 </div>
 
@@ -26,15 +26,15 @@
 				<table id="asset-table" class="table table-auto table_hoverable w-full mb-5">
 					<thead>
 						<tr>
-							<th style="font-size: 14px !important; width: 150px;" class="text-center uppercase">Plant</th>
-							<th style="font-size: 14px !important; width: 150px;" class="text-center uppercase">Site</th>
-							<th style="font-size: 14px !important; width: 150px;" class="text-center uppercase">Asset</th>
-							<th style="font-size: 14px !important; width: 150px;" class="ltr:text-center rtl:text-right uppercase">Work Center</th>
-							<th style="font-size: 14px !important; width: 150px;" class="text-center uppercase">Control Number</th>
-							<th style="font-size: 14px !important; width: 150px;" class="text-center uppercase">Point Of Measure</th>
-							<th style="font-size: 14px !important; width: 150px;" class="text-center uppercase">View</th>
-							<th style="font-size: 14px !important; width: 150px;" class="text-center uppercase">Edit</th>
-							<th style="font-size: 14px !important; width: 150px;" class="text-center uppercase">Delete</th>
+							<th style="font-size: 14px !important; width: 150px;" class="text-center uppercase">Planta</th>
+							<th style="font-size: 14px !important; width: 150px;" class="text-center uppercase">Celda</th>
+							<th style="font-size: 14px !important; width: 150px;" class="text-center uppercase">Punto de medicion</th>
+							<th style="font-size: 14px !important; width: 150px;" class="ltr:text-center rtl:text-right uppercase">Centro de trabajo</th>
+							<th style="font-size: 14px !important; width: 150px;" class="text-center uppercase">Numero de control</th>
+							<th style="font-size: 14px !important; width: 150px;" class="text-center uppercase">Punto de medicion</th>
+							<th style="font-size: 14px !important; width: 150px;" class="text-center uppercase">Visualizar</th>
+							<th style="font-size: 14px !important; width: 150px;" class="text-center uppercase">Editar</th>
+							<th style="font-size: 14px !important; width: 150px;" class="text-center uppercase">Borrar</th>
 						</tr>
 					</thead>
 

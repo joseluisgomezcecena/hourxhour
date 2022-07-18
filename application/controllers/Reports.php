@@ -27,7 +27,7 @@ class Reports extends CI_Controller
         $start_date = $start_date_one;
         $end_date = $end_date_three;
 
-        $data['title'] = "Daily Report";
+        $data['title'] = "Reporte Diario";
         $query = $this->db->query("SELECT DISTINCT plants.plant_id as sub_plant_id, plants.plant_name, sites.site_id as sub_site_id,sites.site_name, assets.asset_id AS sub_asset_id, assets.asset_name,
         (
         SELECT SUM(plan_by_hours.planned) FROM plan_hourxhour.plan_by_hours
@@ -191,7 +191,7 @@ class Reports extends CI_Controller
 
 
 
-        $data['title'] = "Custom Report";
+        $data['title'] = "Reporte Personalizado";
         $query = $this->db->query("SELECT DISTINCT plants.plant_id as sub_plant_id, plants.plant_name, sites.site_id as sub_site_id,sites.site_name, assets.asset_id AS sub_asset_id, assets.asset_name,
         (
         SELECT SUM(plan_by_hours.planned) FROM plan_hourxhour.plan_by_hours
@@ -325,7 +325,7 @@ class Reports extends CI_Controller
         //necesitamos la fecha de hoy, el shift_id y el asset_id
         $now = new DateTime();
 
-        $data['title'] = "Hour x Hour Detail";
+        $data['title'] = "Detalle de hora por hora";
         //$data['asset_id'] =  $this->input->get('asset_id');
         //$shift_date = $this->shift->getIdFromCurrentTime($now);
         //$data['date'] = $date = $shift_date['date']->format(DATE_FORMAT);
@@ -340,7 +340,7 @@ class Reports extends CI_Controller
 
     public function import_tempus_reports()
     {
-        $data['title'] = 'Import Tempus Report';
+        $data['title'] = 'Importar reporte Tempus';
         $this->load->view('templates/header');
         $this->load->view('pages/reports/import_reports/import_hrs_tempus', $data);
         $this->load->view('templates/footer');
@@ -423,7 +423,7 @@ class Reports extends CI_Controller
         $data['supervisor'] = $supervisor;
         $data['date'] = $date;
         $data['hours'] = $hours;
-        $data['title'] = 'Import Tempus Report';
+        $data['title'] = 'Importar reporte Tempus';
         $this->load->view('templates/header');
         $this->load->view('pages/reports/import_reports/import_hrs_tempus', $data);
         $this->load->view('templates/footer');
@@ -436,7 +436,7 @@ class Reports extends CI_Controller
 
     public function std_hours()
     {
-        $data['title'] = 'Import Standard Hours Report';
+        $data['title'] = 'Importar reporte de horas estandar';
         $data['items_by_minutes'] = $this->db->get('hours_std_xa')->result_array();
 
         $this->load->view('templates/header');

@@ -8,7 +8,7 @@ class Sites extends CI_Controller
 		if (!$this->session->userdata(IS_LOGGED_IN))
 			redirect(LOGIN_URL);
 
-		$data['title'] = "Sites";
+		$data['title'] = "Celdas";
 
 		$data['sites'] = $this->Site->getAll();
 
@@ -25,7 +25,7 @@ class Sites extends CI_Controller
 
 		$site_name = $this->input->post('site_name');
 
-		$data['title'] = "Sites";
+		$data['title'] = "Celdas";
 		$data['plants'] = $this->Plant->getAllActive();
 
 		$this->form_validation->set_rules('site_name', 'Site Name', 'required');
@@ -38,14 +38,14 @@ class Sites extends CI_Controller
 				$this->db->where('site_name', $site_name);
 				$query = $this->db->get('sites');
 				if ($query->num_rows() > 0) {
-					$data['message_title'] = 'Hour by Hour Info';
-					$data['message_description'] = 'The site ' . $site_name . ' already exists. The name of the site cannot be repeated.';
+					$data['message_title'] = 'Información del hora por hora';
+					$data['message_description'] = 'La Celda' . $site_name . ' ya existe. El nombre de la celda no puede ser reemplazado.';
 					$data['message_type'] = 'error';
 				} else {
 					//this can be created...
 					$this->Site->create();
-					$data['message_title'] = 'Hour by Hour Info';
-					$data['message_description'] = 'The site ' . $site_name . ' has been added to the System.';
+					$data['message_title'] = 'Informacion del hora por hora';
+					$data['message_description'] = 'La celda ' . $site_name . ' ha sido agregada al sistema';
 					$data['message_type'] = 'success';
 				}
 			}
@@ -64,7 +64,7 @@ class Sites extends CI_Controller
 		if (!$this->session->userdata(IS_LOGGED_IN))
 			redirect(LOGIN_URL);
 
-		$data['title'] = "Update Site";
+		$data['title'] = "Actualizar Celda";
 		$data['site'] = $this->Site->getSingle($id);
 		$data['plants'] = $this->Plant->getAllActive();
 
@@ -91,19 +91,19 @@ class Sites extends CI_Controller
 			$this->db->where('site_name', $site_name);
 			$query = $this->db->get('sites');
 			if ($query->num_rows() > 0) {
-				$data['message_title'] = 'Hour by Hour Info';
-				$data['message_description'] = 'The site ' . $site_name . ' already exists. The name of the site cannot be repeated.';
+				$data['message_title'] = 'Información de hora por hora';
+				$data['message_description'] = 'La celdas ' . $site_name . ' ya existen. El nombre de la celda no puede ser reemplazado';
 				$data['message_type'] = 'error';
 			} else {
 				//this can be modified...
 				$this->Site->update();
-				$data['message_title'] = 'Hour by Hour Info';
-				$data['message_description'] = 'The site ' . $site_name . ' has been updated.';
+				$data['message_title'] = 'Información del hora por hora';
+				$data['message_description'] = 'La celda ' . $site_name . ' ha sido actualizada';
 				$data['message_type'] = 'success';
 			}
 		} else {
-			$data['message_title'] = 'Hour by Hour Info';
-			$data['message_description'] = 'it was not provided site name or plant';
+			$data['message_title'] = 'información del hora por hora';
+			$data['message_description'] = 'No se proporciono el nombre de la celda o la planta';
 			$data['message_type'] = 'error';
 		}
 
@@ -122,7 +122,7 @@ class Sites extends CI_Controller
 		if (!$this->session->userdata(IS_LOGGED_IN))
 			redirect(LOGIN_URL);
 
-		$data['title'] = "Update Site";
+		$data['title'] = "Actualizar Celda";
 		$data['site'] = $this->Site->getSingle($id);
 		$data['plants'] = $this->Plant->getAllActive();
 
@@ -142,20 +142,20 @@ class Sites extends CI_Controller
 		$query = $this->db->get('assets');
 
 		if ($query->num_rows() > 0) {
-			$data['message_title'] = 'Hour by Hour Info';
-			$data['message_description'] = 'The site cannot be delete because there are assets in this site.';
+			$data['message_title'] = 'Información del hora por hora';
+			$data['message_description'] = 'La celda no puede ser eliminada porque ya tiene un punto de medición';
 			$data['message_type'] = 'error';
 		} else {
 
 			$this->db->where('site_id', $site_id);
 			$this->db->delete('sites');
 
-			$data['message_title'] = 'Hour by Hour Info';
-			$data['message_description'] = 'The site was deleted correctly.';
+			$data['message_title'] = 'Información del hora por hora';
+			$data['message_description'] = 'La celda se eliminó correctamente';
 			$data['message_type'] = 'success';
 		}
 
-		$data['title'] = "Update Site";
+		$data['title'] = "Actualizar Celda";
 		$data['site'] = $this->Site->getSingle($site_id);
 		$data['plants'] = $this->Plant->getAllActive();
 		$this->load->view('templates/header');

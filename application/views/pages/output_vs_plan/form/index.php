@@ -22,10 +22,10 @@
 
         <div class="card p-5">
             <form class="relative mt-5">
-                <label class="label absolute block bg-input top-0 ltr:ml-3 rtl:mr-3 px-1 rounded font-heading uppercase" for="input-1">Screen name</label>
+                <label class="label absolute block bg-input top-0 ltr:ml-3 rtl:mr-3 px-1 rounded font-heading uppercase" for="input-1">Nombre de la pantalla</label>
                 <input id="input-1" type="text" class="form-control mt-2 pt-5" placeholder="Enter screen name here" ng-model="screen_name">
                 <div style="margin-top:1rem; display:flex; justify-content:flex-end;">
-                    <button class="btn btn_success uppercase" ng-disabled="screen_name == ''" ng-click="add_screen()">Add Screen</button>
+                    <button class="btn btn_success uppercase" ng-disabled="screen_name == ''" ng-click="add_screen()">Agregar Pantalla</button>
                 </div>
             </form>
         </div>

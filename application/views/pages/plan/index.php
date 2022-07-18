@@ -132,7 +132,7 @@
 <section class="breadcrumb" ng-app='plannerApp' ng-controller='planController'>
     <h1><?= $title ?></h1>
     <ul>
-        <li><a href="<?php echo base_url(); ?>index.php">Home</a></li>
+        <li><a href="<?php echo base_url(); ?>index.php">Inicio</a></li>
         <li class="divider la la-arrow-right"></li>
         <li><?= $title ?></li>
     </ul>
@@ -160,14 +160,14 @@
     <form method="POST" enctype="multipart/form-data" ng-hide="display_loading">
         <div style="display:flex; justify-content: flex-end;">
 
-            <a data-toggle="tooltip" data-tippy-content="Download the information in excel" data-tippy-placement="right">
+            <a data-toggle="tooltip" data-tippy-content="Descarga la informacion a un excel" data-tippy-placement="right">
                 <button type="button" class="btn btn-icon btn-icon_large btn_info uppercase" style="margin-right: 5px;" aria-expanded="false" ng-csv="getRowsForExcel()" csv-header="getHeadersForExcel()" field-separator="," decimal-separator="." filename="MyPlan.csv">
                     <span class="las la-download"></span>
                 </button>
             </a>
 
             <!-- Removed ng-click="copy_clipboard()" -->
-            <a data-toggle="tooltip" data-tippy-content="Paste the information of the excel table" data-tippy-placement="right">
+            <a data-toggle="tooltip" data-tippy-content="Pegar la informacion del excel en la tabla" data-tippy-placement="right">
                 <button type="button" class="btn btn-icon btn-icon_large btn_info uppercase" data-toggle="modal" data-target="#inputExcelDataModal" aria-expanded="false">
                     <span class="las la-paste"></span>
                 </button>
@@ -176,7 +176,7 @@
         <table class="table table_bordered w-full mt-3">
             <thead class="text-xs">
                 <tr>
-                    <th scope="col" class="bg-[#D1FAE5]"><small>PLANT:</small></th>
+                    <th scope="col" class="bg-[#D1FAE5]"><small>PLANTA:</small></th>
                     <th scope="col">
                         <input type="text" name="" value="" ng-model="production_plan.plant_name" disabled class="form-control input_invisible size-sm">
                     </th>
@@ -184,7 +184,7 @@
                     <th scope="col">
                         <input type="text" name="" value="" ng-model="production_plan.site_name" disabled class="form-control input_invisible size-sm">
                     </th>
-                    <th scope="col" class="bg-[#D1FAE5]"><small>OUTPUT:</small></th>
+                    <th scope="col" class="bg-[#D1FAE5]"><small>SALIDA:</small></th>
                     <th scope="col">
                         <input type="text" name="" value="" ng-model="production_plan.asset_name" disabled class="form-control input_invisible size-sm">
                     </th>
@@ -192,7 +192,7 @@
                     <th scope="col">
                         <input type="number" min="1" name="hc" id="" onkeyup="" ng-model="production_plan.hc" ng-change="sethc()" class="form-control input_invisible size-sm" />
                     </th>
-                    <th scope="col" class="bg-[#D1FAE5]"><small>DATE:</small></th>
+                    <th scope="col" class="bg-[#D1FAE5]"><small>FECHA:</small></th>
                     <th scope="col">
                         <input style="min-width: 10rem; border: 0;" name="date" ng-model="production_plan.date_display" ng-change="change_date()" class="form-control size-sm" type="date">
                     </th>
@@ -216,16 +216,16 @@
                     <tr class="bg-[#059669] sticky my-5">
                         <th scope="col" class="text-white text-xs sticky top-0">HR</th>
                         <th scope="col" class="text-white text-xs sticky top-0">HC</th>
-                        <th scope="col" class="text-white text-xs sticky top-0">ITEM NUMBER</th>
-                        <th scope="col" class="text-white text-xs sticky top-0">WO NUMBER</th>
-                        <th scope="col" class="text-white text-xs sticky top-0">PLAN BY HR</th>
+                        <th scope="col" class="text-white text-xs sticky top-0">NUMERO DE PIEZA</th>
+                        <th scope="col" class="text-white text-xs sticky top-0">NUMERO DE WO</th>
+                        <th scope="col" class="text-white text-xs sticky top-0">PLAN</th>
                         <th scope="col" class="text-white text-xs sticky top-0">CUM PLAN</th>
-                        <th scope="col" class="text-white text-xs sticky top-0">PLANNED INTERRUPTION</th>
-                        <th scope="col" class="text-white text-xs sticky top-0">LESS TIME</th>
-                        <th scope="col" class="text-white text-xs sticky top-0">STD TIME</th>
+                        <th scope="col" class="text-white text-xs sticky top-0">INTERRUPCION PLA</th>
+                        <th scope="col" class="text-white text-xs sticky top-0">TIEMPO MENOS</th>
+                        <th scope="col" class="text-white text-xs sticky top-0">TIEMPO ESTANDAR</th>
                         <th scope="col" class="text-white text-xs sticky top-0">
-                            CALCULATED QTY BY HR <br />
-                            HC x (1-LESS TIME) / (STD TIME)
+                            CALCUC CANTIDAD POR HORA <br />
+                            HC x (1-MENOS TIEMPO) / (TIEMPO ESTANDAR)
                         </th>
                     </tr>
                 </thead>
@@ -295,12 +295,12 @@
 
                 <button type="button" class="btn btn_secondary uppercase ltr:mr-2" ng-click="cancel()">
                     <span class="la la-arrow-left ltr:mr-2 rtl:ml-2"></span>
-                    Cancel
+                    Cancelar
                 </button>
 
                 <button type="button" class="btn btn_success uppercase" ng-click="save()">
                     <span class="la la-save ltr:mr-2 rtl:ml-2"></span>
-                    Save Plan
+                    Guardar plan
                 </button>
             </div>
         </div>
@@ -317,7 +317,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h2 class="modal-title">Paste Excel Data in Box (Ctrl + V)</h2>
+                    <h2 class="modal-title">Pega la informacion del excel en la caja (Ctrl + V)</h2>
                     <button type="button" class="close la la-times" data-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
@@ -328,8 +328,8 @@
                 </div>
                 <div class="modal-footer">
                     <div class="flex ltr:ml-auto rtl:mr-auto">
-                        <button type="button" class="btn btn_secondary uppercase" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn_primary ltr:ml-2 rtl:mr-2 uppercase" data-dismiss="modal" ng-click="paste_from_input()">Copy Data </button>
+                        <button type="button" class="btn btn_secondary uppercase" data-dismiss="modal">Cerrar</button>
+                        <button type="button" class="btn btn_primary ltr:ml-2 rtl:mr-2 uppercase" data-dismiss="modal" ng-click="paste_from_input()">Copiar informacion </button>
                     </div>
                 </div>
             </div>
@@ -583,10 +583,10 @@
 
             if (plan_item.planned_head_count == undefined || plan_item.planned == undefined || plan_item.std_time == undefined) {
 
-                console.log("debug 01....");
-                console.log("hc" + plan_item.planned_head_count);
-                console.log("planned" + plan_item.planned);
-                console.log("std" + plan_item.std_time);
+                //console.log("debug 01....");
+                //console.log("hc" + plan_item.planned_head_count);
+                //console.log("planned" + plan_item.planned);
+                //console.log("std" + plan_item.std_time);
                 plan_item.formula = undefined;
             } else {
 
@@ -598,7 +598,7 @@
                 //plan_item.formula = parseFloat((plan_item.planned_head_count - (plan_item.interruption_value == undefined ? 0 : plan_item.interruption_value)) / plan_item.std_time).toFixed(2);
                 plan_item.formula = parseInt(plan_item.planned_head_count * ((1 - less_time) / plan_item.std_time.toFixed(2)));
 
-                console.log("formula es " + plan_item.formula);
+                //console.log("formula es " + plan_item.formula);
                 //1 x (1 - )
 
             }

@@ -13,7 +13,7 @@
                 echo '
                 <div class="items-center px-5 py-2">
                     <h5 class="mb-0 uppercase"> ' . $plant['plant_name'] . '</h5>
-                    <small>Selet a cell</small>
+                    <small>Selecciona una Celda</small>
                 </div>
                 <hr>';
                 foreach ($assets as $asset) {

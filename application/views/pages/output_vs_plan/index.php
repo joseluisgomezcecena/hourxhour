@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="<?php echo  base_url() ?>assets/bootstrap-5.0.2/bootstrap.min.css">
     <script src='<?= base_url() ?>assets/angular-1.8.2/angular.min.js'></script>
     <script src="<?php echo  base_url() ?>assets/js/jquery.min.js"></script>
-    <title>Hour By Hour | Andon</title>
+    <title>Hora por hora | Andon</title>
 </head>
 
 <style>
@@ -96,7 +96,7 @@
             <table class="table table-responsive px-0 mx-0" style="z-index: 100 !important;">
                 <thead>
                     <tr class="text-white text-center">
-                        <th class="py-1 uppercase bg-dark">Plant</th>
+                        <th class="py-1 uppercase bg-dark">Planta</th>
                         <th class="py-1 uppercase bg-secondary">{{ plan_productions[0].plant_name  }}</th>
                         <th class="py-1 uppercase bg-dark">Area</th>
                         <th class="py-1 uppercase bg-secondary">{{ plan_productions[0].site_name }}</th>
@@ -110,9 +110,9 @@
                 <table class="table table-responsive mt-1 mb-0">
                     <thead>
                         <tr>
-                            <th class="uppercase text-white bg-success">Output</th>
+                            <th class="uppercase text-white bg-success">Salida</th>
                             <th class="uppercase table-success">{{ plan.asset_name }}</th>
-                            <th class="uppercase text-white bg-success">Shift status</th>
+                            <th class="uppercase text-white bg-success">Estatus del turno</th>
 
                             <th class="uppercase table-danger" ng-show="plan.shift_status < 84">{{ plan.shift_status }}%</th>
                             <th class="uppercase table-warning" ng-show="plan.shift_status >= 85 && plan.shift_status < 90">{{ plan.shift_status }}%</th>
@@ -123,15 +123,15 @@
                 <table class="table table-responsive">
                     <thead>
                         <tr>
-                            <th class="uppercase ">HOUR</th>
+                            <th class="uppercase ">HORA</th>
                             <th class="uppercase ">HC</th>
-                            <th class="uppercase ">Item Number</th>
-                            <th class="uppercase ">WO Number</th>
-                            <th class="uppercase ">Plan By Hour</th>
-                            <th class="uppercase ">CUM Plan</th>
-                            <th class="uppercase ">Output QTY</th>
-                            <th class="uppercase ">CUM Output</th>
-                            <th class="uppercase ">Interruption Cause</th>
+                            <th class="uppercase ">Numero de pieza</th>
+                            <th class="uppercase ">Numero de WO</th>
+                            <th class="uppercase ">Plan por hora</th>
+                            <th class="uppercase ">Acum Plan</th>
+                            <th class="uppercase ">Cantidad de Salida</th>
+                            <th class="uppercase ">Acum Salida</th>
+                            <th class="uppercase ">Causa de interrupcion</th>
 
                         </tr>
                     </thead>
@@ -191,7 +191,7 @@
                 <table class="table table-responsive mt-1 mb-0">
                     <thead>
                         <tr>
-                            <th class="uppercase text-white bg-success">Output</th>
+                            <th class="uppercase text-white bg-success">Salida</th>
                             <th class="uppercase table-success">{{ plan.asset_name }}</th>
                             <th class="uppercase text-white bg-success">Shift status</th>
 
@@ -204,15 +204,15 @@
                 <table class="table table-responsive">
                     <thead>
                         <tr>
-                            <th class="uppercase ">HOUR</th>
+                            <th class="uppercase ">HORA</th>
                             <th class="uppercase ">HC</th>
-                            <th class="uppercase ">Item Number</th>
-                            <th class="uppercase ">WO Number</th>
-                            <th class="uppercase ">Plan By Hour</th>
-                            <th class="uppercase ">CUM Plan</th>
-                            <th class="uppercase ">Output QTY</th>
-                            <th class="uppercase ">CUM Output</th>
-                            <th class="uppercase ">Interruption Cause</th>
+                            <th class="uppercase ">Numero de pieza</th>
+                            <th class="uppercase ">Numero de WO</th>
+                            <th class="uppercase ">Plan por hora</th>
+                            <th class="uppercase ">Acum Plan</th>
+                            <th class="uppercase ">Cantidad de Salida</th>
+                            <th class="uppercase ">Acum Salida</th>
+                            <th class="uppercase ">Causa de interrupcion</th>
 
                         </tr>
                     </thead>
@@ -271,12 +271,12 @@
         <!--ALERT NO PLAN UPLOAD -->
         <div ng-hide="isHidden" class="alert alert_primary" style="text-align: center;">
             <strong class="uppercase"><bdi>
-                    <h1>No plan loaded!</h1>
+                    <h1>No hay plan cargado!</h1>
                 </bdi>
                 <br>
-                <h3>There isn't an active production plan for this machine/point.</h3> <br>
+                <h3>No hay un plan activo para esta maquina o punto de medicion.</h3> <br>
             </strong>
-            <a type="button" href="<?php echo base_url(); ?>index.php/output_vs_plan/select_monitor" class="btn btn_active uppercase my-5">Go back</a>
+            <a type="button" href="<?php echo base_url(); ?>index.php/output_vs_plan/select_monitor" class="btn btn_active uppercase my-5">Regresar</a>
         </div>
         <!--END ALERT NO PLAN UPLOAD -->
     </main>

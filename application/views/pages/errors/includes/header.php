@@ -13,7 +13,7 @@
 
     <script src='<?= base_url() ?>assets/angular-1.8.2/angular.min.js'></script>
 
-    <title>Hour By Hour | Andon</title>
+    <title>Hora por hora | Andon</title>
 </head>
 
 <body>

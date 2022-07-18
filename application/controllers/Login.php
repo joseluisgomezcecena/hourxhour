@@ -6,7 +6,7 @@ class Login extends CI_Controller
 
 	public function index()
 	{
-		$data['title'] = "Login";
+		$data['title'] = "Iniciar sesión";
 		$this->load->view('pages/login/includes/header');
 		$this->load->view('pages/login/index', $data);
 		$this->load->view('pages/login/includes/footer');
@@ -19,7 +19,7 @@ class Login extends CI_Controller
 		$level_value = $this->input->get('user_level_value');
 		if ($level_value == 0) {
 
-			$data['title'] = "Information";
+			$data['title'] = "Información";
 			$data['message'] = "You have no level permission for access.";
 			$data['url'] = SERVER_PATH_URL . "hourxhour/";
 

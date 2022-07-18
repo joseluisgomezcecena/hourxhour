@@ -16,11 +16,11 @@
 
 <!-- Breadcrumb -->
 <section class="breadcrumb">
-    <h1><?= $title ?></h1>
+    <!--<h1><?= $title ?></h1>-->
     <ul>
-        <li><a href="#">Pages</a></li>
+        <!--<li><a href="#">Pages</a></li>
         <li class="divider la la-arrow-right"></li>
-        <li><?= $title ?></li>
+        <li><?= $title ?></li>-->
     </ul>
     <div class="grid lg:grid-cols-1 gap-5 mt-5">
         <div style="display: flex; justify-content:flex-end;">
@@ -47,8 +47,8 @@
                         <thead>
                             <tr>
                                 <th class="text-center uppercase">Area</th>
-                                <th class="text-center uppercase">Output</th>
-                                <th class="text-center uppercase">Shift Status</th>
+                                <th class="text-center uppercase">Punto de salida</th>
+                                <th class="text-center uppercase">Estatus del turno</th>
                             </tr>
                         </thead>
                         <tbody>

@@ -23,7 +23,7 @@ class Interruption_Cause extends CI_Controller
         $data['production_plan'] =  $this->productionplan;
         $data['interruptions'] = $this->db->get('interruptions')->result();
         $data['not_planned_interruptions'] = $this->db->get('not_planned_interruptions')->result();
-        $data['title'] = "Interruption Cause";
+        $data['title'] = "Causas de interrupción";
 
         $this->load->view('templates/header');
         $this->load->view('pages/interruption_cause/index', $data);
@@ -83,7 +83,7 @@ class Interruption_Cause extends CI_Controller
         }
 
         $data['plants'] = $plants;
-        $data['title'] = "Select a Cell";
+        $data['title'] = "Selecciona una celda";
         $this->load->view('templates/header');
         $this->load->view('pages/interruption_cause/select_cell', $data);
         $this->load->view('templates/footer');
@@ -109,7 +109,7 @@ class Interruption_Cause extends CI_Controller
         $data['site_id'] = $site_id;
         $data['shift_id'] = $shift_date['shift_id'];
         $this->plant->Load($plant_id);
-        $data['title'] = "Interruption Cause";
+        $data['title'] = "Causa de interrupción";
         $this->load->view('templates/header');
         $this->load->view('pages/interruption_cause/measuring_point', $data);
         $this->load->view('templates/footer');

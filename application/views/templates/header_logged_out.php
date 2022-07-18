@@ -20,7 +20,7 @@
 
     <script src="<?php echo  base_url() ?>assets/js/jquery.min.js"></script>
     <script src="<?php echo  base_url() ?>assets/js/sweetalert.min.js"></script>
-    <title>Hour By Hour | Andon</title>
+    <title>Hora por hora | Andon</title>
 </head>
 
 <body>

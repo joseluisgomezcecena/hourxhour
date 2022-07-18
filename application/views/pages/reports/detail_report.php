@@ -132,7 +132,7 @@
 <section class="breadcrumb" ng-app='plannerApp' ng-controller='planController'>
     <h1><?= $title ?></h1>
     <ul>
-        <li><a href="<?php echo base_url(); ?>index.php">Home</a></li>
+        <li><a href="<?php echo base_url(); ?>index.php">Inicio</a></li>
         <li class="divider la la-arrow-right"></li>
         <li><?= $title ?></li>
     </ul>
@@ -162,10 +162,10 @@
         <table class="table table_bordered w-full mt-3">
             <thead class="text-xs">
                 <tr>
-                    <th scope="col" class="bg-[#D1FAE5]"><small>PLANT:</small></th>
+                    <th scope="col" class="bg-[#D1FAE5]"><small>PLANTA:</small></th>
                     <th scope="col" style="width:15rem !important;">
                         <select class="form-control size-md" ng-model="selected_plant">
-                            <option value="">---select plant---</option>
+                            <option value="">---selecciona una planta---</option>
                             <option ng-repeat="plant in plants" value="{{plant.plant_id}}">{{ plant.plant_name }}</option>
                         </select>
                         <!--<input type="text" name="" value="" ng-model="production_plan.plant_name" disabled class="form-control input_invisible size-sm">-->
@@ -173,17 +173,17 @@
                     <th scope="col" class="bg-[#D1FAE5]"><small>AREA:</small></th>
                     <th scope="col" style="width:15rem !important;">
                         <select class="form-control size-md" ng-model="selected_site">
-                            <option value="">---select sites---</option>
+                            <option value="">---selecciona una Celda---</option>
                             <option ng-repeat="site in sites | filter:{plant_id: selected_plant }" value="{{site.site_id}}" ng-show="selected_plant">{{ site.site_name }}</option>
                         </select>
                         <!--<input type="text" name="" value="" ng-model="production_plan.site_name" disabled class="form-control input_invisible size-sm"> -->
 
                     </th>
 
-                    <th scope="col" class="bg-[#D1FAE5]"><small>OUTPUT:</small></th>
+                    <th scope="col" class="bg-[#D1FAE5]"><small>PUNTO DE MEDICION:</small></th>
                     <th scope="col" style="width:15rem !important;">
                         <select class="form-control size-md" ng-model="selected_asset">
-                            <option value="">---select asset---</option>
+                            <option value="">---Selecciona un punto de medicion---</option>
                             <option ng-repeat="asset in assets | filter:{site_id: selected_site }" value="{{asset.asset_id}}" ng-show="selected_site">{{ asset.asset_name }}</option>
                         </select>
 
@@ -199,7 +199,7 @@
                 <tr>
 
 
-                    <th scope="col" class="bg-[#D1FAE5]"><small>DATE:</small></th>
+                    <th scope="col" class="bg-[#D1FAE5]"><small>FECHA:</small></th>
 
                     <th scope="col" style="width:15rem !important;">
                         <input style=" border: 0;" name="date" ng-model="selected_date" class="form-control size-md" type="date">
@@ -209,7 +209,7 @@
                     <th colspan="2">
                         <button type="button" class="btn btn_success uppercase d-grid gap-2 col-6 mx-5" ng-click="search()" ng-disabled="selected_asset == null || selected_date == null ">
                             <span class="la la-eye ltr:mr-2 rtl:ml-2"></span>
-                            Search
+                            Buscar
                         </button>
                     </th>
 
@@ -235,18 +235,18 @@
                     <tr class="bg-[#059669] sticky my-5">
                         <th scope="col" class="text-white text-xs sticky top-0">HR</th>
                         <th scope="col" class="text-white text-xs sticky top-0">HC</th>
-                        <th scope="col" class="text-white text-xs sticky top-0">ITEM NUMBER</th>
-                        <th scope="col" class="text-white text-xs sticky top-0">WO NUMBER</th>
-                        <th scope="col" class="text-white text-xs sticky top-0">PLAN BY HR</th>
-                        <th scope="col" class="text-white text-xs sticky top-0">CUM PLAN</th>
+                        <th scope="col" class="text-white text-xs sticky top-0">NUMERO DE PIEZA</th>
+                        <th scope="col" class="text-white text-xs sticky top-0">NUMERO DE WO</th>
+                        <th scope="col" class="text-white text-xs sticky top-0">PLAN POR HR</th>
+                        <th scope="col" class="text-white text-xs sticky top-0">ACUMULADO PLAN</th>
 
-                        <th scope="col" class="text-white text-xs sticky top-0">DONE BY HR</th>
-                        <th scope="col" class="text-white text-xs sticky top-0">CUM DONE</th>
+                        <th scope="col" class="text-white text-xs sticky top-0">REALIZADO POR HORA</th>
+                        <th scope="col" class="text-white text-xs sticky top-0">CUM REALIZADO</th>
 
                         <th scope="col" class="text-white text-xs sticky top-0">%</th>
 
-                        <th scope="col" class="text-white text-xs sticky top-0">PLANNED INTERRUPTION</th>
-                        <th scope="col" class="text-white text-xs sticky top-0">NOT PLANNED INTERRUPTION</th>
+                        <th scope="col" class="text-white text-xs sticky top-0">INTERRUPCION PLANEADA</th>
+                        <th scope="col" class="text-white text-xs sticky top-0">INTERRUPCION NO PLANEADA</th>
 
                         <!--
                         <th scope="col" class="text-white text-xs sticky top-0">LESS TIME</th>
@@ -272,7 +272,7 @@
 
                         <!-- ITEM NUMBER -->
                         <td>
-                            <input placeholder="Select" style="text-transform: uppercase;" type="text" ng-model="plan_item.item" ng-class="{red: plan_item.invalid_item_id}" class="form-control input_invisible size-sm" list="dl_items" disabled />
+                            <input placeholder="Selecciona" style="text-transform: uppercase;" type="text" ng-model="plan_item.item" ng-class="{red: plan_item.invalid_item_id}" class="form-control input_invisible size-sm" list="dl_items" disabled />
                         </td>
 
                         <!-- WORKORDER  -->
@@ -349,13 +349,13 @@
             </table>
 
 
-            <h3 class="text-center mt-3" ng-show="production_plan.plan_id == null && detail_loaded == true">There was no Plan for the date and output.</h3>
+            <h3 class="text-center mt-3" ng-show="production_plan.plan_id == null && detail_loaded == true">No había un plan para la fecha y el producto</h3>
 
             <div class="flex justify-end mt-5">
 
                 <button type="button" class="btn btn_secondary uppercase ltr:mr-2" ng-click="cancel()">
                     <span class="la la-arrow-left ltr:mr-2 rtl:ml-2"></span>
-                    Back
+                    Regresar
                 </button>
             </div>
         </div>
@@ -372,7 +372,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h2 class="modal-title">Paste Excel Data in Box (Ctrl + V)</h2>
+                    <h2 class="modal-title">Pega la informacion del excel en la caja (Ctrl + V)</h2>
                     <button type="button" class="close la la-times" data-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
@@ -383,8 +383,8 @@
                 </div>
                 <div class="modal-footer">
                     <div class="flex ltr:ml-auto rtl:mr-auto">
-                        <button type="button" class="btn btn_secondary uppercase" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn_primary ltr:ml-2 rtl:mr-2 uppercase" data-dismiss="modal" ng-click="paste_from_input()">Copy Data </button>
+                        <button type="button" class="btn btn_secondary uppercase" data-dismiss="modal">Cerrar</button>
+                        <button type="button" class="btn btn_primary ltr:ml-2 rtl:mr-2 uppercase" data-dismiss="modal" ng-click="paste_from_input()">Copiar Informacion </button>
                     </div>
                 </div>
             </div>

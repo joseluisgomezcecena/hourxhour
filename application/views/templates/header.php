@@ -21,7 +21,7 @@
     <script src="<?php echo  base_url() ?>assets/js/jquery.min.js"></script>
     <script src="<?php echo  base_url() ?>assets/js/sweetalert.min.js"></script>
 
-    <title>Hour By Hour | Andon</title>
+    <title>Hora por hora | Andon</title>
 </head>
 
 <body>
@@ -115,7 +115,7 @@
                     <div class="p-5">
                         <a href="<?php echo base_url() ?>logout" class="flex items-center text-normal hover:text-primary">
                             <span class="la la-power-off text-2xl leading-none ltr:mr-2 rtl:ml-2"></span>
-                            Logout
+                            Cerrar sesión
                         </a>
                     </div>
                 </div>
@@ -138,19 +138,19 @@
             </div>
             <a href="<?php echo base_url() ?>" class="link" data-toggle="tooltip-menu" data-tippy-content="Dashboard">
                 <span class="icon las la-tachometer-alt"></span>
-                <span class="title">Dashboard</span>
+                <span class="title">Inicio</span>
             </a>
             <a href="#no-link" class="link" data-target="[data-menu=pages]" data-toggle="tooltip-menu" data-tippy-content="Pages">
                 <span class="icon las la-hourglass-half"></span>
-                <span class="title">Hour by Hour</span>
+                <span class="title">Hora por hora</span>
             </a>
             <a href="#no-link" class="link" data-target="[data-menu=screens]" data-toggle="tooltip-menu" data-tippy-content="screens">
                 <span class="icon las la-tv"></span>
-                <span class="title">screens</span>
+                <span class="title">Pantallas</span>
             </a>
             <a href="#no-link" class="link" data-target="[data-menu=ui]" data-toggle="tooltip-menu" data-tippy-content="UI">
                 <span class="icon las la-cog"></span>
-                <span class="title">Settings</span>
+                <span class="title">Configuración</span>
             </a>
         </div>
         <!-- ANDON -->
@@ -158,15 +158,15 @@
             <div class="menu-detail-wrapper">
                 <a href="<?php echo base_url(); ?>index.php/plants">
                     <span class="las la-warehouse"></span>
-                    Plants
+                    Plantas
                 </a>
                 <a href="<?php echo base_url(); ?>index.php/sites">
                     <span class="las la-sitemap"></span>
-                    Sites
+                    Celdas
                 </a>
                 <a href="<?php echo base_url(); ?>index.php/machines">
                     <span class="las la-cogs"></span>
-                    Measuring point
+                    Punto de medición
                 </a>
             </div>
         </div>
@@ -176,11 +176,11 @@
             <div class="menu-detail-wrapper">
                 <a href="<?php echo base_url(); ?>index.php/">
                     <span class="icon las la-tachometer-alt"></span>
-                    Dashboard
+                    Inicio
                 </a>
                 <a href="#no-link" class="active" data-toggle="collapse" data-target="#plant_admon">
                     <span class="collapse-indicator la la-arrow-circle-down"></span>
-                    Manage By Plant
+                    Administrar por planta
                 </a>
                 <div id="plant_admon" class="collapse">
 
@@ -196,10 +196,10 @@
                         echo '</a>';
                         echo '<div id="plant_' . $plant['plant_id'] . '" class="collapse">';
                         echo '<a href="' . base_url() . 'index.php/cell?plant_id=' . $plant['plant_id'] . '">';
-                        echo '    Load Plan';
+                        echo '    Cargar Plan';
                         echo '</a>';
                         echo '<a href="' . base_url() . 'index.php/manual_capture?plant_id=' . $plant['plant_id'] . '">';
-                        echo '    Manual Capture';
+                        echo '    Captura Manual';
                         echo '</a>';
                         echo '</div>';
                     }
@@ -217,18 +217,18 @@
                 </div>-->
                 <a href="#no-link" class="active" data-toggle="collapse" data-target="#reports">
                     <span class="collapse-indicator la la-arrow-circle-down"></span>
-                    Reports
+                    Reportes
                 </a>
                 <div id="reports" class="collapse">
                     <a href="<?php echo base_url(); ?>index.php/daily_report">
-                        Daily Report
+                        Reporte Diario
                     </a>
                     <a href="<?php echo base_url(); ?>index.php/custom_report">
-                        Custom Report
+                        Reporte Personalizado
                     </a>
 
                     <a href="<?php echo base_url(); ?>index.php/detail_report">
-                        Hour x Hour Detail
+                        Detalle hora por hora
                     </a>
                 </div>
                 <!--<a href="#no-link" class="active" data-toggle="collapse" data-target="#import_reports">
@@ -237,22 +237,22 @@
                 </a>-->
                 <div id="import_reports" class="collapse">
                     <a href="<?php echo base_url(); ?>import_report/tempus">
-                        Tempus Report
+                        Reporte de tempus
                     </a>
                 </div>
 
                 <div id="import_reports" class="collapse">
                     <a href="<?php echo base_url(); ?>import_report/std_hours">
-                        Standard Hours
+                        Horas estandar
                     </a>
                 </div>
                 <a href="<?php echo base_url(); ?>interruption_cause/select_cell">
                     <span class="icon las la-stop-circle"></span>
-                    Interruption cause
+                    Causas de interrupción
                 </a>
                 <a href="<?php echo base_url(); ?>assets/docs/Template_Upload_Plan.xlsx" download>
                     <span class="icon lar la-file-excel"></span>
-                    Template to load plan
+                    Cargar plan
                 </a>
             </div>
         </div>
@@ -260,11 +260,11 @@
             <div class="menu-detail-wrapper">
                 <a href="<?php echo base_url(); ?>index.php/output_vs_plan/select_monitor">
                     <span class="icon las la-tv"></span>
-                    Output vs Plan
+                    Pantallas
                 </a>
                 <a href="<?php echo base_url(); ?>output_vs_plan/select_site_monitor">
                     <span class="icon lar la-plus-square"></span>
-                    Add Screens
+                    Agregar pantallas
                 </a>
             </div>
         </div>

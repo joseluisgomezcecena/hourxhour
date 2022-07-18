@@ -24,7 +24,7 @@
      <div class="grid lg:grid-cols-2 gap-5 p-5">
 
          <div class="card p-5">
-             <h3>1. Select Plant</h3>
+             <h3>1. Selecciona Planta</h3>
              <form class="mt-2">
                  <div class="custom-select">
                      <select class="form-control" ng-options="plant.plant_name for plant in plants" ng-model="selected_plant"> </select>
@@ -35,7 +35,7 @@
 
 
          <div class="card p-5">
-             <h3>2. Select Site</h3>
+             <h3>2. Selecciona Celda</h3>
              <form class="mt-2">
                  <div class="custom-select">
                      <select class="form-control" ng-options="site.site_name for site in sites  |  filter : {'plant_id': selected_plant.plant_id } " ng-model="selected_site" ng-change="site_changed()"> </select>
@@ -46,10 +46,10 @@
      </div>
 
      <div class="grid lg:grid-cols-1 gap-5 p-2">
-         <h3 class="text-center">3. Select Monitor</h3>
+         <h3 class="text-center">3. Selecciona una pantalla</h3>
      </div>
 
-     <h4 class="text-center" ng-show="monitors.length == 0">There are no monitors on this site / not selected site</h4>
+     <h4 class="text-center" ng-show="monitors.length == 0">No hay pantalla en esta Celda</h4>
 
      <div class="grid lg:grid-cols-4 gap-5 p-5">
 
@@ -62,7 +62,7 @@
 
              <hr>
 
-             <p ng-show="monitor.assets.length == 0" style="color:red"> No assets </p>
+             <p ng-show="monitor.assets.length == 0" style="color:red"> No hay puntos de medicion </p>
 
              <table class="table table_list mt-3 w-full">
                  <thead>

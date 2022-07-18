@@ -20,7 +20,7 @@
 <section class="breadcrumb">
     <h1><?= $title ?></h1>
     <ul>
-        <li><a href="#">Pages</a></li>
+        <!--<li><a href="#">Pages</a></li>-->
         <li class="divider la la-arrow-right"></li>
         <li><?= $title ?></li>
     </ul>
@@ -32,33 +32,32 @@
             <div class="mt-5">
                 <div class="grid lg:grid-cols-3 gap-5 my-5">
                     <div class="text-success">
-                        <label for="start_date" class="mx-5"><b>Start date</b></label>
+                        <label for="start_date" class="mx-5"><b>Fecha inicio</b></label>
                         <input type="date" ng-model="start_date" name="start_date" id="start_date">
                     </div>
                     <div class="text-success">
-                        <label for="end_date" class="mx-5"><b>End date</b></label>
+                        <label for="end_date" class="mx-5"><b>Fecha fin</b></label>
                         <input type="date" ng-model="end_date" name="end_date" id="end_date">
                     </div>
                     <div>
-                        <button type="button" class="btn btn_info uppercase" ng-click="submit()">Search</button>
+                        <button type="button" class="btn btn_info uppercase" ng-click="submit()">Buscar</button>
                     </div>
                 </div>
                 <table id="report-table" class="table table-auto w-full mb-5">
                     <thead>
                         <tr>
-                            <th style="font-size: 11px !important;" class="text-center uppercase">Plant</th>
-                            <th style="font-size: 11px !important;" class="text-center uppercase">Cell</th>
-                            <th style="font-size: 11px !important;" class="text-center uppercase">Machine</th>
-                            <th style="font-size: 11px !important;" class="text-center uppercase table-row-shift-one">Planned (Shift one)</th>
-                            <th style="font-size: 11px !important;" class="text-center uppercase table-row-shift-one">Completed (Shift one)</th>
-                            <th style="font-size: 11px !important;" class="text-center uppercase table-row-shift-two"> Planned (Shift two)</th>
-                            <th style="font-size: 11px !important;" class="text-center uppercase table-row-shift-two">Completed (Shift two)</th>
-                            <th style="font-size: 11px !important;" class="text-center uppercase table-row-shift-three">Planned (Shift three)</th>
-                            <th style="font-size: 11px !important;" class="text-center uppercase table-row-shift-three">Completed (Shift three)</th>
-                            <th style="font-size: 11px !important;" class="text-center uppercase">Total Planned</th>
-                            <th style="font-size: 11px !important;" class="text-center uppercase">Total Completed</th>
-							<th style="font-size: 11px !important;" class="text-center uppercase">% vs Plan</th>
-
+                            <th style="font-size: 11px !important;" class="text-center uppercase">Planta</th>
+                            <th style="font-size: 11px !important;" class="text-center uppercase">Celda</th>
+                            <th style="font-size: 11px !important;" class="text-center uppercase">Maquina</th>
+                            <th style="font-size: 11px !important;" class="text-center uppercase table-row-shift-one">Planeado (1er turno)</th>
+                            <th style="font-size: 11px !important;" class="text-center uppercase table-row-shift-one">Completado (1er turno)</th>
+                            <th style="font-size: 11px !important;" class="text-center uppercase table-row-shift-two">Planeado (2do turno)</th>
+                            <th style="font-size: 11px !important;" class="text-center uppercase table-row-shift-two">Completado (2do turno)</th>
+                            <th style="font-size: 11px !important;" class="text-center uppercase table-row-shift-three">Planeado (3er turno)</th>
+                            <th style="font-size: 11px !important;" class="text-center uppercase table-row-shift-three">Completado (3er turno)</th>
+                            <th style="font-size: 11px !important;" class="text-center uppercase">Total planeado</th>
+                            <th style="font-size: 11px !important;" class="text-center uppercase">Total completado</th>
+							<th style="font-size: 11px !important;" class="text-center uppercase">% VS Plan</th>
                         </tr>
                     </thead>
                     <tbody>

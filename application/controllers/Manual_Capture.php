@@ -17,7 +17,7 @@ class Manual_Capture extends CI_Controller
         $this->load->model('machine_model');
         $this->load->model('productionplan');
 
-        $data['title'] = "Manual Capture";
+        $data['title'] = "Captura Manual";
         //pass the site_id and the plant_id from params
         $plant_id = $this->input->get('plant_id');
         $site_id = $this->input->get('site_id');
@@ -327,7 +327,7 @@ class Manual_Capture extends CI_Controller
 
     public function select_plant_button()
     {
-        $data['title'] = "Select a plant";
+        $data['title'] = "Selecciona una planta";
 
         $this->load->model('plant');
         $plants = $this->plant->getAllActive();
@@ -361,7 +361,7 @@ class Manual_Capture extends CI_Controller
         $query = $this->db->query($sql);
         $data['item_by_plan'] =   $query->result_array();
 
-        $data['title'] = "Measuring Point";
+        $data['title'] = "Puntos de medición";
         $data['plant_id'] = $plant_id;
         $data['site_id'] = $site_id;
         $data['shift_id'] = $shift_date['shift_id'];
