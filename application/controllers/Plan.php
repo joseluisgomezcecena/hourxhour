@@ -297,7 +297,7 @@ class Plan extends CI_Controller
         $this->load->model('plant');
         $this->plant->Load($plant_id);
 
-        $data['title'] = "Select a Cell for shift: " . $this->shift->shift_name;
+        $data['title'] = "Selecciona una celda para el turno: " . $this->shift->shift_name;
         $data['shift'] = $this->shift;
         $data['plant'] =  $this->plant;
 

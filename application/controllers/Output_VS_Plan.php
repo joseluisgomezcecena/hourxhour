@@ -11,7 +11,7 @@ class Output_VS_Plan extends CI_Controller
     */
     public function select_site()
     {
-        $data['title'] = "Select a Site";
+        $data['title'] = "Selecciona una celda";
 
         $this->load->model('plant');
         $plants = $this->plant->getAllActive();
@@ -37,7 +37,7 @@ class Output_VS_Plan extends CI_Controller
      * */
     public function select_monitor()
     {
-        $data['title'] = "Select a Monitor";
+        $data['title'] = "Selecciona una pantalla";
         $site_id = $this->input->get('site_id');
         //$plant_id = $this->input->get('plant_id');
         //$data['site_id'] = $site_id;
@@ -116,7 +116,7 @@ class Output_VS_Plan extends CI_Controller
         $site_id = $this->input->get('site_id');
         $monitor_id = $this->input->get('monitor_id');
 
-        $data['title'] = "Output vs plan";
+        $data['title'] = "Pantallass";
         $data['plant_id'] = $plant_id;
         $data['site_id'] = $site_id;
         $data['monitor_id'] = $monitor_id;
@@ -137,7 +137,7 @@ class Output_VS_Plan extends CI_Controller
         $plant_id = $this->input->get('plant_id');
         $site_id = $this->input->get('site_id');
 
-        $data['title'] = "Select Cell";
+        $data['title'] = "Selecciona una celda";
         $data['plant_id'] = $plant_id;
         $data['site_id'] = $site_id;
 
@@ -157,7 +157,7 @@ class Output_VS_Plan extends CI_Controller
 
     public function select_site_monitor()
     {
-        $data['title'] = "Select a Site";
+        $data['title'] = "Selecciona una celda";
         $this->load->model('plant');
         $plants = $this->plant->getAllActive();
 

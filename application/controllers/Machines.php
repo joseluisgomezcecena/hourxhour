@@ -7,7 +7,7 @@ class Machines extends CI_Controller
 	{
 
 
-		$data['title'] = "Measuring point";
+		$data['title'] = "Punto de medición";
 		//$data['plants'] = $this->Machine_model->get_plants();
 
 		$data['machines'] = $this->Machine_model->display_machines();
@@ -23,7 +23,7 @@ class Machines extends CI_Controller
 
 	public function create()
 	{
-		$data['title'] = "Add output / measuring point";
+		$data['title'] = "Agregar punto de medición";
 		$data['plants'] = $this->Machine_model->get_plants();
 
 		$this->form_validation->set_rules('plant_id', 'Plant', 'required');
@@ -35,12 +35,12 @@ class Machines extends CI_Controller
 		if (isset($_POST['save_machine'])) {
 			if ($this->form_validation->run() === TRUE) {
 				$this->Machine_model->create_machine();
-				$data['message_title'] = 'Well done!';
-				$data['message_description'] = 'Your Machine has been added.';
+				$data['message_title'] = 'Agregado exitosamente!';
+				$data['message_description'] = 'Tu máquina ha sido agregada.';
 				$data['message_type'] = 'success';
 			} else {
-				$data['message_title'] = 'Ups! Something went wrong!';
-				$data['message_description'] = 'Please try again';
+				$data['message_title'] = 'Ups! Algo salió mal!';
+				$data['message_description'] = 'Intenta de nuevo';
 				$data['message_type'] = 'error';
 			}
 		}
@@ -56,7 +56,7 @@ class Machines extends CI_Controller
 	{
 		$data['machines'] = $this->Machine_model->display_single($id);
 
-		$data['title'] = "Machine Details";
+		$data['title'] = "Detalles de la máquina";
 
 		if (empty($data['machines'])) {
 			show_404();
@@ -72,7 +72,7 @@ class Machines extends CI_Controller
 
 	public function edit($id)
 	{
-		$data['title'] = "Update measuring point";
+		$data['title'] = "Actualizar punto de medición";
 		$data['plants'] = $this->Machine_model->get_plants();
 		$data['machine'] = $this->Machine_model->display_single($id);
         $data['sites'] = $this->Machine_model->display_sites_by_plant($data['machine']['plant_id']);
@@ -98,8 +98,8 @@ class Machines extends CI_Controller
 		if ($this->Machine_model->delete_machine($id)) {
 			redirect('machines');
 		} else {
-			$data['title'] = "Asset could not be deleted";
-			$data['message'] = "You have assets that belongs to a production plan, for this reason you cannot delete the asset.";
+			$data['title'] = "La máquina no se puede eliminar";
+			$data['message'] = "Tienes una máquina agregada al plan, por esa razón no puede ser eliminada";
 			$data['url'] =  base_url() . "machines";
 			$this->load->view('pages/errors/includes/header');
 			$this->load->view('pages/errors/index', $data);

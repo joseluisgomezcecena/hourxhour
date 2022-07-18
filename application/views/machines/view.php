@@ -2,9 +2,9 @@
 <section class="breadcrumb">
 	<h1><?=  $title ?></h1>
 	<ul>
-		<li><a href="#">Pages</a></li>
+		<!--<li><a href="#">Pages</a></li>
 		<li class="divider la la-arrow-right"></li>
-		<li><a href="#"><?=  $title ?></a></li>
+		<li><a href="#"><?=  $title ?></a></li>-->
 		<li class="divider la la-arrow-right"></li>
 		<li><?php echo $machines['asset_name'] ?></li>
 	</ul>

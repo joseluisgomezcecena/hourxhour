@@ -52,11 +52,11 @@
         <div class="mt-5">
             <table class="table w-full">
                 <tr>
-                    <th class="text-center uppercase table-green text-bold">Plant</th>
+                    <th class="text-center uppercase table-green text-bold">Planta</th>
                     <th class="text-center uppercase table-green"><?= $plant_name ?></th>
                     <th class="text-center uppercase table-green text-bold">Area</th>
                     <th class="text-center uppercase table-green"><?= $site_name ?></th>
-                    <th class="text-center uppercase table-green text-bold">Output</th>
+                    <th class="text-center uppercase table-green text-bold">Salida</th>
                     <th class="text-center uppercase table-green"><?= $asset_name ?></th>
 
                 </tr>
@@ -65,11 +65,11 @@
             <table class="table w-full mb-5">
                 <thead>
                     <tr>
-                        <th class="text-center uppercase table-color text-bold">Last Hour</th>
+                        <th class="text-center uppercase table-color text-bold">Ultima Hora</th>
                         <th class="text-center uppercase table-color text-bold">HC</th>
-                        <th class="text-center uppercase table-color text-bold">Item number</th>
-                        <th class="text-center uppercase table-color text-bold">WO number</th>
-                        <th class="text-center uppercase table-color text-bold">Output QTY</th>
+                        <th class="text-center uppercase table-color text-bold">Numero de pieza</th>
+                        <th class="text-center uppercase table-color text-bold">Numero de WO</th>
+                        <th class="text-center uppercase table-color text-bold">Cantidad de salida</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -92,23 +92,23 @@
             </table>
         </div>
         <div ng-show="verified">
-            <h6>WO Number:</h6>
+            <h6>Numero de WO:</h6>
             <p><?= $workorder ?></p>
-            <h5 class="mt-4">Item number:</h5>
+            <h5 class="mt-4">Numero de pieza:</h5>
             <h1 class="text-primary <?php if (!isset($multiplier_factor)) {
                                         echo 'mb-8';
                                     } ?> "><b><?= $item ?></b></h1>
 
             <?php
             if (isset($multiplier_factor)) {
-                echo ' <h5 class="mb-8" style="color:red;">Multiplier factor is Activated with ' . $multiplier_factor . '</h5>';
+                echo ' <h5 class="mb-8" style="color:red;">El factor multiplicador esta activado con ' . $multiplier_factor . '</h5>';
             }
             ?>
 
 
             <div class="alert alert_success my-5" ng-if="!IsDisabledButtonModify">
-                <strong class="uppercase"><bdi>Add new capture in the green field!<br /></bdi></strong>
-                Don't forget to save the new capture added.
+                <strong class="uppercase"><bdi>Agrega una nueva captura en el campo verde!<br /></bdi></strong>
+                No olvides guardar la captura agregada!
             </div>
 
             <div class="mt-5 mb-5">
@@ -119,7 +119,7 @@
 
             </div>
             <div>
-                <button class="btn btn_warning" style="width: 15em; margin:auto; display:block;" ng-click="capture()" ng-disabled="!IsDisabledButtonModify">Capture</button>
+                <button class="btn btn_warning" style="width: 15em; margin:auto; display:block;" ng-click="capture()" ng-disabled="!IsDisabledButtonModify">Capturar</button>
             </div>
             <h6 class="mt-5">Current Hour</h6>
             <p><?= $time, '-', $time_end ?></p>
@@ -128,9 +128,9 @@
                     <label class="switch">
                         <input type="checkbox" ng-model="isModify" ng-change="EnableDisableButtonModify()">
                         <span></span>
-                        <span>Modify capture</span>
+                        <span>Modificar captura</span>
                     </label>
-                    <button ng-hide="IsDisabledButtonModify" ng-click="modify_item()" class="btn btn_success mt-4">Save new capture</button>
+                    <button ng-hide="IsDisabledButtonModify" ng-click="modify_item()" class="btn btn_success mt-4">Guardar nueva captura</button>
                 </div>
             </div>
         </div>

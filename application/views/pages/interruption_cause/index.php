@@ -30,7 +30,7 @@
 <section class="breadcrumb">
     <h1><?= $title ?></h1>
     <ul>
-        <li><a href="<?php echo base_url(); ?>">Home</a></li>
+        <li><a href="<?php echo base_url(); ?>">Inicio</a></li>
         <li class="divider la la-arrow-right"></li>
         <li><?= $title ?></li>
     </ul>
@@ -50,13 +50,13 @@
             <table class="table w-full mt-3">
                 <thead>
                     <tr>
-                        <th class="uppercase table-green">Plant</th>
+                        <th class="uppercase table-green">Planta</th>
                         <th class="uppercase table-success"><?= $production_plan->plant_name ?></th>
                         <th class="uppercase table-green">Area</th>
                         <th class="uppercase table-success"><?= $production_plan->site_name ?></th>
-                        <th class="uppercase table-green">Output</th>
+                        <th class="uppercase table-green">Salida</th>
                         <th class="uppercase table-success"><?= $production_plan->asset_name ?></th>
-                        <th class="uppercase table-green">Shift Status</th>
+                        <th class="uppercase table-green">Estatus del turno</th>
                         <th class="uppercase table-success">
                             <?php
                             $sum_planned = 0;
@@ -80,15 +80,15 @@
                     <tr>
                         <th class="uppercase table-green">HR</th>
                         <th class="uppercase table-green">HC</th>
-                        <th class="uppercase table-green">Item Number</th>
-                        <th class="uppercase table-green">WO Number</th>
-                        <th class="uppercase table-green">Plan By Hour</th>
-                        <th class="uppercase table-green">CUM Plan</th>
-                        <th class="uppercase table-green">Output QTY</th>
-                        <th class="uppercase table-green">CUM Output</th>
-                        <th class="uppercase table-green">Planned Interruption</th>
-                        <th class="uppercase table-green">Interruption Cause</th>
-                        <th class="uppercase table-green">Less Time in Minutes</th>
+                        <th class="uppercase table-green">Numero de pieza</th>
+                        <th class="uppercase table-green">Numero de WO</th>
+                        <th class="uppercase table-green">Plan por hora</th>
+                        <th class="uppercase table-green">Acum Plan</th>
+                        <th class="uppercase table-green">Cantidad de salida</th>
+                        <th class="uppercase table-green">acum de Salida</th>
+                        <th class="uppercase table-green">Interrupcion planeada</th>
+                        <th class="uppercase table-green">Interrupcion no planeada</th>
+                        <th class="uppercase table-green">Tiempo menos en minutos</th>
                     </tr>
                 </thead>
                 <tbody id="tbody_validation">
@@ -122,7 +122,7 @@
                         if ($get_plan['planned']) {
                             echo ' <select type="text" class="form-control" name="not_planned_interruption_id_' . $get_plan['plan_by_hour_id'] . '" onchange="changed_interruption_id(this, ' . $get_plan['plan_by_hour_id'] . ')"  >';
 
-                            echo '<option selected>select cause</option>';
+                            echo '<option selected>selecciona causa</option>';
                             foreach ($not_planned_interruptions as $int) {
                                 $selected = '';
                                 if ($get_plan['not_planned_interruption_id'] == $int->interruption_id)
@@ -161,7 +161,7 @@
             <div class="flex justify-end mt-5">
                 <button type="submit" class="btn btn_success uppercase">
                     <span class="la la-save ltr:mr-2 rtl:ml-2"></span>
-                    Save
+                    Guardar
                 </button>
             </div>
 

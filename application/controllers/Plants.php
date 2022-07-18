@@ -10,7 +10,7 @@ class Plants extends CI_Controller
         if (!$this->session->userdata(IS_LOGGED_IN))
             redirect(LOGIN_URL);
 
-        $data['title'] = "Plants";
+        $data['title'] = "Plantas";
         $data['plants'] = $this->Plant->getAllActive();
         $this->load->view('templates/header');
         $this->load->view('pages/andon/plants/index', $data);
@@ -35,7 +35,7 @@ class Plants extends CI_Controller
 
         $plant_name = $this->input->post('plant_name');
 
-        $data['title'] = "Create plant";
+        $data['title'] = "Crear una planta";
 
         $this->form_validation->set_rules('plant_name', 'Plant Name', 'required');
         $this->form_validation->set_rules('plant_password', 'Plant Password', 'required');
@@ -52,8 +52,8 @@ class Plants extends CI_Controller
                 } else {
                     //this can be created...
                     $this->Plant->save();
-                    $data['message_title'] = 'Well done!';
-                    $data['message_description'] = 'The plant ' . $plant_name . ' has been added.';
+                    $data['message_title'] = 'Se a agregado exitosamente!';
+                    $data['message_description'] = 'La planta ' . $plant_name . ' ha sido agregada.';
                     $data['message_type'] = 'success';
                 }
             }
@@ -71,7 +71,7 @@ class Plants extends CI_Controller
         if (!$this->session->userdata(IS_LOGGED_IN))
             redirect(LOGIN_URL);
 
-        $data['title'] = "Update Plant";
+        $data['title'] = "Actualizar Planta";
         $data['plant'] = $this->Plant->display_single_plant($id);
 
         if (empty($data['plant'])) {
@@ -85,7 +85,7 @@ class Plants extends CI_Controller
 
     public function confirm_delete($id)
     {
-        $data['title'] = "Delete Plant";
+        $data['title'] = "Eliminar Planta";
         $data['plant'] = $this->Plant->display_single_plant($id);
 
         if (empty($data['plant'])) {
@@ -108,8 +108,8 @@ class Plants extends CI_Controller
         $query = $this->db->get('sites');
 
         if ($query->num_rows() > 0) {
-            $data['title'] = "Plant could not be deleted";
-            $data['message'] = "You have sites that belongs to this plant, for now plant cannot be deleted until you delete its sites.";
+            $data['title'] = "La planta no puede ser eliminada";
+            $data['message'] = "Se tiene celdas agregadas en esta planta, por esa razón no puede ser eliminada";
             $data['url'] =  base_url() . "plants";
             $this->load->view('pages/errors/includes/header');
             $this->load->view('pages/errors/index', $data);

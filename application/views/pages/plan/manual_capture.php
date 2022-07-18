@@ -12,20 +12,20 @@
         <div>
             <h1><?= $title ?> in {{selected_plant.plant_name}}</h1>
             <ul>
-                <li><a href="#">Pages</a></li>
-                <li class="divider la la-arrow-right"></li>
+                <!--<li><a href="#">Pages</a></li>-->
+                <!--<li class="divider la la-arrow-right"></li>-->
                 <li><?= $title ?></li>
             </ul>
         </div>
         <div class="flex flex-wrap gap-2 items-center ltr:ml-auto rtl:mr-auto mt-5 lg:mt-0">
             <div class="input-group mt-5">
-                <div class="input-addon input-addon-prepend input-group-item">Plant</div>
+                <div class="input-addon input-addon-prepend input-group-item">Planta</div>
                 <select ng-options="plant as plant.plant_name for plant in plants track by plant.plant_id" ng-model="selected_plant"></select>
 
-                <div class="input-addon input-addon-prepend input-group-item">Site</div>
+                <div class="input-addon input-addon-prepend input-group-item">Celda</div>
                 <select ng-options="site as site.site_name for site in sites track by site.site_id" ng-model="selected_site"></select>
 
-                <button class="btn btn_primary uppercase input-group-item" ng-click="filter_plant_site()">Filter</button>
+                <button class="btn btn_primary uppercase input-group-item" ng-click="filter_plant_site()">Filtro</button>
             </div>
         </div>
     </section>
@@ -51,7 +51,7 @@
                         if (count($shift['assets']) == 0) {
                             echo '<div class="alert alert_primary">
 								<strong class="uppercase"><bdi>Info!</bdi></strong>
-								This turn does not have plan production for any machine or workstation
+								Este turno no tiene plan de producción para ninguna máquina o estación de trabajo
 								</div>';
                         }
                         //One table by asset
