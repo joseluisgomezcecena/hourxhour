@@ -56,7 +56,10 @@ class Plan extends CI_Controller
     public function api_get_data()
     {
 
-        $query = $this->db->query('SELECT DISTINCT item_number FROM plan_hourxhour.items_pph ORDER BY item_number');
+        $query = $this->db->query('SELECT DISTINCT(item_number) FROM items_pph WHERE item_number is NOT NULL
+        UNION ALL
+        SELECT DISTINCT(item_number) FROM items_pph_point WHERE item_number is NOT NULL 
+        ORDER BY item_number');
         $data['items'] =   $query->result_array();
 
         $query = $this->db->query('SELECT * FROM interruptions');
