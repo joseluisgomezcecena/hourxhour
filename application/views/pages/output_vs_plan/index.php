@@ -75,8 +75,8 @@
 <body>
     <main class="container-fluid mt-0 px-0" ng-app="OutputVsPlanApp" ng-controller="OutputVsPlanCtrl">
         <!--ANDON START -->
-        <div class="container-fluid andon mt-5">
-            <div class="table-andon my-4">
+        <div class="container-fluid andon">
+            <div class="table-andon my-5">
                 <table class="table table-responsive text-center">
                     <thead>
                         <tr>
@@ -84,7 +84,7 @@
                                 <span><b>{{issue.maquina_centro_trabajo}} -</b></span>
                                 {{issue.tipo_error}}
                             </th>-->
-                            <th class="th-andon bg-danger">SETUP</th>
+                            <th class="th-andon bg-danger my-3">SETUP</th>
                         </tr>
                     </thead>
                 </table>
