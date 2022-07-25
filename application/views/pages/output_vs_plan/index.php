@@ -189,7 +189,7 @@
 
             <!--SECOND TABLE UPLOAD INFO-->
             <div ng-repeat="plan in plan_productions" style="z-index: -1;" id="table_two" class="marquee_table_2">
-                <table class="table table-responsive mt-1 mb-0">
+                <table class="table table-responsive mt-3 mb-0">
                     <thead>
                         <tr>
                             <th class="uppercase text-white bg-success">Salida</th>
@@ -202,7 +202,7 @@
                         </tr>
                     </thead>
                 </table>
-                <table class="table table-responsive my-3">
+                <table class="table table-responsive my-4">
                     <thead>
                         <tr>
                             <th class="uppercase ">HORA</th>
