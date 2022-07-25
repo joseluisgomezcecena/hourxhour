@@ -121,7 +121,7 @@
                         </tr>
                     </thead>
                 </table>
-                <table class="table table-responsive">
+                <table class="table table-responsive my-5">
                     <thead>
                         <tr>
                             <th class="uppercase ">HORA</th>
