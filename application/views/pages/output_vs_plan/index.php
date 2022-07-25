@@ -54,7 +54,7 @@
         position: fixed;
         width: 100vw;
         height: 100vh;
-        margin-top: 50rem;
+        margin-top: 35rem;
         box-sizing: border-box;
         background-color: #fff;
         z-index: 1 !important;
@@ -73,7 +73,7 @@
 </style>
 
 <body>
-    <main class="container-fluid mt-0 px-0 my-5" ng-app="OutputVsPlanApp" ng-controller="OutputVsPlanCtrl">
+    <main class="container-fluid mt-0 px-0" ng-app="OutputVsPlanApp" ng-controller="OutputVsPlanCtrl">
         <!--ANDON START -->
         <div class="container-fluid andon">
             <div class="table-andon my-4">
@@ -84,7 +84,7 @@
                                 <span><b>{{issue.maquina_centro_trabajo}} -</b></span>
                                 {{issue.tipo_error}}
                             </th>-->
-                            <th>TEST</th>
+                            <th>HOLA</th>
                         </tr>
                     </thead>
                 </table>
@@ -94,7 +94,7 @@
 
         <div id="table" ng-model="isHidden">
             <!-- TABLE INFO PLANT AND AREA -->
-            <table class="table table-responsive px-0 mx-0 my-5" style="z-index: 100 !important;">
+            <table class="table table-responsive px-0 mx-0" style="z-index: 100 !important;">
                 <thead>
                     <tr class="text-white text-center">
                         <th class="py-1 uppercase bg-dark">Planta</th>
@@ -121,7 +121,7 @@
                         </tr>
                     </thead>
                 </table>
-                <table class="table table-responsive my-5">
+                <table class="table table-responsive">
                     <thead>
                         <tr>
                             <th class="uppercase ">HORA</th>
@@ -189,7 +189,7 @@
 
             <!--SECOND TABLE UPLOAD INFO-->
             <div ng-repeat="plan in plan_productions" style="z-index: -1;" id="table_two" class="marquee_table_2">
-                <table class="table table-responsive mt-5 mb-0">
+                <table class="table table-responsive mt-1 mb-0">
                     <thead>
                         <tr>
                             <th class="uppercase text-white bg-success">Salida</th>
@@ -202,7 +202,7 @@
                         </tr>
                     </thead>
                 </table>
-                <table class="table table-responsive">
+                <table class="table table-responsive my-3">
                     <thead>
                         <tr>
                             <th class="uppercase ">HORA</th>
