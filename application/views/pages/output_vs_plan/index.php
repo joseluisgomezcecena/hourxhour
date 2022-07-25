@@ -80,11 +80,10 @@
                 <table class="table table-responsive text-center">
                     <thead>
                         <tr>
-                            <!--<th ng-repeat="issue in issues" class="th-andon uppercase {{ issue.status }}">
+                            <th ng-repeat="issue in issues" class="th-andon uppercase {{ issue.status }}">
                                 <span><b>{{issue.maquina_centro_trabajo}} -</b></span>
                                 {{issue.tipo_error}}
-                            </th>-->
-                            <th class="th-andon bg-danger my-3">SETUP</th>
+                            </th>
                         </tr>
                     </thead>
                 </table>
