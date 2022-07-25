@@ -15,7 +15,7 @@
 
 <style>
     body {
-        font-size: 0.9rem;
+        font-size: 1rem;
         display: flex;
         justify-content: center;
         align-content: center;
