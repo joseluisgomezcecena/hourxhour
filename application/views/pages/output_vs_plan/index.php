@@ -125,13 +125,13 @@
                         <tr>
                             <th class="uppercase ">HORA</th>
                             <th class="uppercase ">HC</th>
-                            <th class="uppercase ">Numero de pieza</th>
-                            <th class="uppercase ">Numero de WO</th>
-                            <th class="uppercase ">Plan por hora</th>
+                            <th class="uppercase ">Numero pieza</th>
+                            <th class="uppercase ">Numero WO</th>
+                            <th class="uppercase ">Plan x hora</th>
                             <th class="uppercase ">Acum Plan</th>
-                            <th class="uppercase ">Cantidad de Salida</th>
+                            <th class="uppercase ">Cantidad Salida</th>
                             <th class="uppercase ">Acum Salida</th>
-                            <th class="uppercase ">Causa de interrupcion</th>
+                            <th class="uppercase ">Causa Interrp</th>
 
                         </tr>
                     </thead>
