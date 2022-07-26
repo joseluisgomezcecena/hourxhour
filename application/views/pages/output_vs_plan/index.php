@@ -15,7 +15,7 @@
 
 <style>
     body {
-        font-size: 1.5rem;
+        font-size: 2.3rem;
         display: flex;
         justify-content: center;
         align-content: center;
@@ -54,9 +54,9 @@
         position: fixed;
         width: 100vw;
         height: 100vh;
-        margin-top: 35rem;
+        /*margin-top: 35rem;*/
         box-sizing: border-box;
-        background-color: #fff;
+        background-color: green;
         z-index: 1 !important;
     }
 
@@ -65,6 +65,8 @@
         white-space: nowrap;
         will-change: transform;
         animation: marquee 30s linear infinite;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
     }
 
     .th-andon {
@@ -73,10 +75,10 @@
 </style>
 
 <body>
-    <main class="container-fluid mt-0 px-0" ng-app="OutputVsPlanApp" ng-controller="OutputVsPlanCtrl">
+    <main class="container-fluid mt-0 px-0 mb-0" ng-app="OutputVsPlanApp" ng-controller="OutputVsPlanCtrl">
         <!--ANDON START -->
-        <div class="container-fluid andon">
-            <div class="table-andon my-5">
+        <div class="py-0 px-0 bg-white mb-0" style="bottom: -10rem !important;">
+            <div class="table-andon">
                 <table class="table table-responsive text-center">
                     <thead>
                         <tr>
@@ -90,10 +92,9 @@
             </div>
         </div>
         <!-- END ANDON -->
-
         <div id="table" ng-model="isHidden">
             <!-- TABLE INFO PLANT AND AREA -->
-            <table class="table table-responsive px-0 mx-0" style="z-index: 100 !important;">
+            <table class="table table-responsive mx-0 py-0" style="z-index: 100 !important;">
                 <thead>
                     <tr class="text-white text-center">
                         <th class="py-1 uppercase bg-dark">Planta</th>
@@ -107,15 +108,15 @@
 
             <!--FIRST TABLE UPLOAD INFO-->
             <div ng-repeat="plan in plan_productions" class="marquee_table" id="table_one" style="z-index: -1;">
-                <table class="table table-responsive mt-1 mb-0">
+                <table class="table table-responsive mb-0">
                     <thead>
                         <tr>
                             <th class="uppercase text-white bg-success">Salida</th>
                             <th class="uppercase table-success">{{ plan.asset_name }}</th>
                             <th class="uppercase text-white bg-success">Estatus del turno</th>
-                            <th class="uppercase table-danger" ng-show="plan.shift_status < 84">{{ plan.shift_status }}%</th>
-                            <th class="uppercase table-warning" ng-show="plan.shift_status >= 85 && plan.shift_status < 90">{{ plan.shift_status }}%</th>
-                            <th class="uppercase table-success" ng-show="plan.shift_status >= 90">{{ plan.shift_status }}%</th>
+                            <th class="uppercase bg-danger" ng-show="plan.shift_status < 84">{{ plan.shift_status }}%</th>
+                            <th class="uppercase bg-warning" ng-show="plan.shift_status >= 85 && plan.shift_status <= 90">{{ plan.shift_status }}%</th>
+                            <th class="uppercase bg-success" ng-show="plan.shift_status >= 90">{{ plan.shift_status }}%</th>
                         </tr>
                     </thead>
                 </table>
@@ -124,8 +125,8 @@
                         <tr>
                             <th class="uppercase ">HORA</th>
                             <th class="uppercase ">HC</th>
-                            <th class="uppercase ">Numero pieza</th>
-                            <th class="uppercase ">Numero WO</th>
+                            <th class="uppercase ">No. pieza</th>
+                            <th class="uppercase ">No. WO</th>
                             <th class="uppercase ">Plan x hora</th>
                             <th class="uppercase ">Acum Plan</th>
                             <th class="uppercase ">Cantidad Salida</th>
@@ -193,10 +194,9 @@
                             <th class="uppercase text-white bg-success">Salida</th>
                             <th class="uppercase table-success">{{ plan.asset_name }}</th>
                             <th class="uppercase text-white bg-success">Shift status</th>
-
-                            <th class="uppercase table-danger" ng-show="plan.shift_status < 84">{{ plan.shift_status }}%</th>
-                            <th class="uppercase table-warning" ng-show="plan.shift_status >= 85 && plan.shift_status < 90">{{ plan.shift_status }}%</th>
-                            <th class="uppercase table-success" ng-show="plan.shift_status >= 90">{{ plan.shift_status }}%</th>
+                            <th class="uppercase bg-danger" ng-show="plan.shift_status < 84">{{ plan.shift_status }}%</th>
+                            <th class="uppercase bg-warning" ng-show="plan.shift_status >= 85 && plan.shift_status <= 90">{{ plan.shift_status }}%</th>
+                            <th class="uppercase bg-success" ng-show="plan.shift_status >= 90">{{ plan.shift_status }}%</th>
                         </tr>
                     </thead>
                 </table>
@@ -205,9 +205,9 @@
                         <tr>
                             <th class="uppercase ">HORA</th>
                             <th class="uppercase ">HC</th>
-                            <th class="uppercase ">Numero de pieza</th>
-                            <th class="uppercase ">Numero de WO</th>
-                            <th class="uppercase ">Plan por hora</th>
+                            <th class="uppercase ">No. pieza</th>
+                            <th class="uppercase ">No. WO</th>
+                            <th class="uppercase ">Plan x hora</th>
                             <th class="uppercase ">Acum Plan</th>
                             <th class="uppercase ">Cantidad de Salida</th>
                             <th class="uppercase ">Acum Salida</th>

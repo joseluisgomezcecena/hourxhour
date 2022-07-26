@@ -62,18 +62,18 @@
                         if ($item['completed'] > 0 && $item['planned'] > 0)
                             $percent = ceil(($item['completed'] / $item['planned']) * 100);
 
-                        if ($percent >= 99) {
-                            $color = "table-success";
-                        } elseif ($percent > 85 && $percent < 99) {
-                            $color = "table-warning";
+                        if ($percent >= 95) {
+                            $color = "bg-success";
+                        } elseif ($percent > 85 && $percent <= 94) {
+                            $color = "bg-warning";
                         } else {
-                            $color = "table-danger";
+                            $color = "bg-danger";
                         }
 
                         echo '<tr>';
                         echo '<td>' . $item['site_name'] . '</td>';
                         echo '<td>'  . $item['asset_name'] . '</td>';
-                        echo '<td class="' . $color . '">';
+                        echo '<td class="' . $color . '" style="color: black">';
                         echo '    <b>' . $percent .  '%</b>';
                         echo '</td>';
                         echo '</tr>';
