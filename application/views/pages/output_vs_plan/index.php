@@ -22,6 +22,7 @@
         text-align: center !important;
         overflow: hidden;
         white-space: nowrap;
+        font-weight: bold;
     }
 
     .marquee_table {
