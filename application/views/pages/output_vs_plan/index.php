@@ -313,7 +313,7 @@
             //Actualizar cada 5 minutos...
             var theInterval = $interval(function() {
                 $scope.loadData();
-            }.bind(this), 5 * 60 * 1000);
+            }.bind(this), 3 * 60 * 1000);
 
             $scope.$on('$destroy', function() {
                 $interval.cancel(theInterval)
