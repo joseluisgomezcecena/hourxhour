@@ -113,14 +113,13 @@
                             <th class="uppercase text-white bg-success">Salida</th>
                             <th class="uppercase table-success">{{ plan.asset_name }}</th>
                             <th class="uppercase text-white bg-success">Estatus del turno</th>
-
                             <th class="uppercase table-danger" ng-show="plan.shift_status < 84">{{ plan.shift_status }}%</th>
                             <th class="uppercase table-warning" ng-show="plan.shift_status >= 85 && plan.shift_status < 90">{{ plan.shift_status }}%</th>
                             <th class="uppercase table-success" ng-show="plan.shift_status >= 90">{{ plan.shift_status }}%</th>
                         </tr>
                     </thead>
                 </table>
-                <table class="table table-responsive my-5">
+                <table class="table table-responsive">
                     <thead>
                         <tr>
                             <th class="uppercase ">HORA</th>
@@ -131,7 +130,7 @@
                             <th class="uppercase ">Acum Plan</th>
                             <th class="uppercase ">Cantidad Salida</th>
                             <th class="uppercase ">Acum Salida</th>
-                            <th class="uppercase ">Causa Interrp</th>
+                            <!--<th class="uppercase ">Causa Interrp</th>-->
 
                         </tr>
                     </thead>
@@ -145,7 +144,7 @@
                             <td class="table-secondary">{{ plan.plan_by_hours[plan.current_hour_index - 1].planned_sum }}</td>
                             <td class="table-secondary">{{ plan.plan_by_hours[plan.current_hour_index - 1].completed }}</td>
                             <td class="table-secondary">{{ plan.plan_by_hours[plan.current_hour_index - 1].completed_sum }}</td>
-                            <td class="table-secondary">{{ plan.plan_by_hours[plan.current_hour_index - 1].interruption }}</td>
+                            <!--<td class="table-secondary">{{ plan.plan_by_hours[plan.current_hour_index - 1].interruption }}</td>-->
                         </tr>
                         <tr>
                             <td class="table-success"><b> {{ plan.plan_by_hours[plan.current_hour_index].time }}-{{ plan.plan_by_hours[plan.current_hour_index].time_end }} </b></td>
@@ -156,7 +155,7 @@
                             <td class="table-success">{{ plan.plan_by_hours[plan.current_hour_index].planned_sum }}</td>
                             <td class="table-success">{{ plan.plan_by_hours[plan.current_hour_index].completed }}</td>
                             <td class="table-success">{{ plan.plan_by_hours[plan.current_hour_index].completed_sum }}</td>
-                            <td class="table-success">{{ plan.plan_by_hours[plan.current_hour_index ].interruption }} </td>
+                            <!--<td class="table-success">{{ plan.plan_by_hours[plan.current_hour_index ].interruption }} </td>-->
                         </tr>
                         <tr ng-if="(plan.current_hour_index + 1) < plan.plan_by_hours.length">
                             <td class=""><b> {{ plan.plan_by_hours[plan.current_hour_index + 1].time }}-{{ plan.plan_by_hours[plan.current_hour_index + 1].time_end }} </b></td>
@@ -167,7 +166,7 @@
                             <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 1].planned_sum }}</td>
                             <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 1].completed }}</td>
                             <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 1].completed_sum }}</td>
-                            <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 1 ].interruption }} </td>
+                            <!--<td class="">{{ plan.plan_by_hours[plan.current_hour_index + 1 ].interruption }} </td>-->
                         </tr>
                         <tr ng-if="(plan.current_hour_index + 2) < plan.plan_by_hours.length">
                             <td class=""><b> {{ plan.plan_by_hours[plan.current_hour_index + 2].time }}-{{ plan.plan_by_hours[plan.current_hour_index + 2].time_end }} </b></td>
@@ -178,7 +177,7 @@
                             <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 2].planned_sum }}</td>
                             <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 2].completed }}</td>
                             <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 2].completed_sum }}</td>
-                            <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 2].interruption }} </td>
+                            <!--<td class="">{{ plan.plan_by_hours[plan.current_hour_index + 2].interruption }} </td>-->
 
                         </tr>
                     </tbody>
@@ -201,7 +200,7 @@
                         </tr>
                     </thead>
                 </table>
-                <table class="table table-responsive my-4">
+                <table class="table table-responsive">
                     <thead>
                         <tr>
                             <th class="uppercase ">HORA</th>
@@ -212,7 +211,7 @@
                             <th class="uppercase ">Acum Plan</th>
                             <th class="uppercase ">Cantidad de Salida</th>
                             <th class="uppercase ">Acum Salida</th>
-                            <th class="uppercase ">Causa de interrupcion</th>
+                            <!--<th class="uppercase ">Causa de interrupcion</th>-->
 
                         </tr>
                     </thead>
@@ -226,7 +225,7 @@
                             <td class="table-secondary">{{ plan.plan_by_hours[plan.current_hour_index - 1].planned_sum }}</td>
                             <td class="table-secondary">{{ plan.plan_by_hours[plan.current_hour_index - 1].completed }}</td>
                             <td class="table-secondary">{{ plan.plan_by_hours[plan.current_hour_index - 1].completed_sum }}</td>
-                            <td class="table-secondary">{{ plan.plan_by_hours[plan.current_hour_index - 1].interruption }}</td>
+                            <!--<td class="table-secondary">{{ plan.plan_by_hours[plan.current_hour_index - 1].interruption }}</td>-->
                         </tr>
                         <tr>
                             <td class="table-success"><b> {{ plan.plan_by_hours[plan.current_hour_index].time }}-{{ plan.plan_by_hours[plan.current_hour_index].time_end }} </b></td>
@@ -237,7 +236,7 @@
                             <td class="table-success">{{ plan.plan_by_hours[plan.current_hour_index].planned_sum }}</td>
                             <td class="table-success">{{ plan.plan_by_hours[plan.current_hour_index].completed }}</td>
                             <td class="table-success">{{ plan.plan_by_hours[plan.current_hour_index].completed_sum }}</td>
-                            <td class="table-success">{{ plan.plan_by_hours[plan.current_hour_index ].interruption }} </td>
+                            <!--<td class="table-success">{{ plan.plan_by_hours[plan.current_hour_index ].interruption }} </td>-->
                         </tr>
                         <tr ng-if="(plan.current_hour_index + 1) < plan.plan_by_hours.length">
                             <td class=""><b> {{ plan.plan_by_hours[plan.current_hour_index + 1].time }}-{{ plan.plan_by_hours[plan.current_hour_index + 1].time_end }} </b></td>
@@ -248,7 +247,7 @@
                             <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 1].planned_sum }}</td>
                             <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 1].completed }}</td>
                             <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 1].completed_sum }}</td>
-                            <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 1 ].interruption }} </td>
+                            <!--<td class="">{{ plan.plan_by_hours[plan.current_hour_index + 1 ].interruption }} </td>-->
                         </tr>
                         <tr ng-if="(plan.current_hour_index + 2) < plan.plan_by_hours.length">
                             <td class=""><b> {{ plan.plan_by_hours[plan.current_hour_index + 2].time }}-{{ plan.plan_by_hours[plan.current_hour_index + 2].time_end }} </b></td>
@@ -259,7 +258,7 @@
                             <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 2].planned_sum }}</td>
                             <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 2].completed }}</td>
                             <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 2].completed_sum }}</td>
-                            <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 2].interruption }} </td>
+                            <!--<td class="">{{ plan.plan_by_hours[plan.current_hour_index + 2].interruption }} </td>-->
 
                         </tr>
                     </tbody>
