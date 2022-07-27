@@ -15,7 +15,7 @@
 
 <style>
     body {
-        font-size: 1.6rem;
+        font-size: 2rem;
         display: flex;
         justify-content: center;
         align-content: center;
@@ -73,6 +73,16 @@
     .th-andon {
         border: 0.1rem solid gray;
     }
+    th{
+        font-size: 1.5rem;
+    }
+    td{
+        /*width: 40rem !important;*/
+        padding: 0 !important;
+        margin: 0 !important;
+        min-width: 0.9rem !important;
+
+    }
 </style>
 
 <body>
@@ -112,36 +122,34 @@
 
             <!--FIRST TABLE UPLOAD INFO-->
             <div ng-repeat="plan in plan_productions" class="marquee_table" id="table_one" style="z-index: -1;">
-                <table class="table table-responsive mb-0">
+            <table class="table table-responsive mt-3 mb-0">
                     <thead>
-                        <tr>
-                            <th class="uppercase table-success">Salida</th>
-                            <th class="uppercase table-success">{{ plan.asset_name }}</th>
-                            <!--<th class="uppercase text-white bg-success">Estatus del turno</th>-->
-                            <th class="uppercase bg-danger" ng-show="plan.shift_status < 84">Estatus del turno</th>
-                            <th class="uppercase bg-danger" ng-show="plan.shift_status < 84">{{ plan.shift_status }}%</th>
+                    <tr>
+                            <th class="uppercase table-secondary">Salida</th>
+                            <th class="uppercase table-secondary">{{ plan.asset_name }}</th>
+                            <th class="uppercase bg-danger" ng-show="plan.shift_status <= 84">Estatus del turno</th>
+                            <th class="uppercase bg-danger" ng-show="plan.shift_status <= 84">{{ plan.shift_status }}%</th>
 
-                            <th class="uppercase bg-warning" ng-show="plan.shift_status >= 85 && plan.shift_status <= 90">Estatus del turno</th>
-                            <th class="uppercase bg-warning" ng-show="plan.shift_status >= 85 && plan.shift_status <= 90">{{ plan.shift_status }}%</th>
+                            <th class="uppercase bg-warning" ng-show="plan.shift_status >= 85 && plan.shift_status <= 94">Estatus del turno</th>
+                            <th class="uppercase bg-warning" ng-show="plan.shift_status >= 85 && plan.shift_status <= 94">{{ plan.shift_status }}%</th>
 
-                            <th class="uppercase bg-success" ng-show="plan.shift_status >= 90">Estatus del turno</th>
-                            <th class="uppercase bg-success" ng-show="plan.shift_status >= 90">{{ plan.shift_status }}%</th>
+                            <th class="uppercase bg-success" ng-show="plan.shift_status >= 95">Estatus del turno</th>
+                            <th class="uppercase bg-success" ng-show="plan.shift_status >= 95">{{ plan.shift_status }}%</th>
                         </tr>
                     </thead>
                 </table>
                 <table class="table table-responsive">
                     <thead>
                         <tr>
-                            <th class="uppercase ">HORA</th>
+                            <th class="uppercase ">HR</th>
                             <th class="uppercase ">HC</th>
                             <th class="uppercase ">No. pieza</th>
                             <th class="uppercase ">No. WO</th>
                             <th class="uppercase ">Plan x hora</th>
                             <th class="uppercase ">Acum Plan</th>
-                            <th class="uppercase ">Cantidad Salida</th>
+                            <th class="uppercase ">Cant Salida</th>
                             <th class="uppercase ">Acum Salida</th>
-                            <!--<th class="uppercase ">Causa Interrp</th>-->
-
+                            <th class="uppercase ">Causa Interrupcion</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -154,7 +162,7 @@
                             <td class="table-secondary">{{ plan.plan_by_hours[plan.current_hour_index - 1].planned_sum }}</td>
                             <td class="table-secondary">{{ plan.plan_by_hours[plan.current_hour_index - 1].completed }}</td>
                             <td class="table-secondary">{{ plan.plan_by_hours[plan.current_hour_index - 1].completed_sum }}</td>
-                            <!--<td class="table-secondary">{{ plan.plan_by_hours[plan.current_hour_index - 1].interruption }}</td>-->
+                            <td class="table-secondary">{{ plan.plan_by_hours[plan.current_hour_index - 1].interruption }}</td>
                         </tr>
                         <tr>
                             <td class="table-success"><b> {{ plan.plan_by_hours[plan.current_hour_index].time }}-{{ plan.plan_by_hours[plan.current_hour_index].time_end }} </b></td>
@@ -165,7 +173,7 @@
                             <td class="table-success">{{ plan.plan_by_hours[plan.current_hour_index].planned_sum }}</td>
                             <td class="table-success">{{ plan.plan_by_hours[plan.current_hour_index].completed }}</td>
                             <td class="table-success">{{ plan.plan_by_hours[plan.current_hour_index].completed_sum }}</td>
-                            <!--<td class="table-success">{{ plan.plan_by_hours[plan.current_hour_index ].interruption }} </td>-->
+                            <td class="table-success">{{ plan.plan_by_hours[plan.current_hour_index ].interruption }} </td>
                         </tr>
                         <tr ng-if="(plan.current_hour_index + 1) < plan.plan_by_hours.length">
                             <td class=""><b> {{ plan.plan_by_hours[plan.current_hour_index + 1].time }}-{{ plan.plan_by_hours[plan.current_hour_index + 1].time_end }} </b></td>
@@ -176,7 +184,7 @@
                             <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 1].planned_sum }}</td>
                             <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 1].completed }}</td>
                             <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 1].completed_sum }}</td>
-                            <!--<td class="">{{ plan.plan_by_hours[plan.current_hour_index + 1 ].interruption }} </td>-->
+                            <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 1 ].interruption }} </td>
                         </tr>
                         <tr ng-if="(plan.current_hour_index + 2) < plan.plan_by_hours.length">
                             <td class=""><b> {{ plan.plan_by_hours[plan.current_hour_index + 2].time }}-{{ plan.plan_by_hours[plan.current_hour_index + 2].time_end }} </b></td>
@@ -187,7 +195,7 @@
                             <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 2].planned_sum }}</td>
                             <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 2].completed }}</td>
                             <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 2].completed_sum }}</td>
-                            <!--<td class="">{{ plan.plan_by_hours[plan.current_hour_index + 2].interruption }} </td>-->
+                            <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 2].interruption }} </td>
 
                         </tr>
                     </tbody>
@@ -200,32 +208,31 @@
                 <table class="table table-responsive mt-3 mb-0">
                     <thead>
                     <tr>
-                            <th class="uppercase table-success">Salida</th>
-                            <th class="uppercase table-success">{{ plan.asset_name }}</th>
-                            <!--<th class="uppercase text-white bg-success">Estatus del turno</th>-->
-                            <th class="uppercase bg-danger" ng-show="plan.shift_status < 84">Estatus del turno</th>
-                            <th class="uppercase bg-danger" ng-show="plan.shift_status < 84">{{ plan.shift_status }}%</th>
+                            <th class="uppercase table-secondary">Salida</th>
+                            <th class="uppercase table-secondary">{{ plan.asset_name }}</th>
+                            <th class="uppercase bg-danger" ng-show="plan.shift_status <= 84">Estatus del turno</th>
+                            <th class="uppercase bg-danger" ng-show="plan.shift_status <= 84">{{ plan.shift_status }}%</th>
 
-                            <th class="uppercase bg-warning" ng-show="plan.shift_status >= 85 && plan.shift_status <= 90">Estatus del turno</th>
-                            <th class="uppercase bg-warning" ng-show="plan.shift_status >= 85 && plan.shift_status <= 90">{{ plan.shift_status }}%</th>
+                            <th class="uppercase bg-warning" ng-show="plan.shift_status >= 85 && plan.shift_status <= 94">Estatus del turno</th>
+                            <th class="uppercase bg-warning" ng-show="plan.shift_status >= 85 && plan.shift_status <= 94">{{ plan.shift_status }}%</th>
 
-                            <th class="uppercase bg-success" ng-show="plan.shift_status >= 90">Estatus del turno</th>
-                            <th class="uppercase bg-success" ng-show="plan.shift_status >= 90">{{ plan.shift_status }}%</th>
+                            <th class="uppercase bg-success" ng-show="plan.shift_status >= 95">Estatus del turno</th>
+                            <th class="uppercase bg-success" ng-show="plan.shift_status >= 95">{{ plan.shift_status }}%</th>
                         </tr>
                     </thead>
                 </table>
                 <table class="table table-responsive">
                     <thead>
                         <tr>
-                            <th class="uppercase ">HORA</th>
+                            <th class="uppercase ">HR</th>
                             <th class="uppercase ">HC</th>
                             <th class="uppercase ">No. pieza</th>
                             <th class="uppercase ">No. WO</th>
                             <th class="uppercase ">Plan x hora</th>
                             <th class="uppercase ">Acum Plan</th>
-                            <th class="uppercase ">Cantidad de Salida</th>
+                            <th class="uppercase ">Cant de Salida</th>
                             <th class="uppercase ">Acum Salida</th>
-                            <!--<th class="uppercase ">Causa de interrupcion</th>-->
+                            <th class="uppercase ">Causa Interrupcion</th>
 
                         </tr>
                     </thead>
@@ -239,7 +246,7 @@
                             <td class="table-secondary">{{ plan.plan_by_hours[plan.current_hour_index - 1].planned_sum }}</td>
                             <td class="table-secondary">{{ plan.plan_by_hours[plan.current_hour_index - 1].completed }}</td>
                             <td class="table-secondary">{{ plan.plan_by_hours[plan.current_hour_index - 1].completed_sum }}</td>
-                            <!--<td class="table-secondary">{{ plan.plan_by_hours[plan.current_hour_index - 1].interruption }}</td>-->
+                            <td class="table-secondary">{{ plan.plan_by_hours[plan.current_hour_index - 1].interruption }}</td>
                         </tr>
                         <tr>
                             <td class="table-success"><b> {{ plan.plan_by_hours[plan.current_hour_index].time }}-{{ plan.plan_by_hours[plan.current_hour_index].time_end }} </b></td>
@@ -250,7 +257,7 @@
                             <td class="table-success">{{ plan.plan_by_hours[plan.current_hour_index].planned_sum }}</td>
                             <td class="table-success">{{ plan.plan_by_hours[plan.current_hour_index].completed }}</td>
                             <td class="table-success">{{ plan.plan_by_hours[plan.current_hour_index].completed_sum }}</td>
-                            <!--<td class="table-success">{{ plan.plan_by_hours[plan.current_hour_index ].interruption }} </td>-->
+                            <td class="table-success">{{ plan.plan_by_hours[plan.current_hour_index ].interruption }} </td>
                         </tr>
                         <tr ng-if="(plan.current_hour_index + 1) < plan.plan_by_hours.length">
                             <td class=""><b> {{ plan.plan_by_hours[plan.current_hour_index + 1].time }}-{{ plan.plan_by_hours[plan.current_hour_index + 1].time_end }} </b></td>
@@ -261,7 +268,7 @@
                             <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 1].planned_sum }}</td>
                             <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 1].completed }}</td>
                             <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 1].completed_sum }}</td>
-                            <!--<td class="">{{ plan.plan_by_hours[plan.current_hour_index + 1 ].interruption }} </td>-->
+                            <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 1 ].interruption }} </td>
                         </tr>
                         <tr ng-if="(plan.current_hour_index + 2) < plan.plan_by_hours.length">
                             <td class=""><b> {{ plan.plan_by_hours[plan.current_hour_index + 2].time }}-{{ plan.plan_by_hours[plan.current_hour_index + 2].time_end }} </b></td>
@@ -272,14 +279,14 @@
                             <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 2].planned_sum }}</td>
                             <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 2].completed }}</td>
                             <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 2].completed_sum }}</td>
-                            <!--<td class="">{{ plan.plan_by_hours[plan.current_hour_index + 2].interruption }} </td>-->
+                            <td class="">{{ plan.plan_by_hours[plan.current_hour_index + 2].interruption }} </td>
 
                         </tr>
                     </tbody>
                 </table>
             </div>
             <!--END SECOND TABLE UPLOAD INFO-->
-        </div>
+        </div> 
 
         <!--ALERT NO PLAN UPLOAD -->
         <div ng-hide="isHidden" class="alert alert_primary" style="text-align: center;">
