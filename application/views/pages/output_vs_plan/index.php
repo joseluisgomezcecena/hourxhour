@@ -320,6 +320,7 @@
             //Actualizar cada 5 minutos...
             var theInterval = $interval(function() {
                 $scope.loadData();
+                window.location.reload();
             }.bind(this), 5 * 60 * 1000);
 
             $scope.$on('$destroy', function() {
